@@ -5,7 +5,7 @@
 # === Parameters
 #
 # [*maxscale_package_name*]
-#  Override the name of the maxscale package 
+#  Override the name of the maxscale package
 #
 # [*setup_mariadb_repository*]
 #  Setup the apt repositories from MariaDB for MaxScale.
@@ -23,7 +23,7 @@
 #  The connection timeout in seconds for the MySQL connections to the backend server
 #
 # [*auth_read_timeout*]
-#  The read timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched. 
+#  The read timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
 #
 # [*auth_write_timeout*]
 #  The write timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
@@ -58,13 +58,13 @@
 #  Enable or disable the augmentation of messages.
 #
 # [*logdir*]
-#  Set the directory where the logfiles are stored. 
+#  Set the directory where the logfiles are stored.
 #
 # [*datadir*]
-#  Set the directory where the data files used by MaxScale are stored. 
+#  Set the directory where the data files used by MaxScale are stored.
 #
 # [*cachedir*]
-#  Configure the directory MaxScale uses to store cached data. 
+#  Configure the directory MaxScale uses to store cached data.
 #
 # [*piddir*]
 #  Configure the directory for the PID file for MaxScale.
@@ -125,7 +125,7 @@ class maxscale (
     cachedir             => $cachedir,
     piddir               => $piddir,
     configdir            => $configdir,
-  } 
+  }
 
   service { 'maxscale':
     ensure    => $service_enable,

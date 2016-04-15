@@ -22,109 +22,109 @@ define maxscale::config(
 
   if $threads == undef {
     $real_threads = $maxscale::params::threads
-  } else { 
+  } else {
     $real_threads = $threads
   }
 
   if $auth_connect_timeout == undef {
     $real_auth_connect_timeout = $maxscale::params::auth_connect_timeout
-  } else { 
+  } else {
     $real_auth_connect_timeout = $auth_connect_timeout
   }
 
   if $auth_read_timeout == undef {
     $real_auth_read_timeout = $maxscale::params::auth_read_timeout
-  } else { 
+  } else {
     $real_auth_read_timeout = $auth_read_timeout
   }
 
   if $auth_write_timeout == undef {
     $real_auth_write_timeout = $maxscale::params::auth_write_timeout
-  } else { 
+  } else {
     $real_auth_write_timeout = $auth_write_timeout
   }
 
   if $ms_timestamp == undef {
     $real_ms_timestamp = $maxscale::params::ms_timestamp
-  } else { 
+  } else {
     $real_ms_timestamp = $ms_timestamp
   }
 
   if $syslog == undef {
     $real_syslog = $maxscale::params::syslog
-  } else { 
+  } else {
     $real_syslog = $syslog
   }
 
   if $maxlog == undef {
     $real_maxlog = $maxscale::params::maxlog
-  } else { 
+  } else {
     $real_maxlog = $maxlog
   }
 
   if $log_to_shm == undef {
     $real_log_to_shm = $maxscale::params::log_to_shm
-  } else { 
+  } else {
     $real_log_to_shm = $log_to_shm
   }
 
   if $log_warning == undef {
     $real_log_warning = $maxscale::params::log_warning
-  } else { 
+  } else {
     $real_log_warning = $log_warning
   }
 
   if $log_notice == undef {
     $real_log_notice = $maxscale::params::log_notice
-  } else { 
+  } else {
     $real_log_notice = $log_notice
   }
 
   if $log_info == undef {
     $real_log_info = $maxscale::params::log_info
-  } else { 
+  } else {
     $real_log_info = $log_info
   }
 
   if $log_debug == undef {
     $real_log_debug = $maxscale::params::log_debug
-  } else { 
+  } else {
     $real_log_debug = $log_debug
   }
 
   if $log_augmentation == undef {
     $real_log_augmentation = $maxscale::params::log_augmentation
-  } else { 
+  } else {
     $real_log_augmentation = $log_augmentation
   }
 
   if $logdir == undef {
     $real_logdir = $::maxscale::params::logdir
-  } else { 
+  } else {
     $real_logdir = $logdir
   }
 
   if $datadir == undef {
     $real_datadir = $maxscale::params::datadir
-  } else { 
+  } else {
     $real_datadir = $datadir
   }
 
   if $cachedir == undef {
     $real_cachedir = $maxscale::params::cachedir
-  } else { 
+  } else {
     $real_cachedir = $cachedir
   }
 
   if $piddir == undef {
     $real_piddir = $maxscale::params::piddir
-  } else { 
+  } else {
     $real_piddir = $piddir
   }
 
   if $configdir == undef {
     $real_configdir = $maxscale::params::configdir
-  } else { 
+  } else {
     $real_configdir = $configdir
   }
 

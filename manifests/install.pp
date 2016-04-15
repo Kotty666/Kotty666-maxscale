@@ -6,12 +6,12 @@ define maxscale::install (
     if $setup_mariadb_repository {
         case $::osfamily {
             'Debian' : {
-                ::maxscale::install::apt { $package_name : 
+                ::maxscale::install::apt { $package_name :
                 repository_base_url => $repository_base_url,
               }
             }
             'Ubuntu' : {
-                ::maxscale::install::apt { $package_name : 
+                ::maxscale::install::apt { $package_name :
                 repository_base_url => $repository_base_url,
               }
             }

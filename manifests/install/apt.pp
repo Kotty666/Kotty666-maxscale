@@ -1,4 +1,4 @@
-define maxscale::setup::apt (
+define maxscale::install::apt (
     $package_name = $name,
     $repository_base_url = undef
 ) {
@@ -30,8 +30,8 @@ define maxscale::setup::apt (
     }
     
     ::apt::key { 'mariadb-maxscale' :
-        key         => $::maxscale::params::gpg_key_id,
-        key_server  => 'keys.gnupg.net'
+        key        => $::maxscale::params::gpg_key_id,
+        key_server => 'keys.gnupg.net'
     }
 
     ::apt::source { 'mariadb-maxscale' :

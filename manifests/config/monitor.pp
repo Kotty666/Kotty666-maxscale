@@ -10,15 +10,15 @@ define maxscale::config::monitor (
 ) {
 
   if $module == undef {
-    fail("Monitoring Module must be set!")
+    fail('Monitoring Module must be set!')
   }
   if $servers == undef {
-    fail("At least one server must be set!")
+    fail('At least one server must be set!')
   }
 
   concat::fragment{ "Monitor ${name}":
     target  => $::maxscale::params::configfile,
-    content => template("maxscale/monitor.erb"),
+    content => template('maxscale/monitor.erb'),
     order   => 05,
   }
 }
