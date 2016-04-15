@@ -1,0 +1,30 @@
+[<%= @name -%>]
+type=listener
+service = <%= @service %>
+protocol = <%= @protocol %>
+port = <%= @port %>
+<% if @socket -%>
+socket= <%= @socket %>
+<% end -%>
+<% if @address -%>
+address= <%= @address %>
+<% end -%>
+<% if @ssl -%>
+ssl= <%= @ssl %>
+<% end -%>
+<% if @ssl_key -%>
+ssl_key= <%= @ssl_key %>
+<% end -%>
+<% if @ssl_cert -%>
+ssl_cert= <%= @ssl_cert %>
+<% end -%>
+<% if @ssl_ca_cert -%>
+ssl_ca_cert= <%= @ssl_ca_cert %>
+<% end -%>
+<% if @ssl_version -%>
+ssl_version= <%= @ssl_version %>
+<% end -%>
+<% if @ssl_cert_verification_depth -%>
+ssl_cert_verification_depth= <%= @ssl_cert_verification_depth %>
+<% end -%>
+

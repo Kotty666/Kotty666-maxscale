@@ -1,0 +1,21 @@
+[<%= @name %>]
+type=server
+address=<%= @address %>
+port=<%= @port %>
+<% if @monitoruser -%>
+monitoruser= <%= @monitoruser %>
+<% end -%>
+<% if @monitorpw -%>
+monitorpw= <%= @monitorpw %>
+<% end -%>
+<% if @persistpoolmax -%>
+persistpoolmax= <%= @persistpoolmax %>
+<% end -%>
+<% if @persistmaxtime -%>
+persistmaxtime= <%= @persistmaxtime %>
+<% end -%>
+<% if @serv_weight -%>
+serv_weight= <%= @serv_weight %>
+<% end -%>
+protocol=MySQLBackend
+

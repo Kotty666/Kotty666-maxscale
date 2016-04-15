@@ -1,0 +1,41 @@
+[<%= @name -%>]
+type=service
+router=<%= @router %>
+<% if @servers -%>
+servers=<%= @servers %>
+<% end -%>
+enable_root_user = 0
+localhost_match_wildcard_host = 1
+version_string='MaxScale'
+auth_all_servers = 1
+strip_db_esc = 1
+optimize_wildcard = 1
+log_auth_warnings = 0
+<% if @connection_timeout -%>
+connection_timeout= <%= @connection_timeout %>
+<% end -%>
+<% if @router_options -%>
+router_options= <%= @router_options %>
+<% end -%>
+<% if @filters -%>
+filters= <%= @filters %>
+<% end -%>
+<% if @user -%>
+user= <%= @user %>
+<% end -%>
+<% if @passwd -%>
+passwd= <%= @passwd %>
+<% end -%>
+<% if @weightby -%>
+weightby= <%= @weightby %>
+<% end -%>
+<% if @max_slave_connections  -%>
+max_slave_connections = <%= @max_slave_connections %> 
+<% end -%>
+<% if @max_slave_replication_lag  -%>
+max_slave_replication_lag = <%= @max_slave_replication_lag %>
+<% end -%>
+<% if @use_sql_variables_in  -%>
+use_sql_variables_in = <%= @use_sql_variables_in %>
+<% end -%>
+
