@@ -76,29 +76,52 @@
 #
 # Philipp Frik <kotty@guns-n-girls.de>
 class maxscale (
-  $package_name = $::maxscale::params::package_name,
-  $repository_base_url = $::maxscale::params::repository_base_url,
+  $package_name = undef,
+  $repository_base_url = undef,
   $setup_mariadb_repository = true,
   $service_enable        = true,
-  $threads = $::maxscale::params::threads,
-  $auth_connect_timeout = $::maxscale::params::auth_connect_timeout,
-  $auth_read_timeout = $::maxscale::params::auth_read_timeout,
-  $auth_write_timeout = $::maxscale::params::auth_write_timeout,
-  $ms_timestamp = $::maxscale::params::ms_timestamp,
-  $syslog = $::maxscale::params::syslog,
-  $maxlog = $::maxscale::params::maxlog,
-  $log_to_shm = $::maxscale::params::log_to_shm,
-  $log_warning = $::maxscale::params::log_warning,
-  $log_notice = $::maxscale::params::log_notice,
-  $log_info = $::maxscale::params::log_info,
-  $log_debug = $::maxscale::params::log_debug,
-  $log_augmentation = $::maxscale::params::log_augmentation,
-  $logdir = $::maxscale::params::logdir,
-  $datadir = $::maxscale::params::datadir,
-  $cachedir = $::maxscale::params::cachedir,
-  $piddir = $::maxscale::params::piddir,
-  $configdir = $::maxscale::params::configdir,
-) inherits ::maxscale::params {
+  $threads = undef,
+  $auth_connect_timeout = undef,
+  $auth_read_timeout = undef,
+  $auth_write_timeout = undef,
+  $ms_timestamp = undef,
+  $syslog = undef,
+  $maxlog = undef,
+  $log_to_shm = undef,
+  $log_warning = undef,
+  $log_notice = undef,
+  $log_info = undef,
+  $log_debug = undef,
+  $log_augmentation = undef,
+  $logdir = undef,
+  $datadir = undef,
+  $cachedir = undef,
+  $piddir = undef,
+  $configdir = undef,
+)  {
+
+  include ::maxscale::params
+
+  if $package_name == undef { $package_name = $::maxscale::params::package_name }
+  if $repository_base_url == undef { $repository_base_url = $::maxscale::params::repository_base_url }
+  if $threads == undef { $threads = $::maxscale::params::threads }
+  if $auth_connect_timeout == undef { $auth_connect_timeout = $::maxscale::params::auth_connect_timeout }
+  if $auth_read_timeout == undef { $auth_read_timeout = $::maxscale::params::auth_read_timeout }
+  if $auth_write_timeout == undef { $auth_write_timeout = $::maxscale::params::auth_write_timeout }
+  if $ms_timestamp == undef { $ms_timestamp = $::maxscale::params::ms_timestamp }
+  if $syslog == undef { $syslog = $::maxscale::params::syslog }
+  if $maxlog == undef { $maxlog = $::maxscale::params::maxlog }
+  if $log_to_shm == undef { $log_to_shm = $::maxscale::params::log_to_shm }
+  if $log_warning == undef { $log_warning = $::maxscale::params::log_warning }
+  if $log_notice == undef { $log_notice = $::maxscale::params::log_notice }
+  if $log_info == undef { $log_info = $::maxscale::params::log_info }
+  if $log_debug == undef { $log_debug = $::maxscale::params::log_debug }
+  if $log_augmentation == undef { $log_augmentation = $::maxscale::params::log_augmentation }
+  if $logdir == undef { $logdir = $::maxscale::params::logdir }
+  if $datadir == undef { $datadir = $::maxscale::params::datadir }
+  if $cachedir == undef { $cachedir = $::maxscale::params::cachedir }
+  if $piddir == undef { $piddir = $::maxscale::params::piddir }
+  if $configdir == undef { $configdir = $::maxscale::params::configdir }
 
   validate_bool($service_enable)
 
