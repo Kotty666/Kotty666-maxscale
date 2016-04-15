@@ -23,9 +23,9 @@ define maxscale::config::service (
 		fail("The Router Type must be set!")
 	}
 	concat::fragment{ "Service ${name}":
-		target         => $::maxscale::params::configfile,
-		content        => template("maxscale/service.erb"),
-		order          => 03,
+		target  => $::maxscale::params::configfile,
+		content => template("maxscale/service.erb"),
+		order   => 03,
 	}
 
 }

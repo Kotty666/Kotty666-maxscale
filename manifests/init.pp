@@ -76,75 +76,75 @@
 #
 # Philipp Frik <kotty@guns-n-girls.de>
 class maxscale (
-	$package_name = $::maxscale::params::package_name,
-	$repository_base_url = $::maxscale::params::repository_base_url,
-	$setup_mariadb_repository = true,
-	$service_enable        = true,
-	$threads = $::maxscale::params::threads,
-	$auth_connect_timeout = $::maxscale::params::auth_connect_timeout,
-	$auth_read_timeout = $::maxscale::params::auth_read_timeout,
-	$auth_write_timeout = $::maxscale::params::auth_write_timeout,
-	$ms_timestamp = $::maxscale::params::ms_timestamp,
-	$syslog = $::maxscale::params::syslog,
-	$maxlog = $::maxscale::params::maxlog,
-	$log_to_shm = $::maxscale::params::log_to_shm,
-	$log_warning = $::maxscale::params::log_warning,
-	$log_notice = $::maxscale::params::log_notice,
-	$log_info = $::maxscale::params::log_info,
-	$log_debug = $::maxscale::params::log_debug,
-	$log_augmentation = $::maxscale::params::log_augmentation,
-	$logdir = $::maxscale::params::logdir,
-	$datadir = $::maxscale::params::datadir,
-	$cachedir = $::maxscale::params::cachedir,
-	$piddir = $::maxscale::params::piddir,
-	$configdir = $::maxscale::params::configdir,
+  $package_name = $::maxscale::params::package_name,
+  $repository_base_url = $::maxscale::params::repository_base_url,
+  $setup_mariadb_repository = true,
+  $service_enable        = true,
+  $threads = $::maxscale::params::threads,
+  $auth_connect_timeout = $::maxscale::params::auth_connect_timeout,
+  $auth_read_timeout = $::maxscale::params::auth_read_timeout,
+  $auth_write_timeout = $::maxscale::params::auth_write_timeout,
+  $ms_timestamp = $::maxscale::params::ms_timestamp,
+  $syslog = $::maxscale::params::syslog,
+  $maxlog = $::maxscale::params::maxlog,
+  $log_to_shm = $::maxscale::params::log_to_shm,
+  $log_warning = $::maxscale::params::log_warning,
+  $log_notice = $::maxscale::params::log_notice,
+  $log_info = $::maxscale::params::log_info,
+  $log_debug = $::maxscale::params::log_debug,
+  $log_augmentation = $::maxscale::params::log_augmentation,
+  $logdir = $::maxscale::params::logdir,
+  $datadir = $::maxscale::params::datadir,
+  $cachedir = $::maxscale::params::cachedir,
+  $piddir = $::maxscale::params::piddir,
+  $configdir = $::maxscale::params::configdir,
 ) inherits ::maxscale::params {
 
-	validate_bool($service_enable)
+  validate_bool($service_enable)
 
-	::maxscale::install { $package_name :
-		setup_mariadb_repository => $setup_mariadb_repository,
-		repository_base_url      => $repository_base_url,
-	}
-	::maxscale::config{$package_name:
-		threads => $threads,
-		auth_connect_timeout => $auth_connect_timeout,
-		auth_read_timeout => $auth_read_timeout,
-		auth_write_timeout => $auth_write_timeout,
-		ms_timestamp => $ms_timestamp,
-		syslog => $syslog,
-		maxlog => $maxlog,
-		log_to_shm => $log_to_shm,
-		log_warning => $log_warning,
-		log_notice => $log_notice,
-		log_info => $log_info,
-		log_debug => $log_debug,
-		log_augmentation => $log_augmentation,
-		logdir => $logdir,
-		datadir => $datadir,
-		cachedir => $cachedir,
-		piddir => $piddir,
-		configdir => $configdir,
-	} 
+  ::maxscale::install { $package_name :
+    setup_mariadb_repository => $setup_mariadb_repository,
+    repository_base_url      => $repository_base_url,
+  }
+  ::maxscale::config{$package_name:
+    threads => $threads,
+    auth_connect_timeout => $auth_connect_timeout,
+    auth_read_timeout => $auth_read_timeout,
+    auth_write_timeout => $auth_write_timeout,
+    ms_timestamp => $ms_timestamp,
+    syslog => $syslog,
+    maxlog => $maxlog,
+    log_to_shm => $log_to_shm,
+    log_warning => $log_warning,
+    log_notice => $log_notice,
+    log_info => $log_info,
+    log_debug => $log_debug,
+    log_augmentation => $log_augmentation,
+    logdir => $logdir,
+    datadir => $datadir,
+    cachedir => $cachedir,
+    piddir => $piddir,
+    configdir => $configdir,
+  } 
 
-	service { 'maxscale':
-		ensure    => $service_enable,
-		name      => $package_name,
-		enable    => $service_enable,
-		subscribe => Package[$package_name],
-	}
+  service { 'maxscale':
+    ensure    => $service_enable,
+    name      => $package_name,
+    enable    => $service_enable,
+    subscribe => Package[$package_name],
+  }
 
-	concat { $::maxscale::params::configfile:
-		owner   => 'root',
-		group   => 'root',
-		mode    => '0644',
-		notify  => Service['maxscale'],
-		require => Package[$package_name],
-	}
+  concat { $::maxscale::params::configfile:
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    notify  => Service['maxscale'],
+    require => Package[$package_name],
+  }
 
-	concat::fragment { 'Config Header':
-		target         => $::maxscale::params::configfile,
-		content        => "# This file is managed by Puppet. DO NOT EDIT.\n",
-		order          => 01,
-	}
+  concat::fragment { 'Config Header':
+    target  => $::maxscale::params::configfile,
+    content => "# This file is managed by Puppet. DO NOT EDIT.\n",
+    order   => 01,
+  }
 }
