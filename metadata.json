@@ -8,7 +8,7 @@
   "project_page": "https://github.com/Kotty666/Kotty666-maxscale",
   "issues_url": "https://github.com/Kotty666/Kotty666-maxscale/issues",
   "dependencies": [
-    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"},
+    {"name":"puppetlabs-stdlib","version_requirement":">= 2.2.0"},
 		{"name":"puppetlabs-apt","version_requirement":">= 1.7.0"},
 		{"name":"puppetlabs-concat","version_requirement":">=1.0.0"}
   ],
