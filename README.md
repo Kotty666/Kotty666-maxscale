@@ -28,9 +28,9 @@ is developed by the MariaDB.
 ### Setup Requirements 
 
 * the module requires:
-	- puppetlabs-stdlib
-	- puppetlabs-apt (only if you wish to use the repo management)
-	- puppetlabs-concat
+  - puppetlabs-stdlib
+  - puppetlabs-apt (only if you wish to use the repo management)
+  - puppetlabs-concat
 
 ### Beginning with maxscale
 
@@ -47,31 +47,31 @@ include maxscale
 
 # Configure the Galera Monitor to check the Nodes
 ::maxscale::config::monitor{"Galera":
-	module  => 'galeramon',
-	servers => 'mydb01,mydb02',
-	user    => 'Monitor',
-	passwd  => 'SamplePassword',
+  module  => 'galeramon',
+  servers => 'mydb01,mydb02',
+  user    => 'Monitor',
+  passwd  => 'SamplePassword',
 }
 
 # Create the Server resources
 ::maxscale::config::server{"mydb01":
-	address => '192.168.0.1',
+  address => '192.168.0.1',
 }
 ::maxscale::config::server{"mydb02":
-	address => '192.168.0.2',
+  address => '192.168.0.2',
 }
 
 # Create the Commandlineinterface Service
 ::maxscale::config::service{"CLI":
-	router => "cli",
+  router => "cli",
 }
 
 # Add the connection Listener for the CLI Service
 ::maxscale::config::listener{"CLI Listener":
-	service  => "CLI",
-	protocol => "maxscaled",
-	address  => "localhost",
-	port     => 6603,
+  service  => "CLI",
+  protocol => "maxscaled",
+  address  => "localhost",
+  port     => 6603,
 }
 ```
 
@@ -84,96 +84,96 @@ include maxscale
 ### Variables and Default values for the Package and main configuration
 ```puppet
 class {'maxscale':
-	package_name							=> 'maxscale',
-	setup_mariadb_repository	=> true,
-	service_enable						=> true,
-	threads										=> 'auto',
-	auth_connect_timeout			=> 3,
-	auth_read_timeout					=> 1,
-	auth_write_timeout				=> 2,
-	ms_timestamp							=> 0,
-	syslog										=> 0,
-	maxlog										=> 1,
-	log_to_shm								=> 0,
-	log_warning								=> 1,
-	log_notice								=> 0,
-	log_info									=> 0,
-	log_debug									=> 0,
-	log_augmentation					=> 0,
-	logdir										=> '/var/log/maxscale/',
-	datadir										=> '/var/lib/maxscale/data/',
-	cachedir									=> '/var/cache/maxscale/',
-	piddir										=>  '/var/run/maxscale/',
-	configdir									=> '/etc',
+  package_name              => 'maxscale',
+  setup_mariadb_repository  => true,
+  service_enable            => true,
+  threads                   => 'auto',
+  auth_connect_timeout      => 3,
+  auth_read_timeout         => 1,
+  auth_write_timeout        => 2,
+  ms_timestamp              => 0,
+  syslog                    => 0,
+  maxlog                    => 1,
+  log_to_shm                => 0,
+  log_warning               => 1,
+  log_notice                => 0,
+  log_info                  => 0,
+  log_debug                 => 0,
+  log_augmentation          => 0,
+  logdir                    => '/var/log/maxscale/',
+  datadir                   => '/var/lib/maxscale/data/',
+  cachedir                  => '/var/cache/maxscale/',
+  piddir                    =>  '/var/run/maxscale/',
+  configdir                 => '/etc',
 }
 ```
 
 ### Configuration and default values for a Listener
 ```puppet
 ::maxscale::config::listener{"Listener Name":
-	service,
-	protocol,
-	port,
-	socket => undef,
-	address => undef,
-	ssl => undef,
-	ssl_key => undef,
-	ssl_cert => undef,
-	ssl_ca_cert => undef,
-	ssl_version => undef,
-	ssl_cert_verification_depth => undef,
+  service,
+  protocol,
+  port,
+  socket => undef,
+  address => undef,
+  ssl => undef,
+  ssl_key => undef,
+  ssl_cert => undef,
+  ssl_ca_cert => undef,
+  ssl_version => undef,
+  ssl_cert_verification_depth => undef,
 }
 ```
 ### Configuration and default values for a Monitor
 ```puppet
 ::maxscale::config::monitor{"Monitor Name":
-	module,
-	servers,
-	user => undef,
-	passwd => undef,
-	monitor_interval => undef,
-	backend_connect_timeout => undef,
-	backend_write_timeout => undef,
-	backend_read_timeout => undef,
+  module,
+  servers,
+  user => undef,
+  passwd => undef,
+  monitor_interval => undef,
+  backend_connect_timeout => undef,
+  backend_write_timeout => undef,
+  backend_read_timeout => undef,
 }
 ```
 
 ### Configuration and default values for a Server
 ```puppet
 ::maxscale::config::server{"ServerName":
-	address,
-	port => 3306,
-	protocol => 'MySQLBackend',
-	monitoruser => undef,
-	monitorpw => undef,
-	persistpoolmax => undef,
-	persistmaxtime => undef,
-	serv_weight => undef,
+  address,
+  port => 3306,
+  protocol => 'MySQLBackend',
+  monitoruser => undef,
+  monitorpw => undef,
+  persistpoolmax => undef,
+  persistmaxtime => undef,
+  serv_weight => undef,
 }
 ```
 
 ### Configuration and default values for a Service
 ```puppet
 ::maxscale::config::service{"ServiceName":
-	router,
-	servers => undef,
-	router_options => undef,
-	filters => undef,
-	user => undef,
-	passwd => undef,
-	enable_root_user => 0,
-	localhost_match_wildcard_host => 1,
-	version_string=>'MaxScale',
-	weightby => undef,
-	auth_all_servers => 1,
-	strip_db_esc => 1,
-	optimize_wildcard => 1,
-	retry_on_failure => 1,
-	log_auth_warnings => 0,
-	connection_timeout => undef,
-	max_slave_connections => undef,
-	max_slave_replication_lag => undef,
-	use_sql_variables_in => undef,
+  router,
+  servers => undef,
+  router_options => undef,
+  filters => undef,
+  user => undef,
+  passwd => undef,
+  enable_root_user => 0,
+  localhost_match_wildcard_host => 1,
+  version_string=>'MaxScale',
+  weightby => undef,
+  auth_all_servers => 1,
+  strip_db_esc => 1,
+  optimize_wildcard => 1,
+  retry_on_failure => 1,
+  log_auth_warnings => 0,
+  connection_timeout => undef,
+  max_slave_connections => undef,
+  max_slave_replication_lag => undef,
+  use_sql_variables_in => undef,
 }
 ```
 
