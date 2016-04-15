@@ -1,7 +1,7 @@
 define maxscale::install (
     $setup_mariadb_repository,
+		$repository_base_url,
     $package_name = $name,
-		$repository_base_url
 ) {
     if $setup_mariadb_repository {
         case $::osfamily {
