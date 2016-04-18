@@ -13,5 +13,8 @@ gem 'facter', '>= 1.7.0'
 gem 'rspec-puppet'
 gem 'puppet-blacksmith', '~> 3.3', '>= 3.3.1'
 gem 'iconv', '~> 1.0.3'
-gem 'syck'
+
+if rubyversion => 2.1.0
+	gem 'syck'
+end
 
