@@ -12,6 +12,6 @@ gem 'puppet-lint', '>= 1.0.0'
 gem 'facter', '>= 1.7.0'
 gem 'rspec-puppet'
 gem 'puppet-blacksmith', '~> 3.3', '>= 3.3.1'
-gem "iconv", "~> 1.0.3"
-
+gem 'iconv', '~> 1.0.3'
+gem 'syck'
 
