@@ -1,0 +1,31 @@
+---
+language: ruby
+bundler_args: --without system_tests
+script: "bundle exec rake validate && bundle exec rake lint"
+matrix:
+  allow_failures:
+  fast_finish: true
+  include:
+  - rvm: 1.9.3
+    env: PUPPET_VERSION="~> 2.7" FACTER_VERSION="~> 1.6.0"
+    gemfile: .gemfile
+  - rvm: 2.0.0
+    env: PUPPET_VERSION="~> 3.0"
+    gemfile: .gemfile
+  - rvm: 2.1.8
+    env: PUPPET_VERSION="~> 3.0" FUTURE_PARSER="yes"
+    gemfile: .gemfile
+  - rvm: 2.0.0
+    env: PUPPET_VERSION="~> 4.0" STRICT_VARIABLES="yes"
+    gemfile: .gemfile
+  - rvm: 2.1.8
+    env: PUPPET_VERSION="~> 4.0" STRICT_VARIABLES="yes"
+    gemfile: .gemfile
+  - rvm: 2.2.4
+    env: PUPPET_VERSION="~> 4.0" STRICT_VARIABLES="yes"
+    gemfile: .gemfile
+  - rvm: 2.3.0
+    env: PUPPET_VERSION="~> 4.0" STRICT_VARIABLES="yes"
+    gemfile: .gemfile
+notifications:
+  email: false
