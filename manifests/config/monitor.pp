@@ -1,3 +1,10 @@
+# == define: maxscale::config::monitor
+#
+# creates a monitor in maxscale configuration
+#
+# === Parameters
+# all parameters named like in the original maxscale documentation
+
 define maxscale::config::monitor (
   $module,
   $servers,

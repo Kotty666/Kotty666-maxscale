@@ -1,3 +1,7 @@
+# == class: maxscale::para,s
+#
+# defines the default parameters for a installation 
+#
 class maxscale::params {
   $package_name = 'maxscale'
   $gpg_key_url = 'http://code.mariadb.com/mariadb-maxscale/MariaDB-MaxScale-GPG-KEY'

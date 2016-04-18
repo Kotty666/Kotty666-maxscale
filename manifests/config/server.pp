@@ -1,3 +1,9 @@
+# == define: maxscale::config::server
+#
+# creates a server in maxscale configuration
+#
+# === Parameters
+# all parameters named like in the original maxscale documentation
 define maxscale::config::server(
   $address,
   $port = 3306,

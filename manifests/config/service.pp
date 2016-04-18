@@ -1,3 +1,9 @@
+# == define: maxscale::config::service
+#
+# creates a service in maxscale configuration
+#
+# === Parameters
+# all parameters named like in the original maxscale documentation
 define maxscale::config::service (
   $router,
   $servers = undef,

@@ -1,3 +1,9 @@
+# == define: maxscale::install
+#
+# installs the maxscale package
+#
+# === Parameters
+# the parameters manages if ther should be used the original repo or not
 define maxscale::install (
     $setup_mariadb_repository,
     $repository_base_url,

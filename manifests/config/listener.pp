@@ -1,3 +1,9 @@
+# == define: maxscale::config::listener
+#
+# creates a listener in maxscale configuration
+#
+# === Parameters
+# all parameters named like in the original maxscale documentation
 define maxscale::config::listener (
   $service,
   $protocol,

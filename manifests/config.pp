@@ -1,3 +1,10 @@
+# == define: maxscale
+#
+# configures maxscale, per default in /etc/maxscale.cnf.
+#
+# === Parameters
+# all Parameters are copied from the default maxscale.cnf.
+# they are set per default in ::maxscale::params
 define maxscale::config(
   $threads,
   $auth_connect_timeout,
