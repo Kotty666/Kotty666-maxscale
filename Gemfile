@@ -6,8 +6,6 @@ else
   gem 'puppet', :require => false
 end
 
-rubyversion = ruby "<ruby version>"
-
 gem 'metadata-json-lint'
 gem 'puppetlabs_spec_helper', '>= 0.1.0'
 gem 'puppet-lint', '>= 1.0.0'
@@ -16,7 +14,7 @@ gem 'rspec-puppet'
 gem 'puppet-blacksmith', '~> 3.3', '>= 3.3.1'
 gem 'iconv', '~> 1.0.3'
 
-if rubyversion >= '2.1.0'
+if RUBY_VERSION >= '2.1.0'
 	gem 'syck'
 end
 
