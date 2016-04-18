@@ -18,7 +18,7 @@ define maxscale::config::server(
   if $address == undef {
     fail('The Server address must be set to an IP oder FQDN!')
   }
-  if $port == undef or type($port) != integer {
+  if $port == undef or validate_integer($port) != integer {
     fail('Port must be an Integer and must be set!')
   }
 
