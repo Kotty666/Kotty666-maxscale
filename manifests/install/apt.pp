@@ -31,17 +31,18 @@ define maxscale::install::apt (
     if $repository_base_url == undef {
       $repository_base_url = $::maxscale::params::repository_base_url
     }
-    
-    ::apt::key { 'mariadb-maxscale' :
-        key        => $::maxscale::params::gpg_key_id,
-        key_server => 'keys.gnupg.net'
-    }
 
     ::apt::source { 'mariadb-maxscale' :
         architecture => 'amd64',
         location     => $repository_base_url,
-        include_src  => false,
-        include_deb  => true,
+        include      => {
+            'src' => false,
+            'deb' => true,
+        },
+        key          => {
+            'id'     => $::maxscale::params::gpg_key_id,
+            'server' => 'keys.gnupg.net'
+        },
         repos        => 'main',
         release      => $::lsbdistcodename,
         require      => ::Apt::Key['mariadb-maxscale']
@@ -51,5 +52,5 @@ define maxscale::install::apt (
         ensure  => installed,
         require => ::Apt::Source['mariadb-maxscale']
     }
-    
+
 }
