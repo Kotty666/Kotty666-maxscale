@@ -1,11 +1,11 @@
 # == class: maxscale::para,s
 #
-# defines the default parameters for a installation 
+# defines the default parameters for a installation
 #
 class maxscale::params {
   $package_name = 'maxscale'
   $gpg_key_url = 'http://code.mariadb.com/mariadb-maxscale/MariaDB-MaxScale-GPG-KEY'
-  $gpg_key_id = '70E4618A8167EE24'
+  $gpg_key_id = '13CFDE6DD9EE9784F41AF0F670E4618A8167EE24'
   $threads = 'auto'
   $auth_connect_timeout = 3
   $auth_read_timeout = 1
