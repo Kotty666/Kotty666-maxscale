@@ -136,7 +136,7 @@ define maxscale::config(
   }
 
   file {[$real_logdir,$real_datadir,$real_cachedir,$real_piddir,$real_configdir]:
-		ensure  => 'directory',
+                ensure  => 'directory',
   }
 
   concat::fragment{ 'GlobalSettings':
