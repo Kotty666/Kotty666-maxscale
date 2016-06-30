@@ -40,7 +40,8 @@
 #
 # [*log_to_shm*]
 #  Enable or disable the writing of the maxscale.log file to shared memory.
-#  If enabled, then the actual log file will be created under /dev/shm and a symbolic link to that file will be created in the MaxScale log directory.
+#  If enabled, then the actual log file will be created under /dev/shm and
+#  a symbolic link to that file will be created in the MaxScale log directory.
 #
 # [*log_warning*]
 #  Enable or disable the logging of messages whose syslog priority is warning.
@@ -100,7 +101,6 @@ class maxscale (
   $configdir = $::maxscale::params::configdir,
 ) inherits ::maxscale::params {
 
-  
   validate_bool($service_enable)
 
   ::maxscale::install { $package_name :

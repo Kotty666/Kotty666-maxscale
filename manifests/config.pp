@@ -137,7 +137,7 @@ define maxscale::config(
 
   file {[$real_logdir,$real_datadir,$real_cachedir,$real_piddir,$real_configdir]:
         ensure  => 'directory',
-        require => Package["${::maxscale::params::package_name}"],
+        require => Package[${::maxscale::params::package_name}],
   }
 
   concat::fragment{ 'GlobalSettings':
