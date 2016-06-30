@@ -23,7 +23,7 @@ class maxscale::params {
   $datadir = '/var/lib/maxscale/data/'
   $cachedir = '/var/cache/maxscale/'
   $piddir =  '/var/run/maxscale/'
-  $configdir = '/etc'
+  $configdir = '/etc/maxscale'
   $configfile = "${configdir}/maxscale.cnf"
 
   case $::lsbdistid {

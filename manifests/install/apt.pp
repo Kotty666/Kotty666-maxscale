@@ -45,7 +45,6 @@ define maxscale::install::apt (
         },
         repos        => 'main',
         release      => $::lsbdistcodename,
-        require      => ::Apt::Key['mariadb-maxscale']
     }
 
     package { $package_name :
