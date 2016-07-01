@@ -28,10 +28,10 @@ class maxscale::params {
 
   case $::lsbdistid {
     'Debian' : {
-      $repository_base_url = 'http://code.mariadb.com/mariadb-maxscale/1.4.1/debian/'
+      $repository_base_url = 'http://code.mariadb.com/mariadb-maxscale/1.4.3/debian/'
     }
     'Ubuntu' : {
-      $repository_base_url = 'http://code.mariadb.com/mariadb-maxscale/1.4.1/ubuntu/'
+      $repository_base_url = 'http://code.mariadb.com/mariadb-maxscale/1.4.3/ubuntu/'
     }
     default : {
       fail ('For your Distribution is no repository known!')

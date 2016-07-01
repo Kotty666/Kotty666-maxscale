@@ -1,4 +1,7 @@
 # maxscale
+[![Puppet Forge](http://img.shields.io/puppetforge/v/Kotty666/maxscale.svg)](https://forge.puppetlabs.com/Kotty666/maxscale)
+[![Github Tag](https://img.shields.io/github/tag/Kotty666/Kotty666-maxscale.svg)](https://github.com/Kotty666/Kotty666-maxscale)
+[![Build Status](https://travis-ci.org/Kotty666/Kotty666-maxscale.png?branch=master)](https://travis-ci.org/Kotty666/Kotty666-maxscale)
 
 #### Table of Contents
 

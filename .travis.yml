@@ -90,14 +90,3 @@ matrix:
 
 notifications:
   email: false
-
-deploy:
-  provider: puppetforge
-  user: CERNOps
-  password:
-    secure: "XJpaIghLTjeXOmB6JIRYvKjL2GfVNAYm7Cs0KnTYiuzBieTpTmaJ7p6U/H0qLzhWrzlflu+mI7Y/UAjUxOarUbmwtid5f+vwJClJtPGTxxU4IPFLb3GRjPmSFaof+w4yOtG0aTOziK6MWpxWyWfb1mmU5NuXGXQIsesW20iB70v6ciSWKt6qXjdTpXL0GkDxp0fDwndLZZDPn4v3Bg4HMk6k9yVGfCFsT+ACYEvdHimLTwYXfBlaXDfmx2lp/sngUibXz2dQvKrZ7B4VaRp3/W2ku/X7ar5wXbsAiUkF93BL7kazD68FNNhj6EJB9wWH1RoiCaNC57w94GpRuDov0DjIPOkEatq5AK1+skVsy0ROofjhBWyz1m2R9ywLtQ/MNPQGIaiLv3m75/oTlullBrBsadiQNbH1tLP0QgSuuDDobmWtcfEJq2QJvw0fuZGacPEu1vbY8w/2h+H4iEfIE8uS50wHPb6mH43UgNbGpcfmQPhzbSM8oyAT01HmRnjPm3L0IFpEpDBujhMe7RfCeq8qVIsnsd3+RjrWEA7caYNHOdqzsuP1zT0w9bPUyG7Vuzfk/EPDXowTodt9fBJYU7s6bBxGP/J26JagKBGAY9w0U9L4/sogvW+oLAAPCKvGdufJhScjSpX9NsjNJTwRKJBnQ8YFGoD0FmI9RCLgybo="
-  on:
-    tags: true
-    all_branches: true
-    rvm: 2.0.0
-    condition: "$FUTURE_PARSER = yes"
