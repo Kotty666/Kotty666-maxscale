@@ -14,6 +14,12 @@ gem 'rspec-puppet'
 gem 'puppet-blacksmith', '~> 3.3', '>= 3.3.1'
 gem 'iconv', '~> 1.0.3'
 
+if RUBY_VERSION < '2.0.0'
+	gem 'json' < '2.0.0'
+else
+	gem 'json' 
+else
+end
 if RUBY_VERSION >= '2.1.0'
 	gem 'syck'
 end
