@@ -25,13 +25,14 @@ class maxscale::params {
   $piddir =  '/var/run/maxscale/'
   $configdir = '/etc'
   $configfile = "${configdir}/maxscale.cnf"
+	$version = '1.4.1'
 
   case $::lsbdistid {
     'Debian' : {
-      $repository_base_url = 'http://code.mariadb.com/mariadb-maxscale/1.4.3/debian/'
+      $repository_base_url = "http://code.mariadb.com/mariadb-maxscale/${version}/debian/"
     }
     'Ubuntu' : {
-      $repository_base_url = 'http://code.mariadb.com/mariadb-maxscale/1.4.3/ubuntu/'
+      $repository_base_url = "http://code.mariadb.com/mariadb-maxscale/${version}/ubuntu/"
     }
     default : {
       fail ('For your Distribution is no repository known!')
