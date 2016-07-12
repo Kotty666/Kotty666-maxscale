@@ -16,10 +16,9 @@ gem 'iconv', '~> 1.0.3'
 
 if RUBY_VERSION < '2.0.0'
 	gem 'json' < '2.0.0'
-
+end
 if RUBY_VERSION >= '2.0.0'
 	gem 'json' 
-else
 end
 if RUBY_VERSION >= '2.1.0'
 	gem 'syck'
