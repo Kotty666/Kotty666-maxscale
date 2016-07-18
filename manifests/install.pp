@@ -7,7 +7,7 @@
 define maxscale::install (
     $setup_mariadb_repository,
     $repository_base_url,
-		$package_version,
+    $package_version,
     $package_name = $name,
 ) {
     if $setup_mariadb_repository {
@@ -15,7 +15,7 @@ define maxscale::install (
             'Debian' : {
                 ::maxscale::install::apt { $package_name :
                 repository_base_url => $repository_base_url,
-								package_version             => $package_version
+                package_version             => $package_version
               }
             }
             default : {
