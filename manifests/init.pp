@@ -79,6 +79,7 @@
 class maxscale (
   $package_name = $::maxscale::params::package_name,
   $repository_base_url = $::maxscale::params::repository_base_url,
+  $package_version = $::maxscale::params::version,
   $setup_mariadb_repository = true,
   $service_enable        = true,
   $threads = $::maxscale::params::threads,
@@ -106,6 +107,7 @@ class maxscale (
   ::maxscale::install { $package_name :
     setup_mariadb_repository => $setup_mariadb_repository,
     repository_base_url      => $repository_base_url,
+    package_version          => $package_version,
   }
   ::maxscale::config{$package_name:
     threads              => $threads,

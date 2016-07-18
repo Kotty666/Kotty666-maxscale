@@ -2,6 +2,7 @@
 #
 # adds the repo to the system configuration
 define maxscale::install::apt (
+    $package_version,
     $package_name = $name,
     $repository_base_url = undef
 ) {
