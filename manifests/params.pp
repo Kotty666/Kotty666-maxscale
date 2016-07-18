@@ -25,7 +25,7 @@ class maxscale::params {
   $piddir =  '/var/run/maxscale/'
   $configdir = '/etc'
   $configfile = "${configdir}/maxscale.cnf"
-	$version = '1.4.1'
+  $version = '1.4.1'
 
   case $::lsbdistid {
     'Debian' : {

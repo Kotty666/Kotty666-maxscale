@@ -15,7 +15,7 @@ define maxscale::install (
             'Debian' : {
                 ::maxscale::install::apt { $package_name :
                 repository_base_url => $repository_base_url,
-                package_version             => $package_version
+                package_version     => $package_version
               }
             }
             default : {
