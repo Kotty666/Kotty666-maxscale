@@ -137,12 +137,11 @@ define maxscale::config(
 
   file {[$real_logdir,$real_datadir,$real_cachedir,$real_piddir]:
     ensure => 'directory',
-    owner  => $user,
-    group  => $group,
+    owner  => $maxscale::params::user,
+    group  => $maxscale::params::group,
   }
   file {[$real_configdir]:
     ensure  => 'directory',
-    
   }
   concat::fragment{ 'GlobalSettings':
     target  => $::maxscale::params::configfile,
