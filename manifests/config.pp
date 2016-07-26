@@ -135,10 +135,15 @@ define maxscale::config(
     $real_configdir = $configdir
   }
 
-  file {[$real_logdir,$real_datadir,$real_cachedir,$real_piddir,$real_configdir]:
-                ensure  => 'directory',
+  file {[$real_logdir,$real_datadir,$real_cachedir,$real_piddir]:
+    ensure => 'directory',
+    owner  => $user,
+    group  => $group,
   }
-
+  file {[$real_configdir]:
+    ensure  => 'directory',
+    
+  }
   concat::fragment{ 'GlobalSettings':
     target  => $::maxscale::params::configfile,
     content => template('maxscale/global_settings.erb'),
