@@ -130,6 +130,9 @@ class maxscale (
     configdir            => $configdir,
   }
 
+  # make sure maxscale user is available before writing config files
+  Maxscale::Install <| |> -> Maxscale::Config <| |>
+
   service { 'maxscale':
     ensure    => $service_enable,
     name      => $package_name,
