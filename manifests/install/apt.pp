@@ -20,7 +20,7 @@ define maxscale::install::apt (
             }
         }
         'Ubuntu' : {
-            if ($::lsbdistrelease !~ /^(12\.04|14\.04|15\.10)$/) {
+            if ($::lsbdistrelease !~ /^(14\.04|16\.04)$/) {
                 fail ('This Ubuntu release is not supported by the MariaDB MaxScale repository!')
             }
         }
@@ -42,7 +42,7 @@ define maxscale::install::apt (
         },
         key          => {
             'id'     => $::maxscale::params::gpg_key_id,
-            'server' => 'keys.gnupg.net'
+            'server' => 'hkp://keyserver.ubuntu.com:80'
         },
         repos        => 'main',
         release      => $::lsbdistcodename,
