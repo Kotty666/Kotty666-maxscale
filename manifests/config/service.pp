@@ -31,7 +31,7 @@ define maxscale::config::service (
   concat::fragment{ "Service ${name}":
     target  => $::maxscale::params::configfile,
     content => template('maxscale/service.erb'),
-    order   => 03,
+    order   => '03',
   }
 
 }

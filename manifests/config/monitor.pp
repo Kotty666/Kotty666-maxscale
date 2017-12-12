@@ -26,6 +26,6 @@ define maxscale::config::monitor (
   concat::fragment{ "Monitor ${name}":
     target  => $::maxscale::params::configfile,
     content => template('maxscale/monitor.erb'),
-    order   => 05,
+    order   => '05',
   }
 }

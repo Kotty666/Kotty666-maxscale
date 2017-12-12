@@ -154,7 +154,7 @@ define maxscale::config(
   concat::fragment { 'Config Header':
     target  => $::maxscale::params::configfile,
     content => "# This file is managed by Puppet. DO NOT EDIT.\n",
-    order   => 01,
+    order   => '01',
   }
   concat::fragment{ 'GlobalSettings':
     target  => $::maxscale::params::configfile,
