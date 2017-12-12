@@ -136,18 +136,4 @@ class maxscale (
     enable    => $service_enable,
     subscribe => Package[$package_name],
   }
-
-  concat { $::maxscale::params::configfile:
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    notify  => Service['maxscale'],
-    require => Package[$package_name],
-  }
-
-  concat::fragment { 'Config Header':
-    target  => $::maxscale::params::configfile,
-    content => "# This file is managed by Puppet. DO NOT EDIT.\n",
-    order   => 01,
-  }
 }

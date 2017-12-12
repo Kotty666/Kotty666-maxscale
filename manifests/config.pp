@@ -143,6 +143,19 @@ define maxscale::config(
   file {[$real_configdir]:
     ensure  => 'directory',
   }
+
+  concat { $::maxscale::params::configfile:
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    notify  => Service['maxscale'],
+    require => Package[$package_name],
+  }
+  concat::fragment { 'Config Header':
+    target  => $::maxscale::params::configfile,
+    content => "# This file is managed by Puppet. DO NOT EDIT.\n",
+    order   => 01,
+  }
   concat::fragment{ 'GlobalSettings':
     target  => $::maxscale::params::configfile,
     content => template('maxscale/global_settings.erb'),
