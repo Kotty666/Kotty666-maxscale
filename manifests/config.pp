@@ -1,11 +1,11 @@
-# == define: maxscale
+# == class: maxscale::config
 #
 # configures maxscale, per default in /etc/maxscale.cnf.
 #
 # === Parameters
 # all Parameters are copied from the default maxscale.cnf.
 # they are set per default in ::maxscale::params
-define maxscale::config(
+class maxscale::config(
   $threads,
   $auth_connect_timeout,
   $auth_read_timeout,
@@ -140,16 +140,12 @@ define maxscale::config(
     owner  => $maxscale::params::user,
     group  => $maxscale::params::group,
   }
-  file {[$real_configdir]:
-    ensure  => 'directory',
-  }
 
   concat { $::maxscale::params::configfile:
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
     notify  => Service['maxscale'],
-    require => Package[$package_name],
   }
   concat::fragment { 'Config Header':
     target  => $::maxscale::params::configfile,
@@ -161,5 +157,4 @@ define maxscale::config(
     content => template('maxscale/global_settings.erb'),
     order   => '02',
   }
-
 }

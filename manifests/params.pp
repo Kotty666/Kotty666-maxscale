@@ -1,4 +1,4 @@
-# == class: maxscale::para,s
+# == class: maxscale::params
 #
 # defines the default parameters for a installation
 #

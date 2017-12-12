@@ -104,12 +104,13 @@ class maxscale (
 
   validate_bool($service_enable)
 
-  ::maxscale::install { $package_name :
+  class { '::maxscale::install':
+    package_name             => $package_name,
     setup_mariadb_repository => $setup_mariadb_repository,
     repository_base_url      => $repository_base_url,
     package_version          => $package_version,
   }
-  ::maxscale::config{$package_name:
+  class { '::maxscale::config':
     threads              => $threads,
     auth_connect_timeout => $auth_connect_timeout,
     auth_read_timeout    => $auth_read_timeout,
@@ -131,7 +132,7 @@ class maxscale (
   }
 
   # make sure maxscale user is available before writing config files
-  Maxscale::Install <| |> -> Maxscale::Config <| |>
+  Class['::maxscale::install'] -> Class['::maxscale::config'] ~> Service['maxscale']
 
   service { 'maxscale':
     ensure    => $service_enable,

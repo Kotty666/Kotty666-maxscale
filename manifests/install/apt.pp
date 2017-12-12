@@ -1,9 +1,7 @@
-# == define: maxscale::config::listener
+# == class: maxscale::install::apt
 #
 # adds the repo to the system configuration
-define maxscale::install::apt (
-    $package_version,
-    $package_name = $name,
+class maxscale::install::apt (
     $repository_base_url = undef
 ) {
 
@@ -47,10 +45,4 @@ define maxscale::install::apt (
         repos        => 'main',
         release      => $::lsbdistcodename,
     }
-
-    package { $package_name :
-        ensure  => installed,
-        require => ::Apt::Source['mariadb-maxscale']
-    }
-
 }
