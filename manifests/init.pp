@@ -104,12 +104,13 @@ class maxscale (
 
   validate_bool($service_enable)
 
-  ::maxscale::install { $package_name :
+  class { '::maxscale::install':
+    package_name             => $package_name,
     setup_mariadb_repository => $setup_mariadb_repository,
     repository_base_url      => $repository_base_url,
     package_version          => $package_version,
   }
-  ::maxscale::config{$package_name:
+  class { '::maxscale::config':
     threads              => $threads,
     auth_connect_timeout => $auth_connect_timeout,
     auth_read_timeout    => $auth_read_timeout,
@@ -130,24 +131,13 @@ class maxscale (
     configdir            => $configdir,
   }
 
+  # make sure maxscale user is available before writing config files
+  Class['::maxscale::install'] -> Class['::maxscale::config'] ~> Service['maxscale']
+
   service { 'maxscale':
     ensure    => $service_enable,
     name      => $package_name,
     enable    => $service_enable,
     subscribe => Package[$package_name],
-  }
-
-  concat { $::maxscale::params::configfile:
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    notify  => Service['maxscale'],
-    require => Package[$package_name],
-  }
-
-  concat::fragment { 'Config Header':
-    target  => $::maxscale::params::configfile,
-    content => "# This file is managed by Puppet. DO NOT EDIT.\n",
-    order   => 01,
   }
 }

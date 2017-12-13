@@ -1,32 +1,29 @@
-# == define: maxscale::install
+# == class: maxscale::install
 #
 # installs the maxscale package
 #
 # === Parameters
 # the parameters manages if ther should be used the original repo or not
-define maxscale::install (
+class maxscale::install (
     $setup_mariadb_repository,
     $repository_base_url,
     $package_version,
-    $package_name = $name,
+    $package_name,
 ) {
     if $setup_mariadb_repository {
         case $::osfamily {
             'Debian' : {
-                ::maxscale::install::apt { $package_name :
-                repository_base_url => $repository_base_url,
-                package_version     => $package_version
-              }
+                class { '::maxscale::install::apt':
+                    repository_base_url => $repository_base_url,
+                }
+                Class['::maxscale::install::apt'] -> Package[$package_name]
             }
             default : {
                 fail('sorry, no packages for your linux distribution available.')
             }
         }
-    } else {
-        package { $package_name :
-            ensure => installed,
-        }
+    }
+    package { $package_name :
+        ensure => $package_version,
     }
 }
-
-
