@@ -142,10 +142,9 @@ class maxscale::config(
   }
 
   concat { $::maxscale::params::configfile:
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    notify  => Service['maxscale'],
+    owner => 'root',
+    group => 'root',
+    mode  => '0644',
   }
   concat::fragment { 'Config Header':
     target  => $::maxscale::params::configfile,
