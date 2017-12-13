@@ -193,3 +193,4 @@ If you have whishes for features let me know.
 **Release**  | **PR/Issue**                                        | **Contributer**
 -------------|-----------------------------------------------------|----------------------------------------------------
 1.0.0        |                                                     | [@Kotty666](https://github.com/Kotty666)
+1.0.9        |                                                     | [@xalimar](https://github.com/xalimar)

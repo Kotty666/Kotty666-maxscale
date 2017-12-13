@@ -1,6 +1,6 @@
 {
   "name": "Kotty666-maxscale",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": "Philipp Frik",
   "summary": "Installs and Configures MaxScale from MariaDB",
   "license": "Apache-2.0",
@@ -15,11 +15,11 @@
   "operatingsystem_support": [
     {
       "operatingsystem": "Debian",
-      "operatingsystemrelease": [ "7", "8" ]
+      "operatingsystemrelease": [ "7", "8", "9" ]
     },
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [ "12.04", "14.04", "15.10" ]
+      "operatingsystemrelease": [ "14.04", "16.04" ]
     }
   ],
   "requirements": [
