@@ -26,7 +26,7 @@ class maxscale::install::apt (
     }
 
     if $repository_base_url == undef {
-      $repository_base_url = lookup('maxscale::repository_base_url')
+      $repository_base_url = $maxscale::repository_base_url
     }
 
     ::apt::source { 'mariadb-maxscale' :
@@ -37,7 +37,7 @@ class maxscale::install::apt (
             'deb' => true,
         },
         key          => {
-            'id'     => lookup('maxscale::gpg_key_id'),
+            'id'     => $maxscale::gpg_key_id,
             'server' => 'hkp://keyserver.ubuntu.com:80'
         },
         repos        => 'main',

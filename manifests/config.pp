@@ -27,131 +27,131 @@ class maxscale::config(
 ) {
 
   if $threads == undef {
-    $real_threads = lookup('maxscale::threads')
+    $real_threads = $maxscale::maxscale::threads
   } else {
     $real_threads = $threads
   }
 
   if $auth_connect_timeout == undef {
-    $real_auth_connect_timeout = lookup('maxscale::auth_connect_timeout')
+    $real_auth_connect_timeout = $maxscale::maxscale::auth_connect_timeout
   } else {
     $real_auth_connect_timeout = $auth_connect_timeout
   }
 
   if $auth_read_timeout == undef {
-    $real_auth_read_timeout = lookup('maxscale::auth_read_timeout')
+    $real_auth_read_timeout = $maxscale::maxscale::auth_read_timeout
   } else {
     $real_auth_read_timeout = $auth_read_timeout
   }
 
   if $auth_write_timeout == undef {
-    $real_auth_write_timeout = lookup('maxscale::auth_write_timeout')
+    $real_auth_write_timeout = $maxscale::maxscale::auth_write_timeout
   } else {
     $real_auth_write_timeout = $auth_write_timeout
   }
 
   if $ms_timestamp == undef {
-    $real_ms_timestamp = lookup('maxscale::ms_timestamp')
+    $real_ms_timestamp = $maxscale::maxscale::ms_timestamp
   } else {
     $real_ms_timestamp = $ms_timestamp
   }
 
   if $syslog == undef {
-    $real_syslog = lookup('maxscale::syslog')
+    $real_syslog = $maxscale::maxscale::syslog
   } else {
     $real_syslog = $syslog
   }
 
   if $maxlog == undef {
-    $real_maxlog = lookup('maxscale::maxlog')
+    $real_maxlog = $maxscale::maxscale::maxlog
   } else {
     $real_maxlog = $maxlog
   }
 
   if $log_to_shm == undef {
-    $real_log_to_shm = lookup('maxscale::log_to_shm')
+    $real_log_to_shm = $maxscale::maxscale::log_to_shm
   } else {
     $real_log_to_shm = $log_to_shm
   }
 
   if $log_warning == undef {
-    $real_log_warning = lookup('maxscale::log_warning')
+    $real_log_warning = $maxscale::maxscale::log_warning
   } else {
     $real_log_warning = $log_warning
   }
 
   if $log_notice == undef {
-    $real_log_notice = lookup('maxscale::log_notice')
+    $real_log_notice = $maxscale::maxscale::log_notice
   } else {
     $real_log_notice = $log_notice
   }
 
   if $log_info == undef {
-    $real_log_info = lookup('maxscale::log_info')
+    $real_log_info = $maxscale::maxscale::log_info
   } else {
     $real_log_info = $log_info
   }
 
   if $log_debug == undef {
-    $real_log_debug = lookup('maxscale::log_debug')
+    $real_log_debug = $maxscale::maxscale::log_debug
   } else {
     $real_log_debug = $log_debug
   }
 
   if $log_augmentation == undef {
-    $real_log_augmentation = lookup('maxscale::log_augmentation')
+    $real_log_augmentation = $maxscale::maxscale::log_augmentation
   } else {
     $real_log_augmentation = $log_augmentation
   }
 
   if $logdir == undef {
-    $real_logdir = lookup('maxscale::logdir')
+    $real_logdir = $maxscale::maxscale::logdir
   } else {
     $real_logdir = $logdir
   }
 
   if $datadir == undef {
-    $real_datadir = lookup('maxscale::datadir')
+    $real_datadir = $maxscale::maxscale::datadir
   } else {
     $real_datadir = $datadir
   }
 
   if $cachedir == undef {
-    $real_cachedir = lookup('maxscale::cachedir')
+    $real_cachedir = $maxscale::maxscale::cachedir
   } else {
     $real_cachedir = $cachedir
   }
 
   if $piddir == undef {
-    $real_piddir = lookup('maxscale::piddir')
+    $real_piddir = $maxscale::maxscale::piddir
   } else {
     $real_piddir = $piddir
   }
 
   if $configdir == undef {
-    $real_configdir = lookup('maxscale::configdir')
+    $real_configdir = $maxscale::maxscale::configdir
   } else {
     $real_configdir = $configdir
   }
 
   file {[$real_logdir,$real_datadir,$real_cachedir,$real_piddir]:
     ensure => 'directory',
-    owner  => lookup('maxscale::user'),
-    group  => lookup('maxscale::group'),
+    owner  => $maxscale::maxscale::user,
+    group  => $maxscale::maxscale::group,
   }
 
-  concat { lookup('maxscale::configfile'):
+  concat { $maxscale::maxscale::configfile:
     owner => 'root',
     group => 'root',
     mode  => '0644',
   }
   concat::fragment { 'Config Header':
-    target  => lookup('maxscale::configfile'),
+    target  => $maxscale::maxscale::configfile,
     content => "# This file is managed by Puppet. DO NOT EDIT.\n",
     order   => '01',
   }
   concat::fragment{ 'GlobalSettings':
-    target  => lookup('maxscale::configfile'),
+    target  => $maxscale::maxscale::configfile,
     content => template('maxscale/global_settings.erb'),
     order   => '02',
   }
