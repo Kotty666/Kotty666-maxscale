@@ -2,23 +2,12 @@
 language: ruby
 
 rvm:
-  - 2.0.0
   - 2.1.0
   - 2.2.0
   - 2.3.0
 
 env:
   matrix:
-    - PUPPET_GEM_VERSION="~> 2.7.26"
-    - PUPPET_GEM_VERSION="~> 3.1.0"
-    - PUPPET_GEM_VERSION="~> 3.2.0"
-    - PUPPET_GEM_VERSION="~> 3.3.0"
-    - PUPPET_GEM_VERSION="~> 3.4.0"
-    - PUPPET_GEM_VERSION="~> 3.5.0"
-    - PUPPET_GEM_VERSION="~> 3.6.0"
-    - PUPPET_GEM_VERSION="~> 3.7.0"
-    - PUPPET_GEM_VERSION="~> 3.8.0"
-    - PUPPET_GEM_VERSION="~> 3" FUTURE_PARSER="yes"
     - PUPPET_GEM_VERSION="~> 4.0.0"
     - PUPPET_GEM_VERSION="~> 4.1.0"
     - PUPPET_GEM_VERSION="~> 4.2.0"
@@ -26,70 +15,16 @@ env:
     - PUPPET_GEM_VERSION="~> 4.4.0"
     - PUPPET_GEM_VERSION="~> 4"
     - PUPPET_GEM_VERSION="~> 4" STRICT_VARIABLES="yes"
+    - PUPPET_GEM_VERSION="~> 5.0.0"
+    - PUPPET_GEM_VERSION="~> 5.1.0"
+    - PUPPET_GEM_VERSION="~> 5.2.0"
+    - PUPPET_GEM_VERSION="~> 5.3.0"
+
 
 sudo: false
 
 script: "bundle exec rake validate && bundle exec rake lint"
 
-matrix:
-  fast_finish: true
-  exclude:
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 3.1.0"
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 4"
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 4" STRICT_VARIABLES="yes"
-    - rvm: 2.1.0
-      env: PUPPET_GEM_VERSION="~> 2.7.26"
-    - rvm: 2.1.0
-      env: PUPPET_GEM_VERSION="~> 3.1.0"
-    - rvm: 2.1.0
-      env: PUPPET_GEM_VERSION="~> 3.2.0"
-    - rvm: 2.1.0
-      env: PUPPET_GEM_VERSION="~> 3.3.0"
-    - rvm: 2.1.0
-      env: PUPPET_GEM_VERSION="~> 3.4.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 2.7.26"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.1.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.2.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.3.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.4.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.5.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.6.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.7.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3.8.0"
-    - rvm: 2.2.0
-      env: PUPPET_GEM_VERSION="~> 3" FUTURE_PARSER="yes"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 2.7.26"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.1.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.2.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.3.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.4.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.5.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.6.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.7.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3.8.0"
-    - rvm: 2.3.0
-      env: PUPPET_GEM_VERSION="~> 3" FUTURE_PARSER="yes"
 
 notifications:
   email: false
@@ -101,7 +36,4 @@ notifications:
     secure: "dB465sEJ7QI9JfOTXiUWJNqNG6eLQZABYKKohiv/wXCufL8GaFx3l3CTulFvp6+AYE2JTWwvZzxVnjsa3p4//oCaz/TTsFY/36CYc0x8dPF6P2HWdmR+XMDcbIEARu3BVx2TewvO8EeB1+VYJfj0/heud8+AR4Db3cnAi7tFDn24HttNwNYCZWiOz3Gz4FJjOwtxWmijyaaVIr6wn1C3fbvEHU7Nw+kyS0DvFtHmbe/kO7UUNBL48nawGs8R6imPaImhlvIaKEz5gdvP54FAB/myhLbWNQFvnb89BpyQW6dSesyUUI2lEIguztQ8Wbq7udP0cfPMO95aCqt4xtFVSCwsnWL5xPVDTb8Ktxujjj2Ml+qZ7qEm6GCpPeQUFKrUqVH6/Hl0bQweQ8eMp2rjFvJRs4giAmVF+Z7E+71sRJxIuEQiP3UFxAFAFbv+MdWOfgdGfSsbhj8M2eHCpcDXFvsZ9gXjLdwGMrunGWRg5GBclsNTMTkQVUdXKEQABQVyC1Q5OV6FVMbFW3ueiU822X2/65AxsSnHbzNwfcawi0S6aLdZzsXH5oHP0gKY06DRULV+GsjC3jtOCHOX6+CRrwwZPbD7SyEYH41Cna2giEyfY30boK13Y0VxUuVLEsPgMR3ZO+ZgkP9hgv18Xix2JbuNnKkkdVEMCL4Xbzxh/MM="
   on:
     tags: true
-    # all_branches is required to use tags
     all_branches: true
-    # Only publish the build marked with "DEPLOY_TO_FORGE"
-    condition: "$DEPLOY_TO_FORGE = yes" 

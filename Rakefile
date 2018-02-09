@@ -4,7 +4,6 @@ require 'puppet-lint/tasks/puppet-lint'
 
 Rake::Task[:lint].clear
 PuppetLint.configuration.send('disable_80chars')
-PuppetLint.configuration.send('disable_class_inherits_from_params_class')
 PuppetLint::RakeTask.new :lint do |config|
 config.log_format = "%{path}:%{line}:%{check}:%{KIND}:%{message}"
 config.fail_on_warnings = true
