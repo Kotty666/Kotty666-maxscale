@@ -29,7 +29,7 @@ define maxscale::config::listener (
   }
 
   concat::fragment{ "Listener ${name}":
-    target  => $maxscale::configfile,
+    target  => "$maxscale::configpath/$maxscale::configfile",
     content => template('maxscale/listener.erb'),
     order   => '04',
   }

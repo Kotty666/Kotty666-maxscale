@@ -23,7 +23,7 @@ define maxscale::config::server(
   }
 
   concat::fragment{ "Server ${name}":
-    target  => $maxscale::configfile,
+    target  => "$maxscale::configpath/$maxscale::configfile",
     content => template('maxscale/server.erb'),
     order   => '10',
   }
