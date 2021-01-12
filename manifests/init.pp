@@ -78,7 +78,6 @@
 # Philipp Frik <kotty@guns-n-girls.de>
 class maxscale (
   String  $package_name,
-  String  $repository_base_url,
   String  $package_version,
   Boolean $setup_mariadb_repository,
   Boolean $service_enable,
@@ -100,6 +99,7 @@ class maxscale (
   String  $cachedir,
   String  $piddir,
   String  $configdir,
+  Optional[String]  $repository_base_url,
 ) {
 
   class { '::maxscale::install':
