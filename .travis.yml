@@ -1,39 +1,49 @@
 ---
+os: linux
+dist: xenial
 language: ruby
-
+cache: bundler
+before_install:
+  - bundle -v
+  - rm -f Gemfile.lock
+  - "# Update system gems if requested. This is useful to temporarily workaround troubles in the test runner"
+  - "# See https://github.com/puppetlabs/pdk-templates/commit/705154d5c437796b821691b707156e1b056d244f for an example of how this was used"
+  - "# Ignore exit code of SIGPIPE'd yes to not fail with shell's pipefail set"
+  - '[ -z "$RUBYGEMS_VERSION" ] || (yes || true) | gem update --system $RUBYGEMS_VERSION'
+  - gem --version
+  - bundle -v
+script:
+  - 'bundle exec rake $CHECK'
+bundler_args: --without system_tests
 rvm:
-  - 2.1.0
-  - 2.2.0
-  - 2.3.0
-
-env:
-  matrix:
-    - PUPPET_GEM_VERSION="~> 4.0.0"
-    - PUPPET_GEM_VERSION="~> 4.1.0"
-    - PUPPET_GEM_VERSION="~> 4.2.0"
-    - PUPPET_GEM_VERSION="~> 4.3.0"
-    - PUPPET_GEM_VERSION="~> 4.4.0"
-    - PUPPET_GEM_VERSION="~> 4"
-    - PUPPET_GEM_VERSION="~> 4" STRICT_VARIABLES="yes"
-    - PUPPET_GEM_VERSION="~> 5.0.0"
-    - PUPPET_GEM_VERSION="~> 5.1.0"
-    - PUPPET_GEM_VERSION="~> 5.2.0"
-    - PUPPET_GEM_VERSION="~> 5.3.0"
-
-
-sudo: false
-
-script: "bundle exec rake validate && bundle exec rake lint"
-
-
+  - 2.5.7
+stages:
+  - static
+  - spec
+  - acceptance
+  -
+    if: tag =~ ^v\d
+    name: deploy
+jobs:
+  fast_finish: true
+  include:
+    -
+      env: CHECK="check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop syntax lint metadata_lint"
+      stage: static
+    -
+      env: PUPPET_GEM_VERSION="~> 5.0" CHECK=parallel_spec
+      rvm: 2.4.5
+      stage: spec
+    -
+      env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
+      rvm: 2.5.7
+      stage: spec
+    -
+      env: DEPLOY_TO_FORGE=yes
+      stage: deploy
+branches:
+  only:
+    - master
+    - /^v\d/
 notifications:
   email: false
-
--deploy:
-  provider: puppetforge
-  user: Kotty666
-  password:
-    secure: "dB465sEJ7QI9JfOTXiUWJNqNG6eLQZABYKKohiv/wXCufL8GaFx3l3CTulFvp6+AYE2JTWwvZzxVnjsa3p4//oCaz/TTsFY/36CYc0x8dPF6P2HWdmR+XMDcbIEARu3BVx2TewvO8EeB1+VYJfj0/heud8+AR4Db3cnAi7tFDn24HttNwNYCZWiOz3Gz4FJjOwtxWmijyaaVIr6wn1C3fbvEHU7Nw+kyS0DvFtHmbe/kO7UUNBL48nawGs8R6imPaImhlvIaKEz5gdvP54FAB/myhLbWNQFvnb89BpyQW6dSesyUUI2lEIguztQ8Wbq7udP0cfPMO95aCqt4xtFVSCwsnWL5xPVDTb8Ktxujjj2Ml+qZ7qEm6GCpPeQUFKrUqVH6/Hl0bQweQ8eMp2rjFvJRs4giAmVF+Z7E+71sRJxIuEQiP3UFxAFAFbv+MdWOfgdGfSsbhj8M2eHCpcDXFvsZ9gXjLdwGMrunGWRg5GBclsNTMTkQVUdXKEQABQVyC1Q5OV6FVMbFW3ueiU822X2/65AxsSnHbzNwfcawi0S6aLdZzsXH5oHP0gKY06DRULV+GsjC3jtOCHOX6+CRrwwZPbD7SyEYH41Cna2giEyfY30boK13Y0VxUuVLEsPgMR3ZO+ZgkP9hgv18Xix2JbuNnKkkdVEMCL4Xbzxh/MM="
-  on:
-    tags: true
-    all_branches: true
