@@ -128,10 +128,14 @@ class maxscale::config(
     $real_configdir = $configdir
   }
 
-  file {[$real_logdir,$real_datadir,$real_cachedir,$real_piddir]:
-    ensure => 'directory',
-    owner  => $maxscale::maxscale::user,
-    group  => $maxscale::maxscale::group,
+
+  [$real_logdir,$real_datadir,$real_cachedir,$real_piddir].each | String $folder | {
+    file { $folder:
+      ensure => 'directory',
+      owner  => $maxscale::user,
+      group  => $maxscale::group,
+      mode   => '0774'
+    }
   }
 
   concat { "$configfile":
