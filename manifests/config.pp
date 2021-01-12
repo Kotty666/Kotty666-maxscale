@@ -24,16 +24,16 @@ class maxscale::config(
   $piddir,
   $configdir,
   $configfile,
-  $user,
-  $group,
+  $max_user,
+  $max_group,
 ) {
 
 
   [$logdir,$datadir,$cachedir,$piddir].each | String $folder | {
     file { $folder:
       ensure => 'directory',
-      owner  => $user,
-      group  => $group,
+      owner  => $max_user,
+      group  => $max_group,
       mode   => '0774'
     }
   }

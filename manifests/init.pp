@@ -94,6 +94,8 @@ class maxscale (
   String                        $piddir,
   String                        $configdir,
   String                        $configfile,
+  String                        $max_user,
+  String                        $max_group,
   Optional[String]              $repository_base_url,
   Optional[Hash]                $monitor,
   Optional[Hash]                $server,
@@ -126,6 +128,8 @@ class maxscale (
     piddir               => $piddir,
     configdir            => $configdir,
     configfile           => $configfile,
+    max_user             => $max_user,
+    max_group            => $max_group,
   }
 
   # make sure maxscale user is available before writing config files

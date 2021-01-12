@@ -23,8 +23,8 @@ maxscale::package_version: 'latest'
 maxscale::setup_mariadb_repository: false
 maxscale::service_enable: true
 
-maxscale::conf::user: 'maxscale'
-maxscale::conf::group: 'maxscale'
+maxscale::max_user: 'maxscale'
+maxscale::max_group: 'maxscale'
 
 maxscale::monitor: {}
 maxscale::server: {}
