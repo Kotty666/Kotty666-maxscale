@@ -97,7 +97,6 @@ class {'maxscale':
   ms_timestamp              => 0,
   syslog                    => 0,
   maxlog                    => 1,
-  log_to_shm                => 0,
   log_warning               => 1,
   log_notice                => 0,
   log_info                  => 0,
@@ -107,7 +106,6 @@ class {'maxscale':
   datadir                   => '/var/lib/maxscale/data/',
   cachedir                  => '/var/cache/maxscale/',
   piddir                    =>  '/var/run/maxscale/',
-  configdir                 => '/etc',
 }
 ```
 

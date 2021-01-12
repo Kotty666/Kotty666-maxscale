@@ -8,7 +8,6 @@ maxscale::auth_write_timeout: 2
 maxscale::ms_timestamp: 0
 maxscale::syslog: false
 maxscale::maxlog: true
-maxscale::log_to_shm: false
 maxscale::log_warning: true
 maxscale::log_notice: false
 maxscale::log_info: false

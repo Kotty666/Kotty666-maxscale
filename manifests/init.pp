@@ -38,11 +38,6 @@
 # [*maxlog*]
 #  Enable or disable the logging of messages to MaxScale's log file.
 #
-# [*log_to_shm*]
-#  Enable or disable the writing of the maxscale.log file to shared memory.
-#  If enabled, then the actual log file will be created under /dev/shm and
-#  a symbolic link to that file will be created in the MaxScale log directory.
-#
 # [*log_warning*]
 #  Enable or disable the logging of messages whose syslog priority is warning.
 #
@@ -88,7 +83,6 @@ class maxscale (
   Integer                       $ms_timestamp,
   Boolean                       $syslog,
   Boolean                       $maxlog,
-  Boolean                       $log_to_shm,
   Boolean                       $log_warning,
   Boolean                       $log_notice,
   Boolean                       $log_info,
@@ -121,7 +115,6 @@ class maxscale (
     ms_timestamp         => $ms_timestamp,
     syslog               => $syslog,
     maxlog               => $maxlog,
-    log_to_shm           => $log_to_shm,
     log_warning          => $log_warning,
     log_notice           => $log_notice,
     log_info             => $log_info,

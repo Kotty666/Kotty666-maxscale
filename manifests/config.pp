@@ -13,7 +13,6 @@ class maxscale::config(
   $ms_timestamp,
   $syslog,
   $maxlog,
-  $log_to_shm,
   $log_warning,
   $log_notice,
   $log_info,
@@ -67,12 +66,6 @@ class maxscale::config(
     $real_maxlog = $maxscale::maxscale::maxlog
   } else {
     $real_maxlog = $maxlog
-  }
-
-  if $log_to_shm == undef {
-    $real_log_to_shm = $maxscale::maxscale::log_to_shm
-  } else {
-    $real_log_to_shm = $log_to_shm
   }
 
   if $log_warning == undef {
