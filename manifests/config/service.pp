@@ -10,7 +10,7 @@ define maxscale::config::service (
   $router_options = undef,
   $filters = undef,
   $user = undef,
-  $passwd = undef,
+  $password = undef,
   $enable_root_user = 0,
   $localhost_match_wildcard_host = 1,
   $version_string='MaxScale',

@@ -53,7 +53,7 @@ include maxscale
   module  => 'galeramon',
   servers => 'mydb01,mydb02',
   user    => 'Monitor',
-  passwd  => 'SamplePassword',
+  password  => 'SamplePassword',
 }
 
 # Create the Server resources
@@ -131,7 +131,7 @@ class {'maxscale':
   module,
   servers,
   user => undef,
-  passwd => undef,
+  password => undef,
   monitor_interval => undef,
   backend_connect_timeout => undef,
   backend_write_timeout => undef,
@@ -161,7 +161,7 @@ class {'maxscale':
   router_options => undef,
   filters => undef,
   user => undef,
-  passwd => undef,
+  password => undef,
   enable_root_user => 0,
   localhost_match_wildcard_host => 1,
   version_string=>'MaxScale',

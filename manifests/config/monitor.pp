@@ -9,7 +9,7 @@ define maxscale::config::monitor (
   $module,
   $servers,
   $user = undef,
-  $passwd = undef,
+  $password = undef,
   $monitor_interval = undef,
   $backend_connect_timeout = undef,
   $backend_write_timeout = undef,
