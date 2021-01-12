@@ -147,12 +147,12 @@ class maxscale::config(
     mode  => '0644',
   }
   concat::fragment { 'Config Header':
-    target  => $configfile,
+    target  => "$configdir/$configfile",
     content => "# This file is managed by Puppet. DO NOT EDIT.\n",
     order   => '01',
   }
   concat::fragment{ 'GlobalSettings':
-    target  => $configfile,
+    target  => "$configdir/$configfile",
     content => template('maxscale/global_settings.erb'),
     order   => '02',
   }
