@@ -72,7 +72,7 @@ include maxscale
 # Add the connection Listener for the CLI Service
 ::maxscale::config::listener{"CLI Listener":
   service  => "CLI",
-  protocol => "maxscaled",
+  protocol => "MariaDBClient",
   address  => "localhost",
   port     => 6603,
 }
