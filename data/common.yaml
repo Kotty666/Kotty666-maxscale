@@ -20,10 +20,11 @@ maxscale::piddir:  '/var/run/maxscale/'
 maxscale::configdir: '/etc'
 maxscale::configfile: 'maxscale.cnf'
 maxscale::package_version: 'latest'
-maxscale::user: 'maxscale'
-maxscale::group: 'maxscale'
 maxscale::setup_mariadb_repository: false
 maxscale::service_enable: true
+
+maxscale::conf::user: 'maxscale'
+maxscale::conf::group: 'maxscale'
 
 maxscale::monitor: {}
 maxscale::server: {}
