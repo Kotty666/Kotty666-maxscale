@@ -141,7 +141,7 @@ class maxscale::config(
     group  => $maxscale::maxscale::group,
   }
 
-  concat { $configfile:
+  concat { "$configdir/$configfile":
     owner => 'root',
     group => 'root',
     mode  => '0644',
