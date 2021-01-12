@@ -24,6 +24,7 @@ class maxscale::config(
   $cachedir,
   $piddir,
   $configdir,
+  $configfile,
 ) {
 
   if $threads == undef {
@@ -140,18 +141,18 @@ class maxscale::config(
     group  => $maxscale::maxscale::group,
   }
 
-  concat { $maxscale::configfile:
+  concat { $configfile:
     owner => 'root',
     group => 'root',
     mode  => '0644',
   }
   concat::fragment { 'Config Header':
-    target  => $maxscale::configfile,
+    target  => $configfile,
     content => "# This file is managed by Puppet. DO NOT EDIT.\n",
     order   => '01',
   }
   concat::fragment{ 'GlobalSettings':
-    target  => $maxscale::configfile,
+    target  => $configfile,
     content => template('maxscale/global_settings.erb'),
     order   => '02',
   }

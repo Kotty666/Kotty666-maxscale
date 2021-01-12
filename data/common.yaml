@@ -19,7 +19,7 @@ maxscale::datadir: '/var/lib/maxscale/data/'
 maxscale::cachedir: '/var/cache/maxscale/'
 maxscale::piddir:  '/var/run/maxscale/'
 maxscale::configdir: '/etc'
-maxscale::configfile: "%{hiera('maxscale::configdir')}/maxscale.cnf"
+maxscale::configfile: 'maxscale.cnf'
 maxscale::package_version: 'latest'
 maxscale::user: 'maxscale'
 maxscale::group: 'maxscale'
