@@ -145,7 +145,7 @@ class maxscale::config(
     owner => 'root',
     group => 'root',
     mode  => '0644',
-    target  => "$configdir/$configfile",
+    path  => "$configdir/$configfile",
   }
   concat::fragment { 'Config Header':
     target  => "$configfile",
