@@ -82,7 +82,7 @@ class maxscale (
   String  $package_version,
   Boolean $setup_mariadb_repository,
   Boolean $service_enable,
-  Integer $threads,
+  Variant[Integer,Enum['auto']] $threads,
   Integer $auth_connect_timeout,
   Integer $auth_read_timeout,
   Integer $auth_write_timeout,
