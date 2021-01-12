@@ -101,6 +101,10 @@ class maxscale (
   String                        $configdir,
   String                        $configfile,
   Optional[String]              $repository_base_url,
+  Optional[Hash]                $monitor,
+  Optional[Hash]                $server,
+  Optional[Hash]                $service,
+  Optional[Hash]                $listener,
 ) {
 
   class { '::maxscale::install':
@@ -140,4 +144,10 @@ class maxscale (
     enable    => $service_enable,
     subscribe => Package[$package_name],
   }
+
+  create_resources(maxscale::config::monitor, $monitor)
+  create_resources(maxscale::config::server, $server)
+  create_resources(maxscale::config::service, $service)
+  create_resources(maxscale::config::listener, $listener)
+
 }
