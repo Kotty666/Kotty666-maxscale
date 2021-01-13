@@ -95,3 +95,12 @@ branches:
     - /^v\d/
 notifications:
   email: false
+deploy:
+  provider: puppetforge
+  user: Kotty666
+  password:
+    secure: "dB465sEJ7QI9JfOTXiUWJNqNG6eLQZABYKKohiv/wXCufL8GaFx3l3CTulFvp6+AYE2JTWwvZzxVnjsa3p4//oCaz/TTsFY/36CYc0x8dPF6P2HWdmR+XMDcbIEARu3BVx2TewvO8EeB1+VYJfj0/heud8+AR4Db3cnAi7tFDn24HttNwNYCZWiOz3Gz4FJjOwtxWmijyaaVIr6wn1C3fbvEHU7Nw+kyS0DvFtHmbe/kO7UUNBL48nawGs8R6imPaImhlvIaKEz5gdvP54FAB/myhLbWNQFvnb89BpyQW6dSesyUUI2lEIguztQ8Wbq7udP0cfPMO95aCqt4xtFVSCwsnWL5xPVDTb8Ktxujjj2Ml+qZ7qEm6GCpPeQUFKrUqVH6/Hl0bQweQ8eMp2rjFvJRs4giAmVF+Z7E+71sRJxIuEQiP3UFxAFAFbv+MdWOfgdGfSsbhj8M2eHCpcDXFvsZ9gXjLdwGMrunGWRg5GBclsNTMTkQVUdXKEQABQVyC1Q5OV6FVMbFW3ueiU822X2/65AxsSnHbzNwfcawi0S6aLdZzsXH5oHP0gKY06DRULV+GsjC3jtOCHOX6+CRrwwZPbD7SyEYH41Cna2giEyfY30boK13Y0VxUuVLEsPgMR3ZO+ZgkP9hgv18Xix2JbuNnKkkdVEMCL4Xbzxh/MM="
+  on:
+    tags: true
+    all_branches: true
+

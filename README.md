@@ -24,7 +24,7 @@ is developed by the MariaDB.
 
 ### What maxscale affects
 
-* Installs maxscale in version 2.1.11
+* Installs maxscale in version 2.5
 * overrides /etc/maxscale.cnf
 * adds per default the mariadb-maxscale repository and its key to the system
 

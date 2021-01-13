@@ -19,7 +19,7 @@ maxscale::cachedir: '/var/cache/maxscale/'
 maxscale::piddir:  '/var/run/maxscale/'
 maxscale::configdir: '/etc'
 maxscale::configfile: 'maxscale.cnf'
-maxscale::package_version: 'latest'
+maxscale::package_version: '2.5'
 maxscale::setup_mariadb_repository: false
 maxscale::service_enable: true
 

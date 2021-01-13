@@ -1,6 +1,9 @@
-# == class: maxscale::install::apt
+# @summary adds the repo to the system configuration
 #
 # adds the repo to the system configuration
+#
+# @example
+#   include maxscale::install::apt
 class maxscale::install::apt (
     $repository_base_url = undef
 ) {
