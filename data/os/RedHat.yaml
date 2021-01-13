@@ -1,0 +1,2 @@
+---
+maxscale::repository_base_url: "https://dlm.mariadb.com/repo/maxscale/%{hiera('maxscale::version')}/rhel/$releasever/$basearch"

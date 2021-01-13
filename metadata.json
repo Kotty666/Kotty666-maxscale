@@ -8,25 +8,60 @@
   "project_page": "https://github.com/Kotty666/Kotty666-maxscale",
   "issues_url": "https://github.com/Kotty666/Kotty666-maxscale/issues",
   "dependencies": [
-    {"name":"puppetlabs-stdlib","version_requirement":">= 2.2.0"},
-    {"name":"puppetlabs-apt","version_requirement":">= 2.0.0"},
-    {"name":"puppetlabs-concat","version_requirement":">=1.0.0"}
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 2.2.0"
+    },
+    {
+      "name": "puppetlabs-apt",
+      "version_requirement": ">= 2.0.0"
+    },
+    {
+      "name": "puppetlabs-yum",
+      "version_requirement": ">= 4.0.0"
+    },
+    {
+      "name": "puppetlabs-concat",
+      "version_requirement": ">=1.0.0"
+    }
   ],
   "operatingsystem_support": [
     {
       "operatingsystem": "Debian",
-      "operatingsystemrelease": [ "7", "8", "9" ]
+      "operatingsystemrelease": [
+        "9",
+        "10"
+      ]
     },
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [ "14.04", "16.04" ]
+      "operatingsystemrelease": [
+        "18.04",
+        "20.04"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
     }
   ],
   "requirements": [
-  {
-    "name": "puppet",
-    "version_requirement": ">= 2.7.0 < 5.0.0"
-  }
-  ]
+    {
+      "name": "puppet",
+      "version_requirement": ">= 5.5.0 < 10.0.0"
+    }
+  ],
+  "pdk-version": "1.18.1",
+  "template-url": "pdk-default#1.18.1",
+  "template-ref": "tags/1.18.1-0-g3d2e75c"
 }
-

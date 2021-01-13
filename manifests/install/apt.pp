@@ -5,8 +5,6 @@ class maxscale::install::apt (
     $repository_base_url = undef
 ) {
 
-    require ::maxscale::params
-
     if ($::architecture != 'amd64') {
         fail('Architectures != amd64 are not supported by the maxscale package repository!')
     }
@@ -28,7 +26,7 @@ class maxscale::install::apt (
     }
 
     if $repository_base_url == undef {
-      $repository_base_url = $::maxscale::params::repository_base_url
+      $repository_base_url = $maxscale::repository_base_url
     }
 
     ::apt::source { 'mariadb-maxscale' :
@@ -39,7 +37,7 @@ class maxscale::install::apt (
             'deb' => true,
         },
         key          => {
-            'id'     => $::maxscale::params::gpg_key_id,
+            'id'     => $maxscale::gpg_key_id,
             'server' => 'hkp://keyserver.ubuntu.com:80'
         },
         repos        => 'main',

@@ -53,7 +53,7 @@ include maxscale
   module  => 'galeramon',
   servers => 'mydb01,mydb02',
   user    => 'Monitor',
-  passwd  => 'SamplePassword',
+  password  => 'SamplePassword',
 }
 
 # Create the Server resources
@@ -72,7 +72,7 @@ include maxscale
 # Add the connection Listener for the CLI Service
 ::maxscale::config::listener{"CLI Listener":
   service  => "CLI",
-  protocol => "maxscaled",
+  protocol => "MariaDBClient",
   address  => "localhost",
   port     => 6603,
 }
@@ -97,7 +97,6 @@ class {'maxscale':
   ms_timestamp              => 0,
   syslog                    => 0,
   maxlog                    => 1,
-  log_to_shm                => 0,
   log_warning               => 1,
   log_notice                => 0,
   log_info                  => 0,
@@ -107,7 +106,6 @@ class {'maxscale':
   datadir                   => '/var/lib/maxscale/data/',
   cachedir                  => '/var/cache/maxscale/',
   piddir                    =>  '/var/run/maxscale/',
-  configdir                 => '/etc',
 }
 ```
 
@@ -133,7 +131,7 @@ class {'maxscale':
   module,
   servers,
   user => undef,
-  passwd => undef,
+  password => undef,
   monitor_interval => undef,
   backend_connect_timeout => undef,
   backend_write_timeout => undef,
@@ -163,7 +161,7 @@ class {'maxscale':
   router_options => undef,
   filters => undef,
   user => undef,
-  passwd => undef,
+  password => undef,
   enable_root_user => 0,
   localhost_match_wildcard_host => 1,
   version_string=>'MaxScale',

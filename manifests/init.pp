@@ -38,11 +38,6 @@
 # [*maxlog*]
 #  Enable or disable the logging of messages to MaxScale's log file.
 #
-# [*log_to_shm*]
-#  Enable or disable the writing of the maxscale.log file to shared memory.
-#  If enabled, then the actual log file will be created under /dev/shm and
-#  a symbolic link to that file will be created in the MaxScale log directory.
-#
 # [*log_warning*]
 #  Enable or disable the logging of messages whose syslog priority is warning.
 #
@@ -77,32 +72,36 @@
 #
 # Philipp Frik <kotty@guns-n-girls.de>
 class maxscale (
-  $package_name = $::maxscale::params::package_name,
-  $repository_base_url = $::maxscale::params::repository_base_url,
-  $package_version = $::maxscale::params::version,
-  $setup_mariadb_repository = true,
-  $service_enable        = true,
-  $threads = $::maxscale::params::threads,
-  $auth_connect_timeout = $::maxscale::params::auth_connect_timeout,
-  $auth_read_timeout = $::maxscale::params::auth_read_timeout,
-  $auth_write_timeout = $::maxscale::params::auth_write_timeout,
-  $ms_timestamp = $::maxscale::params::ms_timestamp,
-  $syslog = $::maxscale::params::syslog,
-  $maxlog = $::maxscale::params::maxlog,
-  $log_to_shm = $::maxscale::params::log_to_shm,
-  $log_warning = $::maxscale::params::log_warning,
-  $log_notice = $::maxscale::params::log_notice,
-  $log_info = $::maxscale::params::log_info,
-  $log_debug = $::maxscale::params::log_debug,
-  $log_augmentation = $::maxscale::params::log_augmentation,
-  $logdir = $::maxscale::params::logdir,
-  $datadir = $::maxscale::params::datadir,
-  $cachedir = $::maxscale::params::cachedir,
-  $piddir = $::maxscale::params::piddir,
-  $configdir = $::maxscale::params::configdir,
-) inherits ::maxscale::params {
-
-  validate_bool($service_enable)
+  String                        $package_name,
+  String                        $package_version,
+  Boolean                       $setup_mariadb_repository,
+  Boolean                       $service_enable,
+  Variant[Integer,Enum['auto']] $threads,
+  Integer                       $auth_connect_timeout,
+  Integer                       $auth_read_timeout,
+  Integer                       $auth_write_timeout,
+  Integer                       $ms_timestamp,
+  Boolean                       $syslog,
+  Boolean                       $maxlog,
+  Boolean                       $log_warning,
+  Boolean                       $log_notice,
+  Boolean                       $log_info,
+  Boolean                       $log_debug,
+  Boolean                       $log_augmentation,
+  String                        $logdir,
+  String                        $datadir,
+  String                        $cachedir,
+  String                        $piddir,
+  String                        $configdir,
+  String                        $configfile,
+  String                        $max_user,
+  String                        $max_group,
+  Optional[String]              $repository_base_url,
+  Optional[Hash]                $monitor,
+  Optional[Hash]                $server,
+  Optional[Hash]                $service,
+  Optional[Hash]                $listener,
+) {
 
   class { '::maxscale::install':
     package_name             => $package_name,
@@ -118,7 +117,6 @@ class maxscale (
     ms_timestamp         => $ms_timestamp,
     syslog               => $syslog,
     maxlog               => $maxlog,
-    log_to_shm           => $log_to_shm,
     log_warning          => $log_warning,
     log_notice           => $log_notice,
     log_info             => $log_info,
@@ -129,6 +127,9 @@ class maxscale (
     cachedir             => $cachedir,
     piddir               => $piddir,
     configdir            => $configdir,
+    configfile           => $configfile,
+    max_user             => $max_user,
+    max_group            => $max_group,
   }
 
   # make sure maxscale user is available before writing config files
@@ -140,4 +141,10 @@ class maxscale (
     enable    => $service_enable,
     subscribe => Package[$package_name],
   }
+
+  create_resources(maxscale::config::monitor, $monitor)
+  create_resources(maxscale::config::server, $server)
+  create_resources(maxscale::config::service, $service)
+  create_resources(maxscale::config::listener, $listener)
+
 }
