@@ -12,22 +12,6 @@ class maxscale::install::apt (
         fail('Architectures != amd64 are not supported by the maxscale package repository!')
     }
 
-    case $::lsbdistid {
-        'Debian' : {
-            if ($::lsbmajdistrelease !~ /^(7|8)$/) {
-                fail ('This Debian release is not supported by the MariaDB MaxScale repository!')
-            }
-        }
-        'Ubuntu' : {
-            if ($::lsbdistrelease !~ /^(14\.04|16\.04)$/) {
-                fail ('This Ubuntu release is not supported by the MariaDB MaxScale repository!')
-            }
-        }
-        default : {
-            fail ('This Debian based distribution is not supported by the MariaDB MaxScale repository!')
-        }
-    }
-
     if $repository_base_url == undef {
       $repository_base_url = $maxscale::repository_base_url
     }
