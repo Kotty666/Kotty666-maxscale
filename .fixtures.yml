@@ -6,4 +6,4 @@ fixtures:
      stdlib: "puppetlabs/stdlib"
      concat: "puppetlabs/concat"
      apt: "puppetlabs/apt"
-     yum: "puppetlabs/yum"
+     yum: "puppet/yum"
