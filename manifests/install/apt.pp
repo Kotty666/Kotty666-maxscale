@@ -5,15 +5,11 @@
 # @example
 #   include maxscale::install::apt
 class maxscale::install::apt (
-    $repository_base_url = undef
+    String $repository_base_url
 ) {
 
     if ($::architecture != 'amd64') {
         fail('Architectures != amd64 are not supported by the maxscale package repository!')
-    }
-
-    if $repository_base_url == undef {
-      $repository_base_url = $maxscale::repository_base_url
     }
 
     ::apt::source { 'mariadb-maxscale' :

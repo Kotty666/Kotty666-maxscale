@@ -5,10 +5,10 @@
 # === Parameters
 # the parameters manages if ther should be used the original repo or not
 class maxscale::install (
-    $setup_mariadb_repository,
-    $repository_base_url,
-    $package_version,
-    $package_name,
+    Boolean $setup_mariadb_repository,
+    String $repository_base_url,
+    String $package_version,
+    String $package_name,
 ) {
     if $setup_mariadb_repository {
         case $::osfamily {
