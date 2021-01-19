@@ -7,10 +7,6 @@ describe 'maxscale' do
     context "on #{os}" do
       let(:facts) { os_facts }
 
-      if f[:os]['family'] == 'Debian'
-        let('include maxscale::install')
-
-      end
       it { is_expected.to compile }
     end
   end
