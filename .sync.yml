@@ -1,0 +1,10 @@
+---
+spec/spec_helper.rb:
+  mock_with: ':rspec'
+  spec_overrides:
+    - 'RSpec.configure do |c|'
+    - "  c.default_facter_version = '3.14.0'"
+    - "  c.after(:suite) do"
+    - "    RSpec::Puppet::Coverage.report!"
+    - "  end"
+    - "end"
