@@ -10,6 +10,7 @@ describe 'maxscale::install::apt' do
 				<<-PRE_COND
 					include maxscale
 				PRE_COND
+      end
 
       it { is_expected.to compile }
     end
