@@ -19,7 +19,7 @@ class maxscale::install (
               Class['::maxscale::install::apt'] -> Package[$package_name]
             }
             'RedHat': {
-              class { '::maxscale::install:yum':
+              class { '::maxscale::install::yum':
                 repository_base_url => $repository_base_url,
               }
               Class['::maxscale::install::yum'] -> Package[$package_name]

@@ -8,10 +8,10 @@ class maxscale::install::yum (
       String $repository_base_url
 ) {
 
-  if ($::architecture != 'amd64') {
-            fail('Architectures != amd64 are not supported by the maxscale package repository!')
-
+  unless $facts['os']['architecture'] == 'x86_64' {
+    fail('Architectures != x86_64 are not supported by the maxscale package repository!')
   }
+
 
   class {'yum':
     repos => {
