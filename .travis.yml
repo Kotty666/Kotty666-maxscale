@@ -43,6 +43,7 @@ jobs:
       stage: spec
     -
       env: DEPLOY_TO_FORGE=yes
+      rvm: 2.4.5
       stage: deploy
 
 branches:
