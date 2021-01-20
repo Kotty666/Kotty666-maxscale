@@ -13,6 +13,8 @@ before_install:
   - '[ -z "$RUBYGEMS_VERSION" ] || (yes || true) | gem update --system $RUBYGEMS_VERSION'
   - gem --version
   - bundle -v
+before_deploy:
+  - rvm $(travis_internal_ruby) --fuzzy do ruby -S gem install puppet -v 5.5.6
 script:
   - 'bundle exec rake $CHECK'
 bundler_args: --without system_tests
