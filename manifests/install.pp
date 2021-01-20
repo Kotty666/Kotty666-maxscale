@@ -13,10 +13,16 @@ class maxscale::install (
     if $setup_mariadb_repository {
         case $::osfamily {
             'Debian' : {
-                class { '::maxscale::install::apt':
-                    repository_base_url => $repository_base_url,
-                }
-                Class['::maxscale::install::apt'] -> Package[$package_name]
+              class { '::maxscale::install::apt':
+                repository_base_url => $repository_base_url,
+              }
+              Class['::maxscale::install::apt'] -> Package[$package_name]
+            }
+            'RedHat': {
+              class { '::maxscale::install:yum':
+                repository_base_url => $repository_base_url,
+              }
+              Class['::maxscale::install::yum'] -> Package[$package_name]
             }
             default : {
                 fail('sorry, no packages for your linux distribution available.')
