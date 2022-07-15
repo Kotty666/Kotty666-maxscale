@@ -34,7 +34,7 @@ class maxscale::config(
       ensure => 'directory',
       owner  => $max_user,
       group  => $max_group,
-      mode   => '0774'
+      mode   => '0755'
     }
   }
 
