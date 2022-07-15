@@ -1,6 +1,6 @@
 {
   "name": "Kotty666-maxscale",
-  "version": "2.0.1",
+  "version": "v2.0.2",
   "author": "Philipp Frik",
   "summary": "Installs and Configures MaxScale from MariaDB",
   "license": "Apache-2.0",
@@ -61,7 +61,7 @@
       "version_requirement": ">= 5.5.0 < 10.0.0"
     }
   ],
-  "pdk-version": "1.18.1",
-  "template-url": "pdk-default#1.18.1",
-  "template-ref": "tags/1.18.1-0-g3d2e75c"
+  "pdk-version": "2.4.0",
+  "template-url": "pdk-default#2.4.0",
+  "template-ref": "tags/2.4.0-0-gfa6b6d2"
 }
