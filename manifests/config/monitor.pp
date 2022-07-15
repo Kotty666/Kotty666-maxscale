@@ -4,7 +4,6 @@
 #
 # === Parameters
 # all parameters named like in the original maxscale documentation
-
 define maxscale::config::monitor (
   $module,
   $servers,

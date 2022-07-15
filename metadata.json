@@ -1,6 +1,6 @@
 {
   "name": "Kotty666-maxscale",
-  "version": "v2.0.2",
+  "version": "2.0.2",
   "author": "Philipp Frik",
   "summary": "Installs and Configures MaxScale from MariaDB",
   "license": "Apache-2.0",
@@ -10,19 +10,19 @@
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 2.2.0"
+      "version_requirement": ">= 2.2.0 < 9.0.0"
     },
     {
       "name": "puppetlabs-apt",
-      "version_requirement": ">= 2.0.0"
+      "version_requirement": ">= 2.0.0 < 9.0.0"
     },
     {
       "name": "puppetlabs-yum",
-      "version_requirement": ">= 4.0.0"
+      "version_requirement": ">= 4.0.0 < 9.0.0"
     },
     {
       "name": "puppetlabs-concat",
-      "version_requirement": ">=1.0.0"
+      "version_requirement": ">=1.0.0 < 9.0.0"
     }
   ],
   "operatingsystem_support": [
