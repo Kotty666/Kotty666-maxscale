@@ -5,7 +5,7 @@
 # === Parameters
 # all Parameters are copied from the default maxscale.cnf.
 # they are set per default in /data/
-class maxscale::config(
+class maxscale::config (
   $threads,
   $auth_connect_timeout,
   $auth_read_timeout,
@@ -27,14 +27,12 @@ class maxscale::config(
   $max_user,
   $max_group,
 ) {
-
-
   [$logdir,$datadir,$cachedir,$piddir].each | String $folder | {
     file { $folder:
       ensure => 'directory',
       owner  => $max_user,
       group  => $max_group,
-      mode   => '0755'
+      mode   => '0755',
     }
   }
 
@@ -49,7 +47,7 @@ class maxscale::config(
     content => "# This file is managed by Puppet. DO NOT EDIT.\n",
     order   => '01',
   }
-  concat::fragment{ 'GlobalSettings':
+  concat::fragment { 'GlobalSettings':
     target  => $configfile,
     content => template('maxscale/global_settings.erb'),
     order   => '02',

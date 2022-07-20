@@ -17,7 +17,6 @@ define maxscale::config::listener (
   $ssl_version = undef,
   $ssl_cert_verification_depth = undef,
 ) {
-
   if $service == undef {
     fail('Service must be set!')
   }
@@ -28,11 +27,9 @@ define maxscale::config::listener (
     fail('Port must be an Integer and must be set!')
   }
 
-  concat::fragment{ "Listener ${name}":
+  concat::fragment { "Listener ${name}":
     target  => $maxscale::configfile,
     content => template('maxscale/listener.erb'),
     order   => '04',
   }
-
-
 }

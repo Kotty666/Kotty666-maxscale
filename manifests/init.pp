@@ -4,7 +4,7 @@
 #
 # === Parameters
 #
-# [*maxscale_package_name*]
+# [*package_name*]
 #  Override the name of the maxscale package
 #
 # [*setup_mariadb_repository*]
@@ -102,14 +102,13 @@ class maxscale (
   Optional[Hash]                $service,
   Optional[Hash]                $listener,
 ) {
-
-  class { '::maxscale::install':
+  class { 'maxscale::install':
     package_name             => $package_name,
     setup_mariadb_repository => $setup_mariadb_repository,
     repository_base_url      => $repository_base_url,
     package_version          => $package_version,
   }
-  class { '::maxscale::config':
+  class { 'maxscale::config':
     threads              => $threads,
     auth_connect_timeout => $auth_connect_timeout,
     auth_read_timeout    => $auth_read_timeout,
@@ -133,7 +132,7 @@ class maxscale (
   }
 
   # make sure maxscale user is available before writing config files
-  Class['::maxscale::install'] -> Class['::maxscale::config'] ~> Service['maxscale']
+  Class['maxscale::install'] -> Class['maxscale::config'] ~> Service['maxscale']
 
   service { 'maxscale':
     ensure    => $service_enable,
@@ -146,5 +145,4 @@ class maxscale (
   create_resources(maxscale::config::server, $server)
   create_resources(maxscale::config::service, $service)
   create_resources(maxscale::config::listener, $listener)
-
 }
