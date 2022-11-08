@@ -32,7 +32,7 @@ class maxscale::install (
         }
     }
     if $direct_install {
-      class { "maxscale::install::direct}":
+      class { "maxscale::install::direct":
         package_url => $package_url,
       }
     } else {
