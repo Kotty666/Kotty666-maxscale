@@ -22,6 +22,7 @@ maxscale::configfile: 'maxscale.cnf'
 maxscale::package_version: '2.5'
 maxscale::setup_mariadb_repository: false
 maxscale::service_enable: true
+maxscale::install::direct_install: false
 
 maxscale::max_user: 'maxscale'
 maxscale::max_group: 'maxscale'
