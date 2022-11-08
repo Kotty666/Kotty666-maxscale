@@ -2,9 +2,9 @@
 maxscale::package_name: 'maxscale'
 maxscale::gpg_key_id: '199369E5404BD5FC7D2FE43BCBCB082A1BB943DB'
 maxscale::threads: 'auto'
-maxscale::auth_connect_timeout: 3
-maxscale::auth_read_timeout: 1
-maxscale::auth_write_timeout: 2
+maxscale::auth_connect_timeout: '3s'
+maxscale::auth_read_timeout: '1s'
+maxscale::auth_write_timeout: '2s'
 maxscale::ms_timestamp: 0
 maxscale::syslog: false
 maxscale::maxlog: true
