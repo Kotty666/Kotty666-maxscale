@@ -9,9 +9,10 @@ class maxscale::install::direct (
 ) {
   case $facts['os']['family'] {
     'RedHat': {
-      yum::install {'maxscale':
-        ensure => present,
-        source => $package_url,
+      package { $maxscale::install::package:
+        ensure   => present,
+        source   => $package_url,
+        provider => 'rpm',
       }
     }
     'Debian': {
@@ -21,7 +22,7 @@ class maxscale::install::direct (
         provider    => 'shell',
         refreshonly => true,
       }
-      package {'maxscale':
+      package { $maxscale::install::package:
         ensure  => present,
         source  => '/tmp/maxscale.deb',
         require => Exec['GetDebFile'],
