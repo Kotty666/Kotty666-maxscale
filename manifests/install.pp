@@ -9,27 +9,35 @@ class maxscale::install (
     String $repository_base_url,
     String $package_version,
     String $package_name,
+    Boolean $direct_install,
+    String $package_url
 ) {
     if $setup_mariadb_repository {
-        case $::osfamily {
+        case $facts['os.family'] {
             'Debian' : {
-              class { '::maxscale::install::apt':
+              class { 'maxscale::install::apt':
                 repository_base_url => $repository_base_url,
               }
-              Class['::maxscale::install::apt'] -> Package[$package_name]
+              Class['maxscale::install::apt'] -> Package[$package_name]
             }
             'RedHat': {
-              class { '::maxscale::install::yum':
+              class { 'maxscale::install::yum':
                 repository_base_url => $repository_base_url,
               }
-              Class['::maxscale::install::yum'] -> Package[$package_name]
+              Class['maxscale::install::yum'] -> Package[$package_name]
             }
             default : {
                 fail('sorry, no packages for your linux distribution available.')
             }
         }
     }
-    package { $package_name :
-        ensure => $package_version,
+    if $direct_install {
+      class { "maxscale::install::direct":
+        package_url => $package_url,
+      }
+    } else {
+      package { $package_name :
+          ensure => $package_version,
+      }
     }
 }
