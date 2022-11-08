@@ -12,7 +12,7 @@ class maxscale::install::direct (
       package { $maxscale::install::package_name:
         ensure   => present,
         source   => $package_url,
-        provider => 'rpm',
+        provider => 'dnf',
       }
     }
     'Debian': {
