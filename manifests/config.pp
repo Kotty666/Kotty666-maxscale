@@ -26,6 +26,7 @@ class maxscale::config(
   $configfile,
   $max_user,
   $max_group,
+  $max_auth_errors_until_block,
 ) {
 
 
