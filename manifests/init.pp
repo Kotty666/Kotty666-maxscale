@@ -81,6 +81,7 @@ class maxscale (
   String                        $auth_read_timeout,
   String                        $auth_write_timeout,
   Integer                       $ms_timestamp,
+  Integer                       $max_auth_errors_until_block,
   Boolean                       $syslog,
   Boolean                       $maxlog,
   Boolean                       $log_warning,
@@ -101,7 +102,6 @@ class maxscale (
   Optional[Hash]                $server,
   Optional[Hash]                $service,
   Optional[Hash]                $listener,
-  Optional[Integer]             $max_auth_errors_until_block,
 ) {
 
   class { '::maxscale::install':
