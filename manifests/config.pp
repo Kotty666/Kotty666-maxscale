@@ -31,10 +31,11 @@ class maxscale::config(
 
   [$logdir,$datadir,$cachedir,$piddir].each | String $folder | {
     file { $folder:
-      ensure => 'directory',
-      owner  => $max_user,
-      group  => $max_group,
-      mode   => '0755'
+      ensure  => 'directory',
+      owner   => $max_user,
+      group   => $max_group,
+      mode    => '0755',
+      require => Package[$maxscale::package_name],
     }
   }
 
