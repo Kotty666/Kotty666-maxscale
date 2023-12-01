@@ -24,7 +24,7 @@ define maxscale::config::listener (
   if $protocol == undef {
     fail('The Protocol must be set!')
   }
-  if $port == undef or !(is_integer($port)) {
+  if $port == undef or $port != Integer {
     fail('Port must be an Integer and must be set!')
   }
 
