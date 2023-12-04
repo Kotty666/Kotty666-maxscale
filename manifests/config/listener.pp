@@ -5,9 +5,9 @@
 # === Parameters
 # all parameters named like in the original maxscale documentation
 define maxscale::config::listener (
-  $service,
-  $protocol,
-  $port,
+  String $service,
+  String $protocol,
+  Integer $port,
   $socket = undef,
   $address = undef,
   $ssl = undef,
@@ -17,16 +17,6 @@ define maxscale::config::listener (
   $ssl_version = undef,
   $ssl_cert_verification_depth = undef,
 ) {
-
-  if $service == undef {
-    fail('Service must be set!')
-  }
-  if $protocol == undef {
-    fail('The Protocol must be set!')
-  }
-  if $port == undef or $port != Integer {
-    fail('Port must be an Integer and must be set!')
-  }
 
   concat::fragment{ "Listener ${name}":
     target  => $maxscale::configfile,
