@@ -7,6 +7,7 @@
 # they are set per default in /data/
 class maxscale::config(
   Integer $threads,
+  Integer $max_auth_errors_until_block,
   String $auth_connect_timeout,
   String $auth_read_timeout,
   String $auth_write_timeout,
