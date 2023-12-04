@@ -5,22 +5,15 @@
 # === Parameters
 # all parameters named like in the original maxscale documentation
 define maxscale::config::server(
-  $address,
-  $port = 3306,
-  $protocol = 'MySQLBackend',
+  String $address,
+  Integer $port = 3306,
+  String $protocol = 'MySQLBackend',
   $monitoruser = undef,
   $monitorpw = undef,
   $persistpoolmax = undef,
   $persistmaxtime = undef,
   $serv_weight = undef,
 ) {
-
-  if $address == undef {
-    fail('The Server address must be set to an IP oder FQDN!')
-  }
-  if $port == undef or $port != Integer {
-    fail('Port must be an Integer and must be set!')
-  }
 
   concat::fragment{ "Server ${name}":
     target  => $maxscale::configfile,
