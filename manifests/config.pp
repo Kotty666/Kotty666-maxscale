@@ -6,7 +6,7 @@
 # all Parameters are copied from the default maxscale.cnf.
 # they are set per default in /data/
 class maxscale::config(
-  Integer $threads,
+  Variant[Integer,Enum['auto']] $threads,
   Integer $max_auth_errors_until_block,
   String $auth_connect_timeout,
   String $auth_read_timeout,
