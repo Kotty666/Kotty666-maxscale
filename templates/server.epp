@@ -1,14 +1,17 @@
 <%- |
   String                       $name,
   Stdlib::Host                 $address,
-  Optional[Stdlib::Port]       $port           = undef,
-  Optional[String]             $monitoruser    = undef,
-  Optional[Sensitive[String]]  $monitorpw      = undef,
-  Optional[Integer]            $persistpoolmax = undef,
-  Optional[Maxscale::Duration] $persistmaxtime = undef,
+  Optional[Stdlib::Port]       $port                        = undef,
+  Optional[String]             $monitoruser                 = undef,
+  Optional[Sensitive[String]]  $monitorpw                   = undef,
+  Optional[Integer]            $persistpoolmax              = undef,
+  Optional[Maxscale::Duration] $persistmaxtime              = undef,
+  Optional[Boolean]            $proxy_protocol              = undef,
+  Optional[Boolean]            $ssl                         = undef,
+  Optional[Boolean]            $ssl_verify_peer_certificate = undef,
   # Deprecated?
-  Optional[String]             $protocol       = undef,
-  Optional                     $serv_weight    = undef,
+  Optional[String]             $protocol                    = undef,
+  Optional                     $serv_weight                 = undef,
 | -%>
 [<%= $name %>]
 type=server
@@ -33,5 +36,20 @@ protocol=<%= $protocol %>   # Deprecated?
 <%- } -%>
 <%- if $serv_weight { -%>
 serv_weight=<%= $serv_weight %>   # Deprecated?
+<%- } -%>
+<%- if $proxy_protocol != undef { -%>
+proxy_protocol=<%= $proxy_protocol %>
+<%- } else { -%>
+##################################################################################
+# Uncomment this and add MaxScale's IP to proxy_protocol_networks in MariaDB for #
+# easier user management: https://mariadb.com/kb/en/proxy-protocol-support/      #
+##################################################################################
+# proxy_protocol=true
+<%- } -%>
+<%- if $ssl != undef { -%>
+ssl=<%= $ssl %>
+<%- } -%>
+<%- if $ssl_verify_peer_certificate != undef { -%>
+ssl_verify_peer_certificate=<%= $ssl_verify_peer_certificate %>
 <%- } -%>
 

@@ -16,6 +16,8 @@
 # @param log_auth_warnings
 # @param max_slave_connections
 # @param use_sql_variables_in
+# @param transaction_replay
+# @param transaction_replay_timeout
 #
 # @param weightby
 #   This parameter no longer appear in the documentation, but is kept for backward compatibility
@@ -51,6 +53,8 @@ define maxscale::config::service (
   Optional[Boolean]                                $log_auth_warnings             = undef,
   Optional[Integer]                                $max_slave_connections         = undef,
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
+  Optional[Boolean]                                $transaction_replay            = undef,
+  Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
   # Deprecated?
   Optional                                         $weightby                      = undef,
   Optional                                         $optimize_wildcard             = undef,
@@ -79,6 +83,8 @@ define maxscale::config::service (
         log_auth_warnings             => $log_auth_warnings,
         max_slave_connections         => $max_slave_connections,
         use_sql_variables_in          => $use_sql_variables_in,
+        transaction_replay            => $transaction_replay,
+        transaction_replay_timeout    => $transaction_replay_timeout,
         # Deprecated?
         weightby                      => $weightby,
         optimize_wildcard             => $optimize_wildcard,

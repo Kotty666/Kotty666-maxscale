@@ -71,6 +71,14 @@
 #   Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
 #
 # @param max_auth_errors_until_block
+# @param admin_host
+# @param admin_port
+# @param admin_ssl_key
+# @param admin_ssl_cert
+# @param admin_ssl_ca
+# @param admin_secure_gui
+# @param admin_pam_readonly_service
+# @param admin_pam_readwrite_service
 #
 # @param monitor
 # @param server
@@ -110,6 +118,14 @@ class maxscale (
   Optional[Stdlib::Unixpath]              $cachedir                    = undef,
   Optional[Stdlib::Unixpath]              $piddir                      = undef,
   Optional[Integer]                       $max_auth_errors_until_block = undef,
+  Optional[Stdlib::IP::Address]           $admin_host                  = undef,
+  Optional[Stdlib::Port]                  $admin_port                  = undef,
+  Optional[Stdlib::UnixPath]              $admin_ssl_key               = undef,
+  Optional[Stdlib::UnixPath]              $admin_ssl_cert              = undef,
+  Optional[Stdlib::UnixPath]              $admin_ssl_ca                = undef,
+  Optional[Boolean]                       $admin_secure_gui            = undef,
+  Optional[String]                        $admin_pam_readonly_service  = undef,
+  Optional[String]                        $admin_pam_readwrite_service = undef,
   # Configs (Deprecated)
   Optional[Maxscale::Duration]            $auth_read_timeout           = undef, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
   Optional[Maxscale::Duration]            $auth_write_timeout          = undef, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above

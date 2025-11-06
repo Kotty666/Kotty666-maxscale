@@ -22,6 +22,14 @@
 # @param cachedir
 # @param piddir
 # @param max_auth_errors_until_block
+# @param admin_host
+# @param admin_port
+# @param admin_ssl_key
+# @param admin_ssl_cert
+# @param admin_ssl_ca
+# @param admin_secure_gui
+# @param admin_pam_readonly_service
+# @param admin_pam_readwrite_service
 #
 # @param auth_read_timeout
 #   Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above.
@@ -54,6 +62,14 @@ class maxscale::config (
   Optional[Stdlib::Unixpath]              $cachedir                    = $maxscale::cachedir,
   Optional[Stdlib::Unixpath]              $piddir                      = $maxscale::piddir,
   Optional[Integer]                       $max_auth_errors_until_block = $maxscale::max_auth_errors_until_block,
+  Optional[Stdlib::IP::Address]           $admin_host                  = $maxscale::admin_host,
+  Optional[Stdlib::Port]                  $admin_port                  = $maxscale::admin_port,
+  Optional[Stdlib::UnixPath]              $admin_ssl_key               = $maxscale::admin_ssl_key,
+  Optional[Stdlib::UnixPath]              $admin_ssl_cert              = $maxscale::admin_ssl_cert,
+  Optional[Stdlib::UnixPath]              $admin_ssl_ca                = $maxscale::admin_ssl_ca,
+  Optional[Boolean]                       $admin_secure_gui            = $maxscale::admin_secure_gui,
+  Optional[String]                        $admin_pam_readonly_service  = $maxscale::admin_pam_readonly_service,
+  Optional[String]                        $admin_pam_readwrite_service = $maxscale::admin_pam_readwrite_service,
   # Deprecated
   Optional[String]                        $auth_read_timeout           = $maxscale::auth_read_timeout,  # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above.
   Optional[String]                        $auth_write_timeout          = $maxscale::auth_write_timeout, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above.
@@ -98,6 +114,14 @@ class maxscale::config (
         cachedir                    => $cachedir,
         piddir                      => $piddir,
         max_auth_errors_until_block => $max_auth_errors_until_block,
+        admin_host                  => $admin_host,
+        admin_port                  => $admin_port,
+        admin_ssl_key               => $admin_ssl_key,
+        admin_ssl_cert              => $admin_ssl_cert,
+        admin_ssl_ca                => $admin_ssl_ca,
+        admin_secure_gui            => $admin_secure_gui,
+        admin_pam_readonly_service  => $admin_pam_readonly_service,
+        admin_pam_readwrite_service => $admin_pam_readwrite_service,
         # Deprecated
         auth_read_timeout           => $auth_read_timeout,
         auth_write_timeout          => $auth_write_timeout,

@@ -12,6 +12,12 @@
 # @param backend_connect_timeout
 # @param backend_write_timeout
 # @param backend_read_timeout
+# @param auto_failover
+# @param auto_rejoin
+# @param enforce_simple_topology
+# @param replication_user
+# @param replication_password
+# @param cooperative_monitoring_locks
 #
 # @see
 #   https://mariadb.com/docs/maxscale/reference/maxscale-configuration-settings
@@ -26,6 +32,12 @@ define maxscale::config::monitor (
   Optional[Maxscale::Duration]                            $backend_connect_timeout      = undef,
   Optional[Maxscale::Duration]                            $backend_write_timeout        = undef,
   Optional[Maxscale::Duration]                            $backend_read_timeout         = undef,
+  Optional[Variant[Boolean,Enum['safe']]]                 $auto_failover                = undef,
+  Optional[Boolean]                                       $auto_rejoin                  = undef,
+  Optional[Boolean]                                       $enforce_simple_topology      = undef,
+  Optional[String]                                        $replication_user             = undef,
+  Optional[Sensitive[String]]                             $replication_password         = undef,
+  Optional[Enum['majority_of_all','majority_of_running']] $cooperative_monitoring_locks = undef,
 ) {
   concat::fragment { "Monitor ${name}":
     target  => $maxscale::configfile,

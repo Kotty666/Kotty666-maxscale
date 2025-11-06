@@ -8,6 +8,12 @@
   Optional[Maxscale::Duration]                            $backend_connect_timeout      = undef,
   Optional[Maxscale::Duration]                            $backend_write_timeout        = undef,
   Optional[Maxscale::Duration]                            $backend_read_timeout         = undef,
+  Optional[Variant[Boolean,Enum['safe']]]                 $auto_failover                = undef,
+  Optional[Boolean]                                       $auto_rejoin                  = undef,
+  Optional[Boolean]                                       $enforce_simple_topology      = undef,
+  Optional[String]                                        $replication_user             = undef,
+  Optional[Sensitive[String]]                             $replication_password         = undef,
+  Optional[Enum['majority_of_all','majority_of_running']] $cooperative_monitoring_locks = undef,
 | -%>
 [<%= $name -%>]
 type=monitor
@@ -26,5 +32,47 @@ backend_write_timeout=<%= $backend_write_timeout %>
 <%- } -%>
 <%- if $backend_read_timeout { -%>
 backend_read_timeout=<%= $backend_read_timeout %>
+<%- } -%>
+
+<%- if $auto_failover != undef { -%>
+auto_failover=<%= $auto_failover %>
+<%- } else {-%>
+##################################################################################################################
+# Uncomment these to enable automatic node failover:                                                             #
+# https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-mariadb-monitor/#cluster-manipulation-operations #
+#                                                                                                                #
+# The GRANTs required for automatic node failover can be found here:                                             #
+# https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-mariadb-monitor/#cluster-manipulation-grants     #
+##################################################################################################################
+# auto_failover=true
+<%- } -%>
+<%- if $auto_rejoin != undef { -%>
+auto_rejoin=<%= $auto_rejoin %>
+<%- } else {-%>
+# auto_rejoin=true
+<%- } -%>
+<%- if $enforce_simple_topology != undef { -%>
+enforce_simple_topology=<%= $enforce_simple_topology %>
+<%- } else {-%>
+# enforce_simple_topology=true
+<%- } -%>
+<%- if $replication_user { -%>
+replication_user=<%= $replication_user %>
+<%- } else {-%>
+# replication_user=<username used for replication>
+<%- } -%>
+<%- if $replication_password { -%>
+replication_password=<%= $replication_password %>
+<%- } else {-%>
+# replication_password=<password used for replication>
+<%- } -%>
+<%- if $cooperative_monitoring_locks { -%>
+cooperative_monitoring_locks=<%= $cooperative_monitoring_locks %>
+<%- } else {-%>
+#########################################################################################################
+# Uncomment this if you use more than one MaxScale with automatic node failover:                        #
+# https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-mariadb-monitor/#cooperative-monitoring #
+#########################################################################################################
+# cooperative_monitoring_locks=majority_of_all
 <%- } -%>
 

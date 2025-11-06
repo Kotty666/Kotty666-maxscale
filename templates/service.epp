@@ -14,6 +14,8 @@
   Optional[Boolean]                                $log_auth_warnings             = undef,
   Optional[Integer]                                $max_slave_connections         = undef,
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
+  Optional[Boolean]                                $transaction_replay            = undef,
+  Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
   # Deprecated?
   Optional                                         $weightby                      = undef,
   Optional                                         $optimize_wildcard             = undef,
@@ -58,6 +60,19 @@ max_slave_connections=<%= $max_slave_connections %>
 <%- } -%>
 <%- if $use_sql_variables_in { -%>
 use_sql_variables_in=<%= $use_sql_variables_in %>
+<%- } -%>
+<%- if $transaction_replay != undef { -%>
+transaction_replay=<%= $transaction_replay %>
+<%- } else { -%>
+####################################################################################################
+# Uncomment these to enable transparent transaction replay on node failure:                        #
+# https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-readwritesplit/#transaction_replay #
+####################################################################################################
+# transaction_replay=true
+# transaction_replay_timeout=30s
+<%- } -%>
+<%- if $transaction_replay_timeout { -%>
+transaction_replay_timeout=<%= $transaction_replay_timeout %>
 <%- } -%>
 <%- if $weightby != undef { -%>
 weightby=<%= $weightby %>   # Deprecated??

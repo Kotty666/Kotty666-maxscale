@@ -9,6 +9,9 @@
 # @param monitorpw
 # @param persistpoolmax
 # @param persistmaxtime
+# @param proxy_protocol
+# @param ssl
+# @param ssl_verify_peer_certificate
 #
 # @param protocol
 #   This parameter no longer appear in the documentation, but is kept for backward compatibility
@@ -23,27 +26,33 @@
 #
 define maxscale::config::server (
   Stdlib::Host                 $address,
-  Optional[Stdlib::Port]       $port           = undef,
-  Optional[String]             $monitoruser    = undef,
-  Optional[Sensitive[String]]  $monitorpw      = undef,
-  Optional[Integer]            $persistpoolmax = undef,
-  Optional[Maxscale::Duration] $persistmaxtime = undef,
+  Optional[Stdlib::Port]       $port                        = undef,
+  Optional[String]             $monitoruser                 = undef,
+  Optional[Sensitive[String]]  $monitorpw                   = undef,
+  Optional[Integer]            $persistpoolmax              = undef,
+  Optional[Maxscale::Duration] $persistmaxtime              = undef,
+  Optional[Boolean]            $proxy_protocol              = undef,
+  Optional[Boolean]            $ssl                         = undef,
+  Optional[Boolean]            $ssl_verify_peer_certificate = undef,
   # Deprecated?
-  Optional[String]             $protocol       = undef,
-  Optional                     $serv_weight    = undef,
+  Optional[String]             $protocol                    = undef,
+  Optional                     $serv_weight                 = undef,
 ) {
   concat::fragment { "Server ${name}":
     target  => $maxscale::configfile,
     content => epp('maxscale/server.epp', {
-        name           => $name,
-        address        => $address,
-        monitoruser    => $monitoruser,
-        monitorpw      => $monitorpw,
-        persistpoolmax => $persistpoolmax,
-        persistmaxtime => $persistmaxtime,
+        name                        => $name,
+        address                     => $address,
+        monitoruser                 => $monitoruser,
+        monitorpw                   => $monitorpw,
+        persistpoolmax              => $persistpoolmax,
+        persistmaxtime              => $persistmaxtime,
+        proxy_protocol              => $proxy_protocol,
+        ssl                         => $ssl,
+        ssl_verify_peer_certificate => $ssl_verify_peer_certificate,
         # Deprecated?
-        protocol       => $protocol,
-        serv_weight    => $serv_weight,
+        protocol                    => $protocol,
+        serv_weight                 => $serv_weight,
     }),
     order   => 11,
   }
