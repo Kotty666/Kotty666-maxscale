@@ -85,15 +85,15 @@
 #   https://mariadb.com/docs/maxscale/maxscale-management/deployment/maxscale-configuration-guide
 #
 class maxscale (
-  Boolean                       $service_enable              = true,
-  Stdlib::UnixPath              $configdir                   = '/etc',
-  String                        $configfile                  = 'maxscale.cnf',
-  String                        $user                        = 'maxscale',
-  String                        $group                       = 'maxscale',
+  Boolean                                 $service_enable              = true,
+  Stdlib::UnixPath                        $configdir                   = '/etc',
+  String                                  $configfile                  = 'maxscale.cnf',
+  String                                  $user                        = 'maxscale',
+  String                                  $group                       = 'maxscale',
   # Install
-  String                        $package_name                = 'maxscale',
-  String                        $package_ensure              = 'present',
-  Boolean                       $setup_mariadb_repository    = false,
+  String                                  $package_name                = 'maxscale',
+  String                                  $package_ensure              = 'present',
+  Boolean                                 $setup_mariadb_repository    = false,
   ## Configs
   Variant[Integer,Enum['auto']]           $threads                     = 'auto',
   Optional[Maxscale::Duration]            $auth_connect_timeout        = undef,
