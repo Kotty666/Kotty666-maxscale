@@ -1,2 +1,0 @@
----
-maxscale::repository_base_url: "http://downloads.mariadb.com/MaxScale/%{hiera('maxscale::version')}/debian/"

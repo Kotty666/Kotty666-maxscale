@@ -19,9 +19,6 @@
 # @param setup_mariadb_repository
 #   Setup the apt repositories from MariaDB for MaxScale.
 #
-# @param package_version
-# @param repository_base_url
-#
 # @param threads
 #   Manages the number of maxscale threads
 #
@@ -97,8 +94,6 @@ class maxscale (
   String                        $package_name                = 'maxscale',
   String                        $package_ensure              = 'present',
   Boolean                       $setup_mariadb_repository    = false,
-  String                        $package_version,
-  Optional[String]              $repository_base_url,
   ## Configs
   Variant[Integer,Enum['auto']]           $threads                     = 'auto',
   Optional[Maxscale::Duration]            $auth_connect_timeout        = undef,
