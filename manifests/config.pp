@@ -1,40 +1,68 @@
-# == class: maxscale::config
 #
-# configures maxscale, per default in /etc/maxscale.cnf.
+# @summary
+#   configures maxscale, per default in /etc/maxscale.cnf.
 #
-# === Parameters
-# all Parameters are copied from the default maxscale.cnf.
-# they are set per default in /data/
-class maxscale::config(
-  Variant[Integer,Enum['auto']] $threads,
-  Integer $max_auth_errors_until_block,
-  String $auth_connect_timeout,
-  String $auth_read_timeout,
-  String $auth_write_timeout,
-  Integer $ms_timestamp,
-  Boolean $syslog,
-  Boolean $maxlog,
-  Boolean $log_warning,
-  Boolean $log_notice,
-  Boolean $log_info,
-  Boolean $log_debug,
-  Boolean $log_augmentation,
-  String $logdir,
-  String $datadir,
-  String $cachedir,
-  String $piddir,
-  String $configdir,
-  String $configfile,
-  String $max_user,
-  String $max_group,
+# @param configdir
+# @param configfile
+# @param user
+# @param group
+#
+# @param threads
+# @param auth_connect_timeout
+# @param ms_timestamp
+# @param syslog
+# @param maxlog
+# @param log_warning
+# @param log_notice
+# @param log_info
+# @param log_debug
+# @param log_augmentation
+# @param logdir
+# @param datadir
+# @param cachedir
+# @param piddir
+# @param max_auth_errors_until_block
+#
+# @param auth_read_timeout
+#   Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above.
+#
+# @param auth_write_timeout
+#   Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above.
+#
+# @see
+#   https://mariadb.com/docs/maxscale/reference/maxscale-configuration-settings
+#   https://mariadb.com/docs/maxscale/maxscale-management/deployment/maxscale-configuration-guide#global-settings
+#
+class maxscale::config (
+  Stdlib::Unixpath                        $configdir                   = $maxscale::configdir,
+  String                                  $configfile                  = $maxscale::configfile,
+  String                                  $user                        = $maxscale::user,
+  String                                  $group                       = $maxscale::group,
+  # Configs
+  Variant[Integer,Enum['auto']]           $threads                     = $maxscale::threads,
+  Optional[String]                        $auth_connect_timeout        = $maxscale::auth_connect_timeout,
+  Optional[Boolean]                       $ms_timestamp                = $maxscale::ms_timestamp,
+  Optional[Boolean]                       $syslog                      = $maxscale::syslog,
+  Optional[Boolean]                       $maxlog                      = $maxscale::maxlog,
+  Optional[Boolean]                       $log_warning                 = $maxscale::log_warning,
+  Optional[Boolean]                       $log_notice                  = $maxscale::log_notice,
+  Optional[Boolean]                       $log_info                    = $maxscale::log_info,
+  Optional[Boolean]                       $log_debug                   = $maxscale::log_debug,
+  Optional[Variant[Integer[0,1],Boolean]] $log_augmentation            = $maxscale::log_augmentation,
+  Optional[Stdlib::Unixpath]              $logdir                      = $maxscale::logdir,
+  Optional[Stdlib::Unixpath]              $datadir                     = $maxscale::datadir,
+  Optional[Stdlib::Unixpath]              $cachedir                    = $maxscale::cachedir,
+  Optional[Stdlib::Unixpath]              $piddir                      = $maxscale::piddir,
+  Optional[Integer]                       $max_auth_errors_until_block = $maxscale::max_auth_errors_until_block,
+  # Deprecated
+  Optional[String]                        $auth_read_timeout           = $maxscale::auth_read_timeout,  # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above.
+  Optional[String]                        $auth_write_timeout          = $maxscale::auth_write_timeout, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above.
 ) {
-
-
-  [$logdir,$datadir,$cachedir,$piddir].each | String $folder | {
+  [$logdir,$datadir,$cachedir,$piddir].delete_undef_values().each | String $folder | {
     file { $folder:
       ensure  => 'directory',
-      owner   => $max_user,
-      group   => $max_group,
+      owner   => $user,
+      group   => $group,
       mode    => '0755',
       require => Package[$maxscale::package_name],
     }
@@ -51,9 +79,29 @@ class maxscale::config(
     content => "# This file is managed by Puppet. DO NOT EDIT.\n",
     order   => '01',
   }
-  concat::fragment{ 'GlobalSettings':
+
+  concat::fragment { 'GlobalSettings':
     target  => $configfile,
-    content => template('maxscale/global_settings.erb'),
+    content => epp('maxscale/global_settings.epp', {
+        threads                     => $threads,
+        auth_connect_timeout        => $auth_connect_timeout,
+        ms_timestamp                => $ms_timestamp,
+        syslog                      => $syslog,
+        maxlog                      => $maxlog,
+        log_warning                 => $log_warning,
+        log_notice                  => $log_notice,
+        log_info                    => $log_info,
+        log_debug                   => $log_debug,
+        log_augmentation            => $log_augmentation,
+        logdir                      => $logdir,
+        datadir                     => $datadir,
+        cachedir                    => $cachedir,
+        piddir                      => $piddir,
+        max_auth_errors_until_block => $max_auth_errors_until_block,
+        # Deprecated
+        auth_read_timeout           => $auth_read_timeout,
+        auth_write_timeout          => $auth_write_timeout,
+    }),
     order   => '02',
   }
 }

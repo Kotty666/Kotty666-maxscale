@@ -1,0 +1,62 @@
+<%- |
+  String                            $name,
+  String                            $service,
+  Optional[Enum['mariadb','nosql']] $protocol                    = undef,
+  Optional[Stdlib::Ip::Address]     $address                     = undef,
+  Optional[Stdlib::Port]            $port                        = undef,
+  Optional[Stdlib::UnixPath]        $socket                      = undef,
+  Optional[Boolean]                 $ssl                         = undef,
+  Optional[Stdlib::UnixPath]        $ssl_key                     = undef,
+  Optional[Stdlib::UnixPath]        $ssl_cert                    = undef,
+  Optional[Stdlib::UnixPath]        $ssl_ca                      = undef,
+  Array[Maxscale::TLS]              $ssl_version                 = [],
+  Optional[Integer]                 $ssl_cert_verification_depth = undef,
+  # Deprecated
+  Optional[Stdlib::UnixPath]        $ssl_ca_cert                 = undef, # Deprecated since Mariadb MaxScale 22.08.  See ssl_ca
+| -%>
+<%-
+  # Validation
+  if ! $port and ! $socket {
+    fail('one of parameter `port` or `socket` is mandatory')
+  }
+-%>
+[<%= $name -%>]
+type=listener
+service=<%= $service %>
+<%- if $protocol { -%>
+protocol=<%= $protocol %>
+<%- } -%>
+<%- if $address { -%>
+address=<%= $address %>
+<%- } -%>
+<%- if $port { -%>
+port=<%= $port %>
+<%- } -%>
+<%- if $socket { -%>
+socket=<%= $socket %>
+<%- } -%>
+<%- if $ssl != undef {-%>
+ssl=<%= $ssl %>
+<%- } -%>
+<%- if $ssl_key { -%>
+ssl_key=<%= $ssl_key %>
+<%- } -%>
+<%- if $ssl_cert { -%>
+ssl_cert=<%= $ssl_cert %>
+<%- } -%>
+<%- if $ssl_ca_cert { -%>
+ssl_ca_cert=<%= $ssl_ca_cert %> # Deprecated since Mariadb MaxScale 22.08.  See ssl_ca
+<%- } -%>
+<%- if $ssl_ca { -%>
+ssl_ca=<%= $ssl_ca %>
+<%- } -%>
+<%- if $ssl_ca { -%>
+ssl_ca=<%= $ssl_ca %>
+<%- } -%>
+<%- if $ssl_version != [] { -%>
+ssl_version=<%= $ssl_version.join(',') %>
+<%- } -%>
+<%- if $ssl_cert_verification_depth { -%>
+ssl_cert_verification_depth=<%= $ssl_cert_verification_depth %>
+<%- } -%>
+

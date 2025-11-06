@@ -1,141 +1,134 @@
-# == Class: maxscale
+# @summary
+#   Install MariaDB MaxScale.
 #
-# Install MariaDB MaxScale.
+# @param service_enable
+#   Manages if the service should be enabled
 #
-# === Parameters
+# @param configdir
+#   Configure the directory for the configuration file for MaxScale.
 #
-# [*maxscale_package_name*]
-#  Override the name of the maxscale package
+# @param configfile
+# @param user
+# @param group
 #
-# [*setup_mariadb_repository*]
-#  Setup the apt repositories from MariaDB for MaxScale.
+# @param package_name
+#   Override the name of the maxscale package
 #
-# [*repository_base_url*]
-#  Overrides the default repositorie.
+# @param package_ensure
 #
-# [*service_enable*]
-#  Manages if the service should be enabled
+# @param setup_mariadb_repository
+#   Setup the apt repositories from MariaDB for MaxScale.
 #
-# [*threads*]
-#  Manages the number of maxscale threads
+# @param package_version
+# @param repository_base_url
 #
-# [*auth_connect_timeout*]
-#  The connection timeout in seconds for the MySQL connections to the backend server
+# @param threads
+#   Manages the number of maxscale threads
 #
-# [*auth_read_timeout*]
-#  The read timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+# @param auth_connect_timeout
+#   The connection timeout in seconds for the MySQL connections to the backend server
 #
-# [*auth_write_timeout*]
-#  The write timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+# @param ms_timestamp
+#   Enable or disable the high precision timestamps in logfiles.
+#   Enabling this adds millisecond precision to all logfile timestamps.
 #
-# [*ms_timestamp*]
-#  Enable or disable the high precision timestamps in logfiles.
-#  Enabling this adds millisecond precision to all logfile timestamps.
+# @param syslog
+#   Enable or disable the logging of messages to syslog.
 #
-# [*syslog*]
-#  Enable or disable the logging of messages to syslog.
+# @param maxlog
+#   Enable or disable the logging of messages to MaxScale's log file.
 #
-# [*maxlog*]
-#  Enable or disable the logging of messages to MaxScale's log file.
+# @param log_warning
+#   Enable or disable the logging of messages whose syslog priority is warning.
 #
-# [*log_warning*]
-#  Enable or disable the logging of messages whose syslog priority is warning.
+# @param log_notice
+#   Enable or disable the logging of messages whose syslog priority is notice.
 #
-# [*log_notice*]
-#  Enable or disable the logging of messages whose syslog priority is notice.
+# @param log_info
+#   Enable or disable the logging of messages whose syslog priority is info.
 #
-# [*log_info*]
-#  Enable or disable the logging of messages whose syslog priority is info.
+# @param log_debug
+#   Enable or disable the logging of messages whose syslog priority is debug.
 #
-# [*log_debug*]
-#  Enable or disable the logging of messages whose syslog priority is debug.
+# @param log_augmentation
+#   Enable or disable the augmentation of messages.
 #
-# [*log_augmentation*]
-#  Enable or disable the augmentation of messages.
+# @param logdir
+#   Set the directory where the logfiles are stored.
 #
-# [*logdir*]
-#  Set the directory where the logfiles are stored.
+# @param datadir
+#   Set the directory where the data files used by MaxScale are stored.
 #
-# [*datadir*]
-#  Set the directory where the data files used by MaxScale are stored.
+# @param cachedir
+#   Configure the directory MaxScale uses to store cached data.
 #
-# [*cachedir*]
-#  Configure the directory MaxScale uses to store cached data.
+# @param piddir
+#   Configure the directory for the PID file for MaxScale.
 #
-# [*piddir*]
-#  Configure the directory for the PID file for MaxScale.
+# @param auth_read_timeout
+#   The read timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+#   Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
 #
-# [*configdir*]
-#  Configure the directory for the configuration file for MaxScale.
+# @param auth_write_timeout
+#   The write timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+#   Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
 #
-# === Authors
+# @param max_auth_errors_until_block
 #
-# Philipp Frik <kotty@guns-n-girls.de>
+# @param monitor
+# @param server
+# @param service
+# @param listener
+#
+# @author
+#   Philipp Frik <kotty@guns-n-girls.de>
+#
+# @see
+#   https://mariadb.com/docs/maxscale/reference/maxscale-configuration-settings
+#   https://mariadb.com/docs/maxscale/maxscale-management/deployment/maxscale-configuration-guide
+#
 class maxscale (
-  String                        $package_name,
+  Boolean                       $service_enable              = true,
+  Stdlib::UnixPath              $configdir                   = '/etc',
+  String                        $configfile                  = 'maxscale.cnf',
+  String                        $user                        = 'maxscale',
+  String                        $group                       = 'maxscale',
+  # Install
+  String                        $package_name                = 'maxscale',
+  String                        $package_ensure              = 'present',
+  Boolean                       $setup_mariadb_repository    = false,
   String                        $package_version,
-  Boolean                       $setup_mariadb_repository,
-  Boolean                       $service_enable,
-  Variant[Integer,Enum['auto']] $threads,
-  String                        $auth_connect_timeout,
-  String                        $auth_read_timeout,
-  String                        $auth_write_timeout,
-  Integer                       $ms_timestamp,
-  Integer                       $max_auth_errors_until_block,
-  Boolean                       $syslog,
-  Boolean                       $maxlog,
-  Boolean                       $log_warning,
-  Boolean                       $log_notice,
-  Boolean                       $log_info,
-  Boolean                       $log_debug,
-  Boolean                       $log_augmentation,
-  String                        $logdir,
-  String                        $datadir,
-  String                        $cachedir,
-  String                        $piddir,
-  String                        $configdir,
-  String                        $configfile,
-  String                        $max_user,
-  String                        $max_group,
   Optional[String]              $repository_base_url,
-  Optional[Hash]                $monitor,
-  Optional[Hash]                $server,
-  Optional[Hash]                $service,
-  Optional[Hash]                $listener,
+  ## Configs
+  Variant[Integer,Enum['auto']]           $threads                     = 'auto',
+  Optional[Maxscale::Duration]            $auth_connect_timeout        = undef,
+  Optional[Boolean]                       $ms_timestamp                = undef,
+  Optional[Boolean]                       $syslog                      = undef,
+  Optional[Boolean]                       $maxlog                      = undef,
+  Optional[Boolean]                       $log_warning                 = undef,
+  Optional[Boolean]                       $log_notice                  = undef,
+  Optional[Boolean]                       $log_info                    = undef,
+  Optional[Boolean]                       $log_debug                   = undef,
+  Optional[Variant[Integer[0,1],Boolean]] $log_augmentation            = undef,
+  Optional[Stdlib::Unixpath]              $logdir                      = undef,
+  Optional[Stdlib::Unixpath]              $datadir                     = undef,
+  Optional[Stdlib::Unixpath]              $cachedir                    = undef,
+  Optional[Stdlib::Unixpath]              $piddir                      = undef,
+  Optional[Integer]                       $max_auth_errors_until_block = undef,
+  # Configs (Deprecated)
+  Optional[Maxscale::Duration]            $auth_read_timeout           = undef, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
+  Optional[Maxscale::Duration]            $auth_write_timeout          = undef, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
+  ## defines
+  Hash                                    $monitor                     = {},
+  Hash                                    $server                      = {},
+  Hash                                    $service                     = {},
+  Hash                                    $listener                    = {},
 ) {
-
-  class { '::maxscale::install':
-    package_name             => $package_name,
-    setup_mariadb_repository => $setup_mariadb_repository,
-    repository_base_url      => $repository_base_url,
-    package_version          => $package_version,
-  }
-  class { '::maxscale::config':
-    threads                     => $threads,
-    auth_connect_timeout        => $auth_connect_timeout,
-    auth_read_timeout           => $auth_read_timeout,
-    auth_write_timeout          => $auth_write_timeout,
-    ms_timestamp                => $ms_timestamp,
-    syslog                      => $syslog,
-    maxlog                      => $maxlog,
-    log_warning                 => $log_warning,
-    log_notice                  => $log_notice,
-    log_info                    => $log_info,
-    log_debug                   => $log_debug,
-    log_augmentation            => $log_augmentation,
-    logdir                      => $logdir,
-    datadir                     => $datadir,
-    cachedir                    => $cachedir,
-    piddir                      => $piddir,
-    configdir                   => $configdir,
-    configfile                  => $configfile,
-    max_user                    => $max_user,
-    max_group                   => $max_group,
-    max_auth_errors_until_block => $max_auth_errors_until_block,
-  }
+  contain maxscale::install
+  contain maxscale::config
 
   # make sure maxscale user is available before writing config files
-  Class['::maxscale::install'] -> Class['::maxscale::config'] ~> Service['maxscale']
+  Class['maxscale::install'] -> Class['maxscale::config'] ~> Service['maxscale']
 
   service { 'maxscale':
     ensure    => $service_enable,
@@ -148,5 +141,4 @@ class maxscale (
   create_resources(maxscale::config::server, $server)
   create_resources(maxscale::config::service, $service)
   create_resources(maxscale::config::listener, $listener)
-
 }

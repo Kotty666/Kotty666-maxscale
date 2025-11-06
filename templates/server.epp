@@ -1,0 +1,37 @@
+<%- |
+  String                       $name,
+  Stdlib::Host                 $address,
+  Optional[Stdlib::Port]       $port           = undef,
+  Optional[String]             $monitoruser    = undef,
+  Optional[Sensitive[String]]  $monitorpw      = undef,
+  Optional[Integer]            $persistpoolmax = undef,
+  Optional[Maxscale::Duration] $persistmaxtime = undef,
+  # Deprecated?
+  Optional[String]             $protocol       = undef,
+  Optional                     $serv_weight    = undef,
+| -%>
+[<%= $name %>]
+type=server
+address=<%= $address %>
+<%- if $port { -%>
+port=<%= $port %>
+<%- } -%>
+<%- if $monitoruser { -%>
+monitoruser=<%= $monitoruser %>
+<%- } -%>
+<%- if $monitorpw { -%>
+monitorpw=<%= $monitorpw %>
+<%- } -%>
+<%- if $persistpoolmax { -%>
+persistpoolmax=<%= $persistpoolmax %>
+<%- } -%>
+<%- if $persistmaxtime { -%>
+persistmaxtime=<%= $persistmaxtime %>
+<%- } -%>
+<%- if $protocol { -%>
+protocol=<%= $protocol %>   # Deprecated?
+<%- } -%>
+<%- if $serv_weight { -%>
+serv_weight=<%= $serv_weight %>   # Deprecated?
+<%- } -%>
+

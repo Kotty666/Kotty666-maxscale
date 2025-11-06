@@ -1,0 +1,77 @@
+<%- |
+  String                                           $name,
+  Enum['readwritesplit','readconnroute']           $router,
+  Array[Enum['master','slave','synced','running']] $router_options                = [],
+  Array[String]                                    $filters                       = [],
+  Array[String]                                    $servers                       = [],
+  String                                           $user,
+  Sensitive[String]                                $password,
+  Optional[Boolean]                                $enable_root_user              = undef,
+  Optional[Boolean]                                $localhost_match_wildcard_host = undef,
+  Optional[String]                                 $version_string                = undef,
+  Optional[Boolean]                                $auth_all_servers              = undef,
+  Optional[Boolean]                                $strip_db_esc                  = undef,
+  Optional[Boolean]                                $log_auth_warnings             = undef,
+  Optional[Integer]                                $max_slave_connections         = undef,
+  Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
+  # Deprecated?
+  Optional                                         $weightby                      = undef,
+  Optional                                         $optimize_wildcard             = undef,
+  Optional                                         $retry_on_failure              = undef,
+  Optional                                         $connection_timeout            = undef,
+  Optional                                         $max_slave_replication_lag     = undef,
+| -%>
+[<%= $name -%>]
+type=service
+router=<%= $router %>
+<%- if $router_options != [] { -%>
+router_options=<%= $router_options.join(',') %>
+<%- } -%>
+<%- if $filters != [] { -%>
+filters=<%= $filters.join(' | ') %>
+<%- } -%>
+<%- if $servers != [] { -%>
+servers=<%= $servers.join(',') %>
+<%- } -%>
+user=<%= $user %>
+password=<%= $password %>
+<%- if $enable_root_user != undef { -%>
+enable_root_user=<%= $enable_root_user %>
+<%- } -%>
+<%- if $localhost_match_wildcard_host != undef { -%>
+localhost_match_wildcard_host=<%= $localhost_match_wildcard_host %>  # Note: deprecated and ignored
+<%- } -%>
+<%- if $version_string { -%>
+version_string=<%= $version_string %>
+<%- } -%>
+<%- if $auth_all_servers != undef { -%>
+auth_all_servers=<%= $auth_all_servers %>
+<%- } -%>
+<%- if $strip_db_esc != undef { -%>
+strip_db_esc=<%= $strip_db_esc %>
+<%- } -%>
+<%- if $log_auth_warnings != undef { -%>
+log_auth_warnings=<%= $log_auth_warnings %>
+<%- } -%>
+<%- if $max_slave_connections { -%>
+max_slave_connections=<%= $max_slave_connections %>
+<%- } -%>
+<%- if $use_sql_variables_in { -%>
+use_sql_variables_in=<%= $use_sql_variables_in %>
+<%- } -%>
+<%- if $weightby != undef { -%>
+weightby=<%= $weightby %>   # Deprecated??
+<%- } -%>
+<%- if $optimize_wildcard != undef { -%>
+optimize_wildcard=<%= $optimize_wildcard %>   # deprecated??
+<%- } -%>
+<%- if $retry_on_failure != undef { -%>
+retry_on_failure=<%= $retry_on_failure %>   # Deprecated??
+<%- } -%>
+<%- if $connection_timeout != undef { -%>
+connection_timeout=<%= $connection_timeout %>   # Deprecated??
+<%- } -%>
+<%- if $max_slave_replication_lag != undef { -%>
+max_slave_replication_lag=<%= $max_slave_replication_lag %>   # Deprecated??
+<%- } -%>
+
