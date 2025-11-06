@@ -46,6 +46,6 @@ define maxscale::config::monitor (
         replication_password         => $replication_password,
         cooperative_monitoring_locks => $cooperative_monitoring_locks,
     }),
-    order   => '05',
+    order   => 21,
   }
 }

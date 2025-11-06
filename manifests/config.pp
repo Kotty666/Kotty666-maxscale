@@ -104,4 +104,67 @@ class maxscale::config (
     }),
     order   => '02',
   }
+
+  $_server_header = @(_EOF)
+    ############################################################################
+    # Server definitions                                                       #
+    #                                                                          #
+    # Set the address of the server to the network address of a MariaDB server.#
+    ############################################################################
+    | _EOF
+
+  concat::fragment { 'Server Header':
+    target  => $configfile,
+    order   => 10,
+    content => $_server_header,
+  }
+
+  $_monitor_header = @(_EOF)
+    ##################################################################################################
+    # Monitor for the servers                                                                        #
+    #                                                                                                #
+    # This will keep MaxScale aware of the state of the servers.                                     #
+    # MariaDB Monitor documentation:                                                                 #
+    # https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-25-01-monitors/                       #
+    #                                                                                                #
+    # The GRANTs needed by the monitor user depend on the actual monitor.                            #
+    # The GRANTs required by the MariaDB Monitor can be found here:                                  #
+    # https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-mariadb-monitor/#required-grants #
+    ##################################################################################################
+    | _EOF
+
+  concat::fragment { 'Monitor Header':
+    target  => $configfile,
+    order   => 20,
+    content => $_monitor_header,
+  }
+
+  $_service_header = @(_EOF)
+    #########################################################################################################
+    # Service definitions                                                                                   #
+    #                                                                                                       #
+    # Service Definition for a read-only service and a read/write splitting service.                        #
+    #                                                                                                       #
+    # The GRANTs needed by the service user can be found here:                                              #
+    # https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-authentication-modules/#required-grants #
+    #########################################################################################################
+    | _EOF
+  concat::fragment { 'Service Header':
+    target  => $configfile,
+    order   => 30,
+    content => $_service_header,
+  }
+
+  $_listener_header = @(_EOF)
+    ####################################################################
+    # Listener definitions                                             #
+    #                                                                  #
+    # These listeners represent the ports the services will listen on. #
+    ####################################################################
+    | _EOF
+  concat::fragment { 'Listener Header':
+    target  => $configfile,
+    order   => 40,
+    content => $_listener_header,
+  }
 }

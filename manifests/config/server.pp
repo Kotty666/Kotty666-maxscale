@@ -45,6 +45,6 @@ define maxscale::config::server (
         protocol       => $protocol,
         serv_weight    => $serv_weight,
     }),
-    order   => '10',
+    order   => 11,
   }
 }

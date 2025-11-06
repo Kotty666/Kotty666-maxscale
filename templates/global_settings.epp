@@ -18,6 +18,12 @@
   Optional[Maxscale::Duration]            $auth_read_timeout           = undef, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
   Optional[Maxscale::Duration]            $auth_write_timeout          = undef, # Deprecated and ignored as of MaxScale 2.5.0. See auth_connect_timeout above
 | -%>
+#######################################################################################################
+# Global parameters                                                                                   #
+#                                                                                                     #
+# Complete list of configuration options:                                                             #
+# https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-mariadb-maxscale-configuration-guide/ #
+#######################################################################################################
 [maxscale]
 threads=<%= $threads %>
 <%- if $auth_connect_timeout { -%>

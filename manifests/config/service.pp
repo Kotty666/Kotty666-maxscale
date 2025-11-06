@@ -86,6 +86,6 @@ define maxscale::config::service (
         connection_timeout            => $connection_timeout,
         max_slave_replication_lag     => $max_slave_replication_lag,
     }),
-    order   => '03',
+    order   => 31,
   }
 }

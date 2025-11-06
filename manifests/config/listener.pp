@@ -55,6 +55,6 @@ define maxscale::config::listener (
         # Deprecated
         ssl_ca_cert                 => $ssl_ca_cert,
     }),
-    order   => '04',
+    order   => 41,
   }
 }
