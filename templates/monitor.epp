@@ -14,6 +14,10 @@
   Optional[String]                                        $replication_user             = undef,
   Optional[Sensitive[String]]                             $replication_password         = undef,
   Optional[Enum['majority_of_all','majority_of_running']] $cooperative_monitoring_locks = undef,
+  Optional[Boolean]                                       $enforce_writable_master      = undef,
+  Optional[Boolean]                                       $enforce_readonly_slaves      = undef,
+  Optional[String]                                        $ssh_user                     = undef,
+  Optional[Stdlib::UnixPath]                              $ssh_keyfile                  = undef,
 | -%>
 [<%= $name -%>]
 type=monitor
@@ -74,5 +78,17 @@ cooperative_monitoring_locks=<%= $cooperative_monitoring_locks %>
 # https://mariadb.com/kb/en/mariadb-maxscale-2501-maxscale-2501-mariadb-monitor/#cooperative-monitoring #
 #########################################################################################################
 # cooperative_monitoring_locks=majority_of_all
+<%- } -%>
+<%- if $enforce_writable_master != undef { -%>
+enforce_writable_master=<%= $enforce_writable_master %>
+<%- } -%>
+<%- if $enforce_readonly_slaves != undef { -%>
+enforce_readonly_slaves=<%= $enforce_readonly_slaves %>
+<%- } -%>
+<%- if $ssh_user { -%>
+ssh_user=<%= $ssh_user %>
+<%- } -%>
+<%- if $ssh_keyfile { -%>
+ssh_keyfile=<%= $ssh_keyfile %>
 <%- } -%>
 
