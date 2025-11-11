@@ -19,7 +19,7 @@
 # @param replication_password
 # @param cooperative_monitoring_locks
 # @param enforce_writable_master
-# @param enforce_readonly_slaves
+# @param enforce_read_only_slaves
 # @param ssh_user
 # @param ssh_keyfile
 #
@@ -44,7 +44,7 @@ define maxscale::config::monitor (
   Optional[Sensitive[String]]                             $replication_password         = undef,
   Optional[Enum['majority_of_all','majority_of_running']] $cooperative_monitoring_locks = undef,
   Optional[Boolean]                                       $enforce_writable_master      = undef,
-  Optional[Boolean]                                       $enforce_readonly_slaves      = undef,
+  Optional[Boolean]                                       $enforce_read_only_slaves     = undef,
   Optional[String]                                        $ssh_user                     = undef,
   Optional[Stdlib::UnixPath]                              $ssh_keyfile                  = undef,
 ) {
@@ -67,7 +67,7 @@ define maxscale::config::monitor (
         replication_password         => $replication_password,
         cooperative_monitoring_locks => $cooperative_monitoring_locks,
         enforce_writable_master      => $enforce_writable_master,
-        enforce_readonly_slaves      => $enforce_readonly_slaves,
+        enforce_read_only_slaves     => $enforce_read_only_slaves,
         ssh_user                     => $ssh_user,
         ssh_keyfile                  => $ssh_keyfile,
     }),
