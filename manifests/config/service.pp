@@ -15,6 +15,7 @@
 # @param strip_db_esc
 # @param log_auth_warnings
 # @param max_slave_connections
+# @param max_replication_lag
 # @param use_sql_variables_in
 # @param transaction_replay
 # @param transaction_replay_timeout
@@ -32,7 +33,8 @@
 #   This parameter no longer appear in the documentation, but is kept for backward compatibility
 #
 # @param max_slave_replication_lag
-#   This parameter no longer appear in the documentation, but is kept for backward compatibility
+#   Deprecated since MariaDB MaxScale 23.02, but still works as an alias for max_replication_lag.
+#   Is kept for backward compatibility
 #
 # @see
 #   https://mariadb.com/docs/maxscale/reference/maxscale-configuration-settings
@@ -52,6 +54,7 @@ define maxscale::config::service (
   Optional[Boolean]                                $strip_db_esc                  = undef,
   Optional[Boolean]                                $log_auth_warnings             = undef,
   Optional[Integer]                                $max_slave_connections         = undef,
+  Optional[Maxscale::Duration]                     $max_replication_lag           = undef,
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
   Optional[Boolean]                                $transaction_replay            = undef,
   Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
@@ -82,6 +85,7 @@ define maxscale::config::service (
         strip_db_esc                  => $strip_db_esc,
         log_auth_warnings             => $log_auth_warnings,
         max_slave_connections         => $max_slave_connections,
+        max_replication_lag           => $max_replication_lag,
         use_sql_variables_in          => $use_sql_variables_in,
         transaction_replay            => $transaction_replay,
         transaction_replay_timeout    => $transaction_replay_timeout,
