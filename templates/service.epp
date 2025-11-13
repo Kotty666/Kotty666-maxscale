@@ -15,6 +15,8 @@
   Optional[Integer]                                $max_slave_connections         = undef,
   Optional[Maxscale::Duration]                     $max_replication_lag           = undef,
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
+  Optional[Boolean]                                $strict_multi_stmt             = undef,
+  Optional[Boolean]                                $strict_sp_calls               = undef,
   Optional[Boolean]                                $transaction_replay            = undef,
   Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
   # Deprecated?
@@ -64,6 +66,12 @@ max_replication_lag=<%= $max_replication_lag %>
 <%- } -%>
 <%- if $use_sql_variables_in { -%>
 use_sql_variables_in=<%= $use_sql_variables_in %>
+<%- } -%>
+<%- if $strict_multi_stmt != undef { -%>
+strict_multi_stmt=<%= $strict_multi_stmt %>
+<%- } -%>
+<%- if $strict_sp_calls != undef { -%>
+strict_sp_calls=<%= $strict_sp_calls %>
 <%- } -%>
 <%- if $transaction_replay != undef { -%>
 transaction_replay=<%= $transaction_replay %>

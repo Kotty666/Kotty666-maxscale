@@ -17,6 +17,8 @@
 # @param max_slave_connections
 # @param max_replication_lag
 # @param use_sql_variables_in
+# @param strict_multi_stmt
+# @param strict_sp_calls
 # @param transaction_replay
 # @param transaction_replay_timeout
 #
@@ -56,6 +58,8 @@ define maxscale::config::service (
   Optional[Integer]                                $max_slave_connections         = undef,
   Optional[Maxscale::Duration]                     $max_replication_lag           = undef,
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
+  Optional[Boolean]                                $strict_multi_stmt             = undef,
+  Optional[Boolean]                                $strict_sp_calls               = undef,
   Optional[Boolean]                                $transaction_replay            = undef,
   Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
   # Deprecated?
@@ -87,6 +91,8 @@ define maxscale::config::service (
         max_slave_connections         => $max_slave_connections,
         max_replication_lag           => $max_replication_lag,
         use_sql_variables_in          => $use_sql_variables_in,
+        strict_multi_stmt             => $strict_multi_stmt,
+        strict_sp_calls               => $strict_sp_calls,
         transaction_replay            => $transaction_replay,
         transaction_replay_timeout    => $transaction_replay_timeout,
         # Deprecated?
