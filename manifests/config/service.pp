@@ -19,6 +19,7 @@
 # @param use_sql_variables_in
 # @param strict_multi_stmt
 # @param strict_sp_calls
+# @param causal_reads
 # @param transaction_replay
 # @param transaction_replay_timeout
 #
@@ -60,6 +61,7 @@ define maxscale::config::service (
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
   Optional[Boolean]                                $strict_multi_stmt             = undef,
   Optional[Boolean]                                $strict_sp_calls               = undef,
+  Optional[Maxscale::Causal_reads]                 $causal_reads                  = undef,
   Optional[Boolean]                                $transaction_replay            = undef,
   Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
   # Deprecated?
@@ -93,6 +95,7 @@ define maxscale::config::service (
         use_sql_variables_in          => $use_sql_variables_in,
         strict_multi_stmt             => $strict_multi_stmt,
         strict_sp_calls               => $strict_sp_calls,
+        causal_reads                  => $causal_reads,
         transaction_replay            => $transaction_replay,
         transaction_replay_timeout    => $transaction_replay_timeout,
         # Deprecated?

@@ -17,6 +17,7 @@
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
   Optional[Boolean]                                $strict_multi_stmt             = undef,
   Optional[Boolean]                                $strict_sp_calls               = undef,
+  Optional[Maxscale::Causal_reads]                 $causal_reads                  = undef,
   Optional[Boolean]                                $transaction_replay            = undef,
   Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
   # Deprecated?
@@ -72,6 +73,9 @@ strict_multi_stmt=<%= $strict_multi_stmt %>
 <%- } -%>
 <%- if $strict_sp_calls != undef { -%>
 strict_sp_calls=<%= $strict_sp_calls %>
+<%- } -%>
+<%- if $causal_reads { -%>
+causal_reads=<%= $causal_reads %>
 <%- } -%>
 <%- if $transaction_replay != undef { -%>
 transaction_replay=<%= $transaction_replay %>
