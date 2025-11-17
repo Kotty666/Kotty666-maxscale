@@ -46,7 +46,7 @@ define maxscale::config::listener (
         address                     => $address,
         port                        => $port,
         socket                      => $socket,
-        ssl                         => $socket,
+        ssl                         => $ssl,
         ssl_key                     => $ssl_key,
         ssl_cert                    => $ssl_cert,
         ssl_ca                      => $ssl_ca,
