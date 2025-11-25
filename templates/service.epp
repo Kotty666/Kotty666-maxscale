@@ -15,11 +15,14 @@
   Optional[Integer]                                $max_slave_connections         = undef,
   Optional[Maxscale::Duration]                     $max_replication_lag           = undef,
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
+  Optional[Boolean]                                $master_reconnection           = undef,
+  Optional[Maxscale::Slave_selection_criteria]     $slave_selection_criteria      = undef,
   Optional[Boolean]                                $strict_multi_stmt             = undef,
   Optional[Boolean]                                $strict_sp_calls               = undef,
-  Optional[Maxscale::Causal_reads]                 $causal_reads                  = undef,
+  Optional[Maxscale::Master_failure_mode]          $master_failure_mode           = undef,
   Optional[Boolean]                                $transaction_replay            = undef,
   Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
+  Optional[Maxscale::Causal_reads]                 $causal_reads                  = undef,
   # Deprecated?
   Optional                                         $weightby                      = undef,
   Optional                                         $optimize_wildcard             = undef,
@@ -68,14 +71,20 @@ max_replication_lag=<%= $max_replication_lag %>
 <%- if $use_sql_variables_in { -%>
 use_sql_variables_in=<%= $use_sql_variables_in %>
 <%- } -%>
+<%- if $master_reconnection != undef { -%>
+master_reconnection=<%= $master_reconnection %>
+<%- } -%>
+<%- if $slave_selection_criteria { -%>
+slave_selection_criteria=<%= $slave_selection_criteria %>
+<%- } -%>
 <%- if $strict_multi_stmt != undef { -%>
 strict_multi_stmt=<%= $strict_multi_stmt %>
 <%- } -%>
 <%- if $strict_sp_calls != undef { -%>
 strict_sp_calls=<%= $strict_sp_calls %>
 <%- } -%>
-<%- if $causal_reads { -%>
-causal_reads=<%= $causal_reads %>
+<%- if $master_failure_mode { -%>
+master_failure_mode=<%= $master_failure_mode %>
 <%- } -%>
 <%- if $transaction_replay != undef { -%>
 transaction_replay=<%= $transaction_replay %>
@@ -89,6 +98,9 @@ transaction_replay=<%= $transaction_replay %>
 <%- } -%>
 <%- if $transaction_replay_timeout { -%>
 transaction_replay_timeout=<%= $transaction_replay_timeout %>
+<%- } -%>
+<%- if $causal_reads { -%>
+causal_reads=<%= $causal_reads %>
 <%- } -%>
 <%- if $weightby != undef { -%>
 weightby=<%= $weightby %>   # Deprecated??

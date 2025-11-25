@@ -17,11 +17,14 @@
 # @param max_slave_connections
 # @param max_replication_lag
 # @param use_sql_variables_in
+# @param master_reconnection
+# @param slave_selection_criteria
 # @param strict_multi_stmt
 # @param strict_sp_calls
-# @param causal_reads
+# @param master_failure_mode
 # @param transaction_replay
 # @param transaction_replay_timeout
+# @param causal_reads
 #
 # @param weightby
 #   This parameter no longer appear in the documentation, but is kept for backward compatibility
@@ -59,11 +62,14 @@ define maxscale::config::service (
   Optional[Integer]                                $max_slave_connections         = undef,
   Optional[Maxscale::Duration]                     $max_replication_lag           = undef,
   Optional[Enum['master','all']]                   $use_sql_variables_in          = undef,
+  Optional[Boolean]                                $master_reconnection           = undef,
+  Optional[Maxscale::Slave_selection_criteria]     $slave_selection_criteria      = undef,
   Optional[Boolean]                                $strict_multi_stmt             = undef,
   Optional[Boolean]                                $strict_sp_calls               = undef,
-  Optional[Maxscale::Causal_reads]                 $causal_reads                  = undef,
+  Optional[Maxscale::Master_failure_mode]          $master_failure_mode           = undef,
   Optional[Boolean]                                $transaction_replay            = undef,
   Optional[Maxscale::Duration]                     $transaction_replay_timeout    = undef,
+  Optional[Maxscale::Causal_reads]                 $causal_reads                  = undef,
   # Deprecated?
   Optional                                         $weightby                      = undef,
   Optional                                         $optimize_wildcard             = undef,
@@ -93,11 +99,14 @@ define maxscale::config::service (
         max_slave_connections         => $max_slave_connections,
         max_replication_lag           => $max_replication_lag,
         use_sql_variables_in          => $use_sql_variables_in,
+        master_reconnection           => $master_reconnection,
+        slave_selection_criteria      => $slave_selection_criteria,
         strict_multi_stmt             => $strict_multi_stmt,
         strict_sp_calls               => $strict_sp_calls,
-        causal_reads                  => $causal_reads,
+        master_failure_mode           => $master_failure_mode,
         transaction_replay            => $transaction_replay,
         transaction_replay_timeout    => $transaction_replay_timeout,
+        causal_reads                  => $causal_reads,
         # Deprecated?
         weightby                      => $weightby,
         optimize_wildcard             => $optimize_wildcard,
