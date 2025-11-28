@@ -7,6 +7,7 @@
   Optional[Integer]            $persistpoolmax              = undef,
   Optional[Maxscale::Duration] $persistmaxtime              = undef,
   Optional[Boolean]            $proxy_protocol              = undef,
+  Optional[Maxscale::Rank]     $rank                        = undef,
   Optional[Boolean]            $ssl                         = undef,
   Optional[Boolean]            $ssl_verify_peer_certificate = undef,
   # Deprecated?
@@ -45,6 +46,9 @@ proxy_protocol=<%= $proxy_protocol %>
 # easier user management: https://mariadb.com/kb/en/proxy-protocol-support/      #
 ##################################################################################
 # proxy_protocol=true
+<%- } -%>
+<%- if $rank { -%>
+rank=<%= $rank %>
 <%- } -%>
 <%- if $ssl != undef { -%>
 ssl=<%= $ssl %>

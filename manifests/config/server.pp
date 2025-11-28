@@ -10,6 +10,7 @@
 # @param persistpoolmax
 # @param persistmaxtime
 # @param proxy_protocol
+# @param rank
 # @param ssl
 # @param ssl_verify_peer_certificate
 #
@@ -32,6 +33,7 @@ define maxscale::config::server (
   Optional[Integer]            $persistpoolmax              = undef,
   Optional[Maxscale::Duration] $persistmaxtime              = undef,
   Optional[Boolean]            $proxy_protocol              = undef,
+  Optional[Maxscale::Rank]     $rank                        = undef,
   Optional[Boolean]            $ssl                         = undef,
   Optional[Boolean]            $ssl_verify_peer_certificate = undef,
   # Deprecated?
@@ -48,6 +50,7 @@ define maxscale::config::server (
         persistpoolmax              => $persistpoolmax,
         persistmaxtime              => $persistmaxtime,
         proxy_protocol              => $proxy_protocol,
+        rank                        => $rank,
         ssl                         => $ssl,
         ssl_verify_peer_certificate => $ssl_verify_peer_certificate,
         # Deprecated?
