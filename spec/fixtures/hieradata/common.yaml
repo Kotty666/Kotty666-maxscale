@@ -1,0 +1,3 @@
+---
+# Test hiera data - empty by default
+# Module data is loaded from data/ directory
