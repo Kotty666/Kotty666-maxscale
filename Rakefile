@@ -1,40 +1,18 @@
 # frozen_string_literal: true
 
+require 'bundler'
+require 'puppet_litmus/rake_tasks' if Gem.loaded_specs.key? 'puppet_litmus'
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-syntax/tasks/puppet-syntax'
-require 'puppet-lint/tasks/puppet-lint'
+require 'puppet-strings/tasks' if Gem.loaded_specs.key? 'puppet-strings'
 
-begin
-  require 'puppet_strings/tasks'
-rescue LoadError
-  # puppet-strings not available
-end
-
-PuppetLint.configuration.log_format = '%{path}:%{line}:%{check}:%{KIND}:%{message}'
-PuppetLint.configuration.fail_on_warnings = true
-PuppetLint.configuration.send('relative')
+PuppetLint.configuration.send('disable_relative')
+PuppetLint.configuration.send('disable_80chars')
 PuppetLint.configuration.send('disable_140chars')
 PuppetLint.configuration.send('disable_class_inherits_from_params_class')
+PuppetLint.configuration.send('disable_autoloader_layout')
 PuppetLint.configuration.send('disable_documentation')
 PuppetLint.configuration.send('disable_single_quote_string_with_variables')
+PuppetLint.configuration.fail_on_warnings = true
+PuppetLint.configuration.ignore_paths = [".vendor/**/*.pp", ".bundle/**/*.pp", "pkg/**/*.pp", "spec/**/*.pp", "tests/**/*.pp", "types/**/*.pp", "vendor/**/*.pp"]
 
-exclude_paths = %w[
-  bundle/**/*
-  pkg/**/*
-  vendor/**/*
-  .vendor/**/*
-  spec/**/*
-]
-PuppetLint.configuration.ignore_paths = exclude_paths
-PuppetSyntax.exclude_paths = exclude_paths
-
-desc 'Run all validation and unit tests'
-task default: %i[validate lint spec]
-
-desc 'Generate REFERENCE.md'
-task :reference do
-  sh 'puppet strings generate --format markdown --out REFERENCE.md'
-end
-
-desc 'Run all CI tasks'
-task ci: %i[validate lint spec]

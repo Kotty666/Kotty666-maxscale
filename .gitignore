@@ -1,44 +1,37 @@
-# Managed by puppet-lint
+.git/
+.*.sw[op]
+.metadata
+.yardoc
+.yardwarns
+*.iml
 /.bundle/
+/.idea/
 /.vagrant/
-/Gemfile.lock
-/.yardoc/
 /coverage/
+/bin/
 /doc/
+/Gemfile.local
+/Gemfile.lock
+/junit/
 /log/
 /pkg/
 /spec/fixtures/manifests/
-/spec/fixtures/modules/
+/spec/fixtures/modules/*
 /tmp/
 /vendor/
-.vendor/
-*.swp
-*~
-.*.sw?
-.idea/
-.envrc
-
-# PDK
-/.pdk/
-/.pdkignore
-
-# Bolt
-/.modules/
-/bolt-debug.log
-/.resource_types/
-
-# Editor backup files
-*.bak
-*.orig
-
-# OS files
+/.vendor/
+/convert_report.txt
+/update_report.txt
 .DS_Store
-Thumbs.db
-
-# Test coverage
-/coverage/
-/.rspec_status
-
-# Ruby
-/.ruby-version
-/.ruby-gemset
+.project
+.envrc
+/inventory.yaml
+/spec/fixtures/litmus_inventory.yaml
+.resource_types
+.modules
+.task_cache.json
+.plan_cache.json
+.rerun.json
+bolt-debug.log
+/spec/fixtures/modules/
+/.vscode/
