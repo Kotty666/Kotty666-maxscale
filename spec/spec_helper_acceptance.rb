@@ -21,7 +21,7 @@ RSpec.configure do |c|
     hosts.each do |host|
       # Ensure puppet-agent is properly configured
       on(host, 'puppet config set --section main server $(hostname -f)')
-      
+
       # Install dependencies based on OS
       case host['platform']
       when %r{debian|ubuntu}

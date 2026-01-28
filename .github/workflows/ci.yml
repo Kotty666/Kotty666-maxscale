@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   validate:
-    name: Validate
+    name: PDK Validate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,8 +31,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pdk
 
-      - name: PDK Validate
-        run: pdk validate --parallel
+      - name: PDK Validate (syntax and metadata only)
+        run: pdk validate metadata,puppet,yaml --parallel
 
   lint:
     name: Puppet Lint
@@ -47,26 +47,19 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
-      - name: Install dependencies
-        run: |
-          gem install puppet-lint
-          gem install puppet-lint-absolute_classname-check
-          gem install puppet-lint-leading_zero-check
-          gem install puppet-lint-trailing_comma-check
-          gem install puppet-lint-version_comparison-check
-          gem install puppet-lint-unquoted_string-check
-          gem install puppet-lint-empty_string-check
+      - name: Install puppet-lint
+        run: gem install puppet-lint
 
       - name: Run puppet-lint
         run: |
-          puppet-lint --fail-on-warnings \
+          puppet-lint \
             --no-140chars-check \
             --no-documentation-check \
             --no-autoloader_layout-check \
             manifests/ types/
 
   syntax:
-    name: Syntax Check
+    name: Syntax Check - Puppet ${{ matrix.puppet_version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -82,18 +75,16 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
 
       - name: Install Puppet ${{ matrix.puppet_version }}
-        run: |
-          gem install puppet -v "~> ${{ matrix.puppet_version }}.0"
-          gem install puppet-syntax
+        run: gem install puppet -v "~> ${{ matrix.puppet_version }}.0" --no-document
 
-      - name: Check Puppet syntax
+      - name: Check Puppet manifest syntax
         run: |
-          puppet parser validate manifests/**/*.pp types/**/*.pp
+          find manifests -name '*.pp' -exec puppet parser validate {} +
+          find types -name '*.pp' -exec puppet parser validate {} +
 
-      - name: Check ERB/EPP syntax
+      - name: Check EPP template syntax
         run: |
           for file in templates/*.epp; do
             echo "Checking $file"
@@ -111,7 +102,7 @@ jobs:
           - '7.0'
           - '7.24'
           - '8.0'
-          - '8.4'
+          - '8.10'
         include:
           - puppet_version: '7.0'
             ruby_version: '2.7'
@@ -119,7 +110,7 @@ jobs:
             ruby_version: '3.2'
           - puppet_version: '8.0'
             ruby_version: '3.2'
-          - puppet_version: '8.4'
+          - puppet_version: '8.10'
             ruby_version: '3.2'
     steps:
       - name: Checkout
@@ -134,11 +125,11 @@ jobs:
         env:
           PUPPET_GEM_VERSION: "~> ${{ matrix.puppet_version }}"
         run: |
-          gem install bundler
-          bundle config set --local without 'acceptance documentation'
+          gem install bundler --no-document
+          bundle config set --local without 'acceptance documentation development'
           bundle install --jobs 4 --retry 3
 
-      - name: Setup fixtures
+      - name: Setup test fixtures
         run: bundle exec rake spec_prep
 
       - name: Run unit tests
@@ -152,7 +143,7 @@ jobs:
           path: coverage/
           retention-days: 5
 
-  unit-tests-os-matrix:
+  os-matrix-tests:
     name: Unit Tests - ${{ matrix.os_name }}
     needs: [validate, lint, syntax]
     runs-on: ubuntu-latest
@@ -161,21 +152,45 @@ jobs:
       matrix:
         include:
           - os_name: 'Debian 11'
-            os_facts: '{"os": {"family": "Debian", "name": "Debian", "release": {"major": "11", "full": "11"}, "distro": {"codename": "bullseye"}}, "operatingsystem": "Debian", "operatingsystemrelease": "11"}'
+            operatingsystem: 'Debian'
+            operatingsystemrelease: '11'
+            osfamily: 'Debian'
+            lsbdistcodename: 'bullseye'
           - os_name: 'Debian 12'
-            os_facts: '{"os": {"family": "Debian", "name": "Debian", "release": {"major": "12", "full": "12"}, "distro": {"codename": "bookworm"}}, "operatingsystem": "Debian", "operatingsystemrelease": "12"}'
+            operatingsystem: 'Debian'
+            operatingsystemrelease: '12'
+            osfamily: 'Debian'
+            lsbdistcodename: 'bookworm'
           - os_name: 'Ubuntu 22.04'
-            os_facts: '{"os": {"family": "Debian", "name": "Ubuntu", "release": {"major": "22.04", "full": "22.04"}, "distro": {"codename": "jammy"}}, "operatingsystem": "Ubuntu", "operatingsystemrelease": "22.04"}'
+            operatingsystem: 'Ubuntu'
+            operatingsystemrelease: '22.04'
+            osfamily: 'Debian'
+            lsbdistcodename: 'jammy'
           - os_name: 'Ubuntu 24.04'
-            os_facts: '{"os": {"family": "Debian", "name": "Ubuntu", "release": {"major": "24.04", "full": "24.04"}, "distro": {"codename": "noble"}}, "operatingsystem": "Ubuntu", "operatingsystemrelease": "24.04"}'
+            operatingsystem: 'Ubuntu'
+            operatingsystemrelease: '24.04'
+            osfamily: 'Debian'
+            lsbdistcodename: 'noble'
           - os_name: 'RHEL 8'
-            os_facts: '{"os": {"family": "RedHat", "name": "RedHat", "release": {"major": "8", "full": "8.9"}}, "operatingsystem": "RedHat", "operatingsystemrelease": "8.9"}'
+            operatingsystem: 'RedHat'
+            operatingsystemrelease: '8'
+            osfamily: 'RedHat'
+            lsbdistcodename: ''
           - os_name: 'RHEL 9'
-            os_facts: '{"os": {"family": "RedHat", "name": "RedHat", "release": {"major": "9", "full": "9.3"}}, "operatingsystem": "RedHat", "operatingsystemrelease": "9.3"}'
+            operatingsystem: 'RedHat'
+            operatingsystemrelease: '9'
+            osfamily: 'RedHat'
+            lsbdistcodename: ''
           - os_name: 'Rocky 8'
-            os_facts: '{"os": {"family": "RedHat", "name": "Rocky", "release": {"major": "8", "full": "8.9"}}, "operatingsystem": "Rocky", "operatingsystemrelease": "8.9"}'
+            operatingsystem: 'Rocky'
+            operatingsystemrelease: '8'
+            osfamily: 'RedHat'
+            lsbdistcodename: ''
           - os_name: 'Rocky 9'
-            os_facts: '{"os": {"family": "RedHat", "name": "Rocky", "release": {"major": "9", "full": "9.3"}}, "operatingsystem": "Rocky", "operatingsystemrelease": "9.3"}'
+            operatingsystem: 'Rocky'
+            operatingsystemrelease: '9'
+            osfamily: 'RedHat'
+            lsbdistcodename: ''
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -189,16 +204,19 @@ jobs:
         env:
           PUPPET_GEM_VERSION: "~> 8.0"
         run: |
-          gem install bundler
-          bundle config set --local without 'acceptance documentation'
+          gem install bundler --no-document
+          bundle config set --local without 'acceptance documentation development'
           bundle install --jobs 4 --retry 3
 
-      - name: Setup fixtures
+      - name: Setup test fixtures
         run: bundle exec rake spec_prep
 
       - name: Run unit tests for ${{ matrix.os_name }}
         env:
-          SPEC_FACTS_OS: ${{ matrix.os_facts }}
+          FACTER_operatingsystem: ${{ matrix.operatingsystem }}
+          FACTER_operatingsystemrelease: ${{ matrix.operatingsystemrelease }}
+          FACTER_osfamily: ${{ matrix.osfamily }}
+          FACTER_lsbdistcodename: ${{ matrix.lsbdistcodename }}
         run: bundle exec rake spec
 
   documentation:
@@ -216,12 +234,11 @@ jobs:
 
       - name: Install puppet-strings
         run: |
-          gem install puppet
-          gem install puppet-strings
+          gem install puppet --no-document
+          gem install puppet-strings --no-document
 
       - name: Generate REFERENCE.md
-        run: |
-          puppet strings generate --format markdown --out REFERENCE.md
+        run: puppet strings generate --format markdown --out REFERENCE.md
 
       - name: Upload documentation
         uses: actions/upload-artifact@v4

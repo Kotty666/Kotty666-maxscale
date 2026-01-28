@@ -24,35 +24,28 @@
 #   }
 #
 type Maxscale::Filter = Struct[{
-  module                      => String,
-  # QLA Filter options
-  Optional[filebase]          => String,
-  Optional[log_type]          => Enum['session', 'unified'],
-  Optional[flush]             => Boolean,
-  Optional[append]            => Boolean,
-  Optional[newline_replacement] => String,
-  Optional[separator]         => String,
-  # Regex Filter options
-  Optional[match]             => String,
-  Optional[replace]           => String,
-  Optional[source]            => String,
-  Optional[user]              => String,
-  # Tee Filter options
-  Optional[service]           => String,
-  # Throttle Filter options
-  Optional[max_qps]           => Integer[0],
-  Optional[throttling_duration] => String,
-  Optional[sampling_duration] => String,
-  Optional[continuous_duration] => String,
-  # Named Server Filter
-  Optional[match01]           => String,
-  Optional[target01]          => String,
-  # Cache Filter
-  Optional[storage]           => String,
-  Optional[ttl]               => String,
-  Optional[max_size]          => String,
-  Optional[max_count]         => Integer[0],
-  Optional[rules]             => Stdlib::Absolutepath,
-  # Allow any additional parameters for future compatibility
-  Optional[options]           => Hash[String, Variant[String, Integer, Boolean]],
+    module                        => String,
+    Optional[filebase]            => String,
+    Optional[log_type]            => Enum['session', 'unified'],
+    Optional[flush]               => Boolean,
+    Optional[append]              => Boolean,
+    Optional[newline_replacement] => String,
+    Optional[separator]           => String,
+    Optional[match]               => String,
+    Optional[replace]             => String,
+    Optional[source]              => String,
+    Optional[user]                => String,
+    Optional[service]             => String,
+    Optional[max_qps]             => Integer[0],
+    Optional[throttling_duration] => String,
+    Optional[sampling_duration]   => String,
+    Optional[continuous_duration] => String,
+    Optional[match01]             => String,
+    Optional[target01]            => String,
+    Optional[storage]             => String,
+    Optional[ttl]                 => String,
+    Optional[max_size]            => String,
+    Optional[max_count]           => Integer[0],
+    Optional[rules]               => Stdlib::Absolutepath,
+    Optional[options]             => Hash[String, Variant[String, Integer, Boolean]],
 }]
