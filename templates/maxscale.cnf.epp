@@ -9,7 +9,6 @@
 # MaxScale Configuration File
 # Managed by Puppet - DO NOT EDIT MANUALLY
 #
-# Generated: <%= Time.now.strftime('%Y-%m-%d %H:%M:%S') %>
 
 # =============================================================================
 # Global Settings

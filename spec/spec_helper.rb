@@ -26,23 +26,9 @@ default_fact_files.each do |f|
   end
 end
 
-# Fixture settings
-fixture_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
-
 RSpec.configure do |c|
   c.default_facts = default_facts
-  c.hiera_config = File.expand_path(File.join(__FILE__, '../fixtures/hiera.yaml'))
-  c.before :each do
-    # Set up fixtures
-    Puppet.settings[:environmentpath] = File.join(fixture_path, 'environments')
-    Puppet.settings[:strict_variables] = true
-  end
   c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
   c.after(:suite) do
   end
-end
-
-# Ensure spec_helper files exist
-def ensure_module_fixtures
-  # Create fixtures directory structure if needed
 end

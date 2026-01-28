@@ -3,9 +3,12 @@ fixtures:
   forge_modules:
     stdlib:
       repo: 'puppetlabs/stdlib'
-      ref: '9.0.0'
+      ref: '9.7.0'
     apt:
       repo: 'puppetlabs/apt'
-      ref: '9.0.0'
+      ref: '9.4.0'
+    yumrepo:
+      repo: 'puppetlabs/yumrepo_core'
+      ref: '3.0.1'
   symlinks:
     maxscale: "#{source_dir}"

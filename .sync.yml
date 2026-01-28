@@ -1,8 +1,33 @@
-# This file can be used to customize the files managed by PDK.
-#
-# See https://github.com/puppetlabs/pdk-templates/blob/main/README.md
-# for more information.
-#
-# See https://github.com/puppetlabs/pdk-templates/blob/main/config_defaults.yml
-# for the default values.
---- {}
+---
+# PDK sync configuration
+# This file configures how PDK updates module files
+
+.gitignore:
+  paths:
+    - /coverage/
+    - /log/
+    - /pkg/
+    - /spec/fixtures/modules/
+    - /vendor/
+    - /.vendor/
+    - /.bundle/
+    - /Gemfile.lock
+    - /.idea/
+    - /.vscode/
+
+.gitlab-ci.yml:
+  delete: true
+
+.travis.yml:
+  delete: true
+
+appveyor.yml:
+  delete: true
+
+Gemfile:
+  optional:
+    ':development':
+      - gem: 'pdk'
+
+spec/spec_helper.rb:
+  mock_with: ':rspec'

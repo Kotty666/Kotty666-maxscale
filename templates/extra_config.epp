@@ -1,10 +1,9 @@
 <%- |
   Hash $sections,
 | -%>
-# MaxScale Extra Configuration File
+# MaxScale Extra Configuration
 # Managed by Puppet - DO NOT EDIT MANUALLY
 #
-# Generated: <%= Time.now.strftime('%Y-%m-%d %H:%M:%S') %>
 
 <%- $sections.each |$section_name, $section_config| { -%>
 [<%= $section_name %>]

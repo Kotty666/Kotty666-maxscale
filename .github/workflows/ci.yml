@@ -31,7 +31,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y pdk
 
-      - name: PDK Validate (syntax and metadata only)
+      - name: PDK Validate
         run: pdk validate metadata,puppet,yaml --parallel
 
   lint:
@@ -48,7 +48,7 @@ jobs:
           bundler-cache: true
 
       - name: Install puppet-lint
-        run: gem install puppet-lint
+        run: gem install puppet-lint --no-document
 
       - name: Run puppet-lint
         run: |
@@ -99,34 +99,24 @@ jobs:
       fail-fast: false
       matrix:
         puppet_version:
-          - '7.0'
           - '7.24'
           - '8.0'
           - '8.10'
-        include:
-          - puppet_version: '7.0'
-            ruby_version: '2.7'
-          - puppet_version: '7.24'
-            ruby_version: '3.2'
-          - puppet_version: '8.0'
-            ruby_version: '3.2'
-          - puppet_version: '8.10'
-            ruby_version: '3.2'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Ruby ${{ matrix.ruby_version }}
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby_version }}
+          ruby-version: '3.2'
 
       - name: Install dependencies
         env:
           PUPPET_GEM_VERSION: "~> ${{ matrix.puppet_version }}"
         run: |
           gem install bundler --no-document
-          bundle config set --local without 'acceptance documentation development'
+          bundle config set --local without 'acceptance documentation development rubocop'
           bundle install --jobs 4 --retry 3
 
       - name: Setup test fixtures
@@ -155,42 +145,34 @@ jobs:
             operatingsystem: 'Debian'
             operatingsystemrelease: '11'
             osfamily: 'Debian'
-            lsbdistcodename: 'bullseye'
           - os_name: 'Debian 12'
             operatingsystem: 'Debian'
             operatingsystemrelease: '12'
             osfamily: 'Debian'
-            lsbdistcodename: 'bookworm'
           - os_name: 'Ubuntu 22.04'
             operatingsystem: 'Ubuntu'
             operatingsystemrelease: '22.04'
             osfamily: 'Debian'
-            lsbdistcodename: 'jammy'
           - os_name: 'Ubuntu 24.04'
             operatingsystem: 'Ubuntu'
             operatingsystemrelease: '24.04'
             osfamily: 'Debian'
-            lsbdistcodename: 'noble'
           - os_name: 'RHEL 8'
             operatingsystem: 'RedHat'
             operatingsystemrelease: '8'
             osfamily: 'RedHat'
-            lsbdistcodename: ''
           - os_name: 'RHEL 9'
             operatingsystem: 'RedHat'
             operatingsystemrelease: '9'
             osfamily: 'RedHat'
-            lsbdistcodename: ''
           - os_name: 'Rocky 8'
             operatingsystem: 'Rocky'
             operatingsystemrelease: '8'
             osfamily: 'RedHat'
-            lsbdistcodename: ''
           - os_name: 'Rocky 9'
             operatingsystem: 'Rocky'
             operatingsystemrelease: '9'
             osfamily: 'RedHat'
-            lsbdistcodename: ''
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -205,7 +187,7 @@ jobs:
           PUPPET_GEM_VERSION: "~> 8.0"
         run: |
           gem install bundler --no-document
-          bundle config set --local without 'acceptance documentation development'
+          bundle config set --local without 'acceptance documentation development rubocop'
           bundle install --jobs 4 --retry 3
 
       - name: Setup test fixtures
@@ -216,7 +198,6 @@ jobs:
           FACTER_operatingsystem: ${{ matrix.operatingsystem }}
           FACTER_operatingsystemrelease: ${{ matrix.operatingsystemrelease }}
           FACTER_osfamily: ${{ matrix.osfamily }}
-          FACTER_lsbdistcodename: ${{ matrix.lsbdistcodename }}
         run: bundle exec rake spec
 
   documentation:

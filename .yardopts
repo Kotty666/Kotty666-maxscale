@@ -1,1 +1,10 @@
 --markup markdown
+--output-dir doc/
+manifests/**/*.pp
+types/**/*.pp
+lib/**/*.rb
+functions/**/*.pp
+-
+README.md
+REFERENCE.md
+CHANGELOG.md
