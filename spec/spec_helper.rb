@@ -5,7 +5,11 @@ RSpec.configure do |c|
 end
 
 require 'puppetlabs_spec_helper/module_spec_helper'
-require 'rspec-puppet-facts'
+begin
+  require 'rspec-puppet-facts'
+rescue LoadError
+  warn 'rspec-puppet-facts not available, falling back to basic facts'
+end
 
 require 'spec_helper_local' if File.file?(File.join(File.dirname(__FILE__), 'spec_helper_local.rb'))
 
