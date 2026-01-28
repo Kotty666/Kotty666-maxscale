@@ -185,27 +185,29 @@ class maxscale (
   Hash[String, Hash]            $extra_config_files,
 ) {
   # Ensure proper class ordering
-  include maxscale::install
+  include maxscale::user
   include maxscale::config
+  include maxscale::install
   include maxscale::service
 
-  # Establish relationships
-  Class['maxscale::install']
+  Class['maxscale::user']
   -> Class['maxscale::config']
   ~> Class['maxscale::service']
 
-  # Repository must be set up before package installation
+  Class['maxscale::install']
+  -> Class['maxscale::service']
+
   if $manage_repo {
     case $facts['os']['family'] {
       'Debian': {
         include maxscale::repo::apt
-        Class['maxscale::repo::apt'] -> Package['maxscale']
+        Class['maxscale::repo::apt'] -> Class['maxscale::install']
       }
       'RedHat': {
         include maxscale::repo::yum
-        Class['maxscale::repo::yum'] -> Package['maxscale']
+        Class['maxscale::repo::yum'] -> Class['maxscale::install']
       }
       default: {}
     }
-  } 
+  }
 }

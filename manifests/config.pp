@@ -63,6 +63,7 @@ class maxscale::config {
         'listeners'      => $maxscale::listeners,
         'filters'        => $maxscale::filters,
     }),
+    require => User[$maxscale::maxscale_user],
   }
 
   # Create any extra configuration files
