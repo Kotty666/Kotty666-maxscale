@@ -1,1 +1,3 @@
 --relative
+--no-140chars-check
+--no-documentation-check

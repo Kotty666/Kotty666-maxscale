@@ -1,0 +1,23 @@
+<%- |
+  Hash $sections,
+| -%>
+# MaxScale Extra Configuration File
+# Managed by Puppet - DO NOT EDIT MANUALLY
+#
+# Generated: <%= Time.now.strftime('%Y-%m-%d %H:%M:%S') %>
+
+<%- $sections.each |$section_name, $section_config| { -%>
+[<%= $section_name %>]
+<%- $section_config.each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+
+<%- } -%>

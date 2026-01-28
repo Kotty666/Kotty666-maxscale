@@ -1,2 +1,3 @@
 ---
-maxscale::repository_base_url: "http://downloads.mariadb.com/MaxScale/%{hiera('maxscale::version')}/debian/"
+# Debian-specific settings for MaxScale
+# Repository URL uses APT format for Debian-based systems

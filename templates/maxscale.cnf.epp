@@ -1,0 +1,199 @@
+<%- |
+  Hash $global_options,
+  Hash $servers,
+  Hash $monitors,
+  Hash $services,
+  Hash $listeners,
+  Hash $filters,
+| -%>
+# MaxScale Configuration File
+# Managed by Puppet - DO NOT EDIT MANUALLY
+#
+# Generated: <%= Time.now.strftime('%Y-%m-%d %H:%M:%S') %>
+
+# =============================================================================
+# Global Settings
+# =============================================================================
+[maxscale]
+<%- $global_options.each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+
+<%- if $servers.length > 0 { -%>
+# =============================================================================
+# Server Definitions
+# =============================================================================
+<%- $servers.each |$name, $config| { -%>
+[<%= $name %>]
+type=server
+<%- $config.each |$key, $value| { -%>
+<%- if $key != 'options' { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+<%- if 'options' in $config and $config['options'] { -%>
+<%- $config['options'].each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+
+<%- } -%>
+<%- } -%>
+<%- if $monitors.length > 0 { -%>
+# =============================================================================
+# Monitor Definitions
+# =============================================================================
+<%- $monitors.each |$name, $config| { -%>
+[<%= $name %>]
+type=monitor
+<%- $config.each |$key, $value| { -%>
+<%- if $key != 'options' { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+<%- if 'options' in $config and $config['options'] { -%>
+<%- $config['options'].each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+
+<%- } -%>
+<%- } -%>
+<%- if $filters.length > 0 { -%>
+# =============================================================================
+# Filter Definitions
+# =============================================================================
+<%- $filters.each |$name, $config| { -%>
+[<%= $name %>]
+type=filter
+<%- $config.each |$key, $value| { -%>
+<%- if $key != 'options' { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+<%- if 'options' in $config and $config['options'] { -%>
+<%- $config['options'].each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+
+<%- } -%>
+<%- } -%>
+<%- if $services.length > 0 { -%>
+# =============================================================================
+# Service Definitions
+# =============================================================================
+<%- $services.each |$name, $config| { -%>
+[<%= $name %>]
+type=service
+<%- $config.each |$key, $value| { -%>
+<%- if $key != 'options' { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+<%- if 'options' in $config and $config['options'] { -%>
+<%- $config['options'].each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+
+<%- } -%>
+<%- } -%>
+<%- if $listeners.length > 0 { -%>
+# =============================================================================
+# Listener Definitions
+# =============================================================================
+<%- $listeners.each |$name, $config| { -%>
+[<%= $name %>]
+type=listener
+<%- $config.each |$key, $value| { -%>
+<%- if $key != 'options' { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+<%- if 'options' in $config and $config['options'] { -%>
+<%- $config['options'].each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>
+
+<%- } -%>
+<%- } -%>
