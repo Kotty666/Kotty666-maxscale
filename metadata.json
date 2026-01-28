@@ -82,5 +82,8 @@
     "proxy",
     "load-balancer",
     "replication"
-  ]
+  ],
+  "pdk-version": "3.4.0",
+  "template-url": "https://github.com/puppetlabs/pdk-templates#main",
+  "template-ref": "tags/3.6.1-0-gb9426e5"
 }
