@@ -116,7 +116,7 @@ jobs:
           PUPPET_GEM_VERSION: "~> ${{ matrix.puppet_version }}"
         run: |
           gem install bundler --no-document
-          bundle config set --local without 'acceptance documentation development rubocop'
+          bundle config set --local without 'acceptance documentation rubocop'
           bundle install --jobs 4 --retry 3
 
       - name: Setup test fixtures
@@ -187,7 +187,7 @@ jobs:
           PUPPET_GEM_VERSION: "~> 8.0"
         run: |
           gem install bundler --no-document
-          bundle config set --local without 'acceptance documentation development rubocop'
+          bundle config set --local without 'acceptance documentation rubocop'
           bundle install --jobs 4 --retry 3
 
       - name: Setup test fixtures
