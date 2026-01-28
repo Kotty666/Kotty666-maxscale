@@ -1,0 +1,16 @@
+# CODEOWNERS for puppet-maxscale
+# These owners will be requested for review when PRs are opened
+
+# Default owners for everything in the repo
+* @Kotty666
+
+# Manifests and templates require careful review
+/manifests/ @Kotty666
+/templates/ @Kotty666
+/types/ @Kotty666
+
+# Data files
+/data/ @Kotty666
+
+# CI/CD configuration
+/.github/ @Kotty666

@@ -1,0 +1,44 @@
+# Managed by puppet-lint
+/.bundle/
+/.vagrant/
+/Gemfile.lock
+/.yardoc/
+/coverage/
+/doc/
+/log/
+/pkg/
+/spec/fixtures/manifests/
+/spec/fixtures/modules/
+/tmp/
+/vendor/
+.vendor/
+*.swp
+*~
+.*.sw?
+.idea/
+.envrc
+
+# PDK
+/.pdk/
+/.pdkignore
+
+# Bolt
+/.modules/
+/bolt-debug.log
+/.resource_types/
+
+# Editor backup files
+*.bak
+*.orig
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+/coverage/
+/.rspec_status
+
+# Ruby
+/.ruby-version
+/.ruby-gemset

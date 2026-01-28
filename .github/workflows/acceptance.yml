@@ -1,0 +1,85 @@
+---
+name: Acceptance Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+
+concurrency:
+  group: acceptance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  acceptance:
+    name: ${{ matrix.os }} - Puppet ${{ matrix.puppet_version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - debian-11
+          - debian-12
+          - ubuntu-2204
+          - ubuntu-2404
+          - rockylinux-8
+          - rockylinux-9
+        puppet_version:
+          - '7'
+          - '8'
+        exclude:
+          # Reduce matrix for faster CI - test all OS on Puppet 8, subset on Puppet 7
+          - os: debian-11
+            puppet_version: '7'
+          - os: ubuntu-2404
+            puppet_version: '7'
+          - os: rockylinux-8
+            puppet_version: '7'
+    env:
+      PUPPET_GEM_VERSION: "~> ${{ matrix.puppet_version }}.0"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle config set --local with 'acceptance'
+          bundle install --jobs 4 --retry 3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run acceptance tests
+        env:
+          BEAKER_PUPPET_COLLECTION: puppet${{ matrix.puppet_version }}
+          BEAKER_setfile: ${{ matrix.os }}
+          BEAKER_destroy: 'onpass'
+          BEAKER_debug: 'true'
+        run: |
+          bundle exec rake beaker:${{ matrix.os }}
+        continue-on-error: true
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-logs-${{ matrix.os }}-puppet${{ matrix.puppet_version }}
+          path: |
+            log/
+            junit/
+          retention-days: 7
