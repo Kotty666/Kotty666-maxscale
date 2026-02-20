@@ -87,11 +87,9 @@ define maxscale::config::service (
   Optional[Integer] $max_slave_replication_lag     = undef,
   Optional[String]  $use_sql_variables_in          = undef,
 ) {
-
   concat::fragment { "service_${name}":
     target  => $maxscale::configfile,
     content => template('maxscale/service.erb'),
     order   => '03',
   }
-
 }

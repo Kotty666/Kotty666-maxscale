@@ -128,7 +128,6 @@ class maxscale (
   Optional[Hash]                $service             = undef,
   Optional[Hash]                $listener            = undef,
 ) {
-
   class { 'maxscale::install':
     package_name             => $package_name,
     setup_mariadb_repository => $setup_mariadb_repository,
@@ -161,8 +160,8 @@ class maxscale (
   }
 
   Class['maxscale::install']
-    -> Class['maxscale::config']
-    ~> Service['maxscale']
+  -> Class['maxscale::config']
+  ~> Service['maxscale']
 
   service { 'maxscale':
     ensure    => $service_enable ? {

@@ -89,7 +89,6 @@ class maxscale::config (
   String                         $max_user,
   String                         $max_group,
 ) {
-
   # Ensure install happens first
   require Class['maxscale::install']
 

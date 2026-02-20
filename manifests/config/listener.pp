@@ -49,7 +49,6 @@ define maxscale::config::listener (
   Optional[String]               $ssl_version                  = undef,
   Optional[Integer]              $ssl_cert_verification_depth  = undef,
 ) {
-
   concat::fragment { "Listener ${name}":
     target  => $maxscale::configfile,
     content => template('maxscale/listener.erb'),
