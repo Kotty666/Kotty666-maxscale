@@ -4,6 +4,8 @@
 #
 # @example
 #   include maxscale::install::direct
+# @param package_url
+#   TODO
 class maxscale::install::direct (
   String $package_url
 ) {
@@ -16,8 +18,8 @@ class maxscale::install::direct (
       }
     }
     'Debian': {
-      exec {'GetDebFile':
-        command     => "curl --silent -k $package_url --output /tmp/maxscale.deb",
+      exec { 'GetDebFile':
+        command     => "curl --silent -k ${package_url} --output /tmp/maxscale.deb",
         path        => ['/usr/bin', '/usr/sbin', '/bin', '/sbin'],
         provider    => 'shell',
         refreshonly => true,

@@ -1,82 +1,107 @@
 # == Class: maxscale
 #
-# Install MariaDB MaxScale.
+# @summary
+#   Installs and configures MariaDB MaxScale.
 #
-# === Parameters
+# @example
+#   include maxscale
 #
-# [*maxscale_package_name*]
-#  Override the name of the maxscale package
+# @param package_name
+#   Name of the MaxScale package to install.
 #
-# [*setup_mariadb_repository*]
-#  Setup the apt repositories from MariaDB for MaxScale.
+# @param package_version
+#   Specific version of the MaxScale package to install.
 #
-# [*repository_base_url*]
-#  Overrides the default repositorie.
+# @param setup_mariadb_repository
+#   Whether to configure the official MariaDB repository for MaxScale.
 #
-# [*service_enable*]
-#  Manages if the service should be enabled
+# @param service_enable
+#   Whether the MaxScale service should be enabled at boot.
 #
-# [*threads*]
-#  Manages the number of maxscale threads
+# @param threads
+#   Number of MaxScale worker threads. Can be an Integer or 'auto'.
 #
-# [*auth_connect_timeout*]
-#  The connection timeout in seconds for the MySQL connections to the backend server
+# @param auth_connect_timeout
+#   Connection timeout (in seconds) for backend MySQL connections.
 #
-# [*auth_read_timeout*]
-#  The read timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+# @param auth_read_timeout
+#   Read timeout (in seconds) when fetching authentication data.
 #
-# [*auth_write_timeout*]
-#  The write timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+# @param auth_write_timeout
+#   Write timeout (in seconds) when fetching authentication data.
 #
-# [*ms_timestamp*]
-#  Enable or disable the high precision timestamps in logfiles.
-#  Enabling this adds millisecond precision to all logfile timestamps.
+# @param ms_timestamp
+#   Enable (1) or disable (0) millisecond precision timestamps in logs.
 #
-# [*syslog*]
-#  Enable or disable the logging of messages to syslog.
+# @param max_auth_errors_until_block
+#   Number of authentication failures allowed before blocking a host.
 #
-# [*maxlog*]
-#  Enable or disable the logging of messages to MaxScale's log file.
+# @param syslog
+#   Enable or disable logging to syslog.
 #
-# [*log_warning*]
-#  Enable or disable the logging of messages whose syslog priority is warning.
+# @param maxlog
+#   Enable or disable logging to the MaxScale log file.
 #
-# [*log_notice*]
-#  Enable or disable the logging of messages whose syslog priority is notice.
+# @param log_warning
+#   Enable or disable logging of warning-level messages.
 #
-# [*log_info*]
-#  Enable or disable the logging of messages whose syslog priority is info.
+# @param log_notice
+#   Enable or disable logging of notice-level messages.
 #
-# [*log_debug*]
-#  Enable or disable the logging of messages whose syslog priority is debug.
+# @param log_info
+#   Enable or disable logging of info-level messages.
 #
-# [*log_augmentation*]
-#  Enable or disable the augmentation of messages.
+# @param log_debug
+#   Enable or disable logging of debug-level messages.
 #
-# [*logdir*]
-#  Set the directory where the logfiles are stored.
+# @param log_augmentation
+#   Enable or disable log message augmentation.
 #
-# [*datadir*]
-#  Set the directory where the data files used by MaxScale are stored.
+# @param logdir
+#   Directory where MaxScale log files are stored.
 #
-# [*cachedir*]
-#  Configure the directory MaxScale uses to store cached data.
+# @param datadir
+#   Directory where MaxScale data files are stored.
 #
-# [*piddir*]
-#  Configure the directory for the PID file for MaxScale.
+# @param cachedir
+#   Directory where MaxScale cached data is stored.
 #
-# [*configdir*]
-#  Configure the directory for the configuration file for MaxScale.
+# @param piddir
+#   Directory where the MaxScale PID file is stored.
 #
-# === Authors
+# @param configdir
+#   Directory containing MaxScale configuration files.
 #
-# Philipp Frik <kotty@guns-n-girls.de>
+# @param configfile
+#   Path to the main MaxScale configuration file.
+#
+# @param max_user
+#   User account under which MaxScale runs.
+#
+# @param max_group
+#   Group under which MaxScale runs.
+#
+# @param repository_base_url
+#   Optional base URL for the MariaDB repository.
+#
+# @param monitor
+#   Optional hash of monitor resources to create.
+#
+# @param server
+#   Optional hash of server resources to create.
+#
+# @param service
+#   Optional hash of service resources to create.
+#
+# @param listener
+#   Optional hash of listener resources to create.
+#
 class maxscale (
   String                        $package_name,
   String                        $package_version,
   Boolean                       $setup_mariadb_repository,
   Boolean                       $service_enable,
-  Variant[Integer,Enum['auto']] $threads,
+  Variant[Integer, Enum['auto']] $threads,
   String                        $auth_connect_timeout,
   String                        $auth_read_timeout,
   String                        $auth_write_timeout,
@@ -97,20 +122,21 @@ class maxscale (
   String                        $configfile,
   String                        $max_user,
   String                        $max_group,
-  Optional[String]              $repository_base_url,
-  Optional[Hash]                $monitor,
-  Optional[Hash]                $server,
-  Optional[Hash]                $service,
-  Optional[Hash]                $listener,
+  Optional[String]              $repository_base_url = undef,
+  Optional[Hash]                $monitor             = undef,
+  Optional[Hash]                $server              = undef,
+  Optional[Hash]                $service             = undef,
+  Optional[Hash]                $listener            = undef,
 ) {
 
-  class { '::maxscale::install':
+  class { 'maxscale::install':
     package_name             => $package_name,
     setup_mariadb_repository => $setup_mariadb_repository,
     repository_base_url      => $repository_base_url,
     package_version          => $package_version,
   }
-  class { '::maxscale::config':
+
+  class { 'maxscale::config':
     threads                     => $threads,
     auth_connect_timeout        => $auth_connect_timeout,
     auth_read_timeout           => $auth_read_timeout,
@@ -134,19 +160,22 @@ class maxscale (
     max_auth_errors_until_block => $max_auth_errors_until_block,
   }
 
-  # make sure maxscale user is available before writing config files
-  Class['::maxscale::install'] -> Class['::maxscale::config'] ~> Service['maxscale']
+  Class['maxscale::install']
+    -> Class['maxscale::config']
+    ~> Service['maxscale']
 
   service { 'maxscale':
-    ensure    => $service_enable,
+    ensure    => $service_enable ? {
+      true  => 'running',
+      false => 'stopped',
+    },
     name      => $package_name,
     enable    => $service_enable,
     subscribe => Package[$package_name],
   }
 
-  create_resources(maxscale::config::monitor, $monitor)
-  create_resources(maxscale::config::server, $server)
-  create_resources(maxscale::config::service, $service)
+  create_resources(maxscale::config::monitor,  $monitor)
+  create_resources(maxscale::config::server,   $server)
+  create_resources(maxscale::config::service,  $service)
   create_resources(maxscale::config::listener, $listener)
-
 }

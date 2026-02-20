@@ -4,11 +4,11 @@
 #
 # @example
 #   include maxscale::install::apt
+# @param repository_base_url
+#    The URL to the APT package repository
 class maxscale::install::apt (
-    String $repository_base_url
+  String $repository_base_url
 ) {
-
-
   unless $facts['os']['architecture'] == 'amd64' {
     fail('Architectures != amd64 are not supported by the maxscale package repository!')
   }
@@ -22,9 +22,9 @@ class maxscale::install::apt (
     },
     key          => {
       'id'     => $maxscale::gpg_key_id,
-      'server' => 'hkp://keyserver.ubuntu.com:80'
+      'server' => 'hkp://keyserver.ubuntu.com:80',
     },
     repos        => 'main',
-    release      => $::lsbdistcodename,
+    release      => $facts['os']['distro']['codename'],
   }
 }
