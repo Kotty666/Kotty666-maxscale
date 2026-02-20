@@ -164,7 +164,7 @@ class maxscale (
   ~> Service['maxscale']
 
   service { 'maxscale':
-    ensure    => $service_enable ? {
+    ensure    => $service_enable ? { # lint:ignore:selector_inside_resource
       true  => 'running',
       false => 'stopped',
     },

@@ -28,7 +28,7 @@ is developed by the MariaDB.
 * overrides /etc/maxscale.cnf
 * adds per default the mariadb-maxscale repository and its key to the system
 
-### Setup Requirements 
+### Setup Requirements
 
 * the module requires:
   - puppetlabs-stdlib
