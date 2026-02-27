@@ -34,7 +34,6 @@
 [<%= $name %>]
 type=server
 <%- $config.each |$key, $value| { -%>
-<%- if $key != 'options' { -%>
 <%- if $value =~ Sensitive { -%>
 <%= $key %>=<%= $value.unwrap %>
 <%- } elsif $value =~ Boolean { -%>
@@ -43,18 +42,6 @@ type=server
 <%= $key %>=<%= $value.join(',') %>
 <%- } else { -%>
 <%= $key %>=<%= $value %>
-<%- } -%>
-<%- } -%>
-<%- } -%>
-<%- if 'options' in $config and $config['options'] { -%>
-<%- $config['options'].each |$key, $value| { -%>
-<%- if $value =~ Sensitive { -%>
-<%= $key %>=<%= $value.unwrap %>
-<%- } elsif $value =~ Boolean { -%>
-<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
-<%- } else { -%>
-<%= $key %>=<%= $value %>
-<%- } -%>
 <%- } -%>
 <%- } -%>
 
@@ -68,7 +55,6 @@ type=server
 [<%= $name %>]
 type=monitor
 <%- $config.each |$key, $value| { -%>
-<%- if $key != 'options' { -%>
 <%- if $value =~ Sensitive { -%>
 <%= $key %>=<%= $value.unwrap %>
 <%- } elsif $value =~ Boolean { -%>
@@ -77,18 +63,6 @@ type=monitor
 <%= $key %>=<%= $value.join(',') %>
 <%- } else { -%>
 <%= $key %>=<%= $value %>
-<%- } -%>
-<%- } -%>
-<%- } -%>
-<%- if 'options' in $config and $config['options'] { -%>
-<%- $config['options'].each |$key, $value| { -%>
-<%- if $value =~ Sensitive { -%>
-<%= $key %>=<%= $value.unwrap %>
-<%- } elsif $value =~ Boolean { -%>
-<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
-<%- } else { -%>
-<%= $key %>=<%= $value %>
-<%- } -%>
 <%- } -%>
 <%- } -%>
 
@@ -102,7 +76,6 @@ type=monitor
 [<%= $name %>]
 type=filter
 <%- $config.each |$key, $value| { -%>
-<%- if $key != 'options' { -%>
 <%- if $value =~ Sensitive { -%>
 <%= $key %>=<%= $value.unwrap %>
 <%- } elsif $value =~ Boolean { -%>
@@ -111,18 +84,6 @@ type=filter
 <%= $key %>=<%= $value.join(',') %>
 <%- } else { -%>
 <%= $key %>=<%= $value %>
-<%- } -%>
-<%- } -%>
-<%- } -%>
-<%- if 'options' in $config and $config['options'] { -%>
-<%- $config['options'].each |$key, $value| { -%>
-<%- if $value =~ Sensitive { -%>
-<%= $key %>=<%= $value.unwrap %>
-<%- } elsif $value =~ Boolean { -%>
-<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
-<%- } else { -%>
-<%= $key %>=<%= $value %>
-<%- } -%>
 <%- } -%>
 <%- } -%>
 
@@ -136,7 +97,6 @@ type=filter
 [<%= $name %>]
 type=service
 <%- $config.each |$key, $value| { -%>
-<%- if $key != 'options' { -%>
 <%- if $value =~ Sensitive { -%>
 <%= $key %>=<%= $value.unwrap %>
 <%- } elsif $value =~ Boolean { -%>
@@ -145,18 +105,6 @@ type=service
 <%= $key %>=<%= $value.join(',') %>
 <%- } else { -%>
 <%= $key %>=<%= $value %>
-<%- } -%>
-<%- } -%>
-<%- } -%>
-<%- if 'options' in $config and $config['options'] { -%>
-<%- $config['options'].each |$key, $value| { -%>
-<%- if $value =~ Sensitive { -%>
-<%= $key %>=<%= $value.unwrap %>
-<%- } elsif $value =~ Boolean { -%>
-<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
-<%- } else { -%>
-<%= $key %>=<%= $value %>
-<%- } -%>
 <%- } -%>
 <%- } -%>
 
@@ -170,7 +118,6 @@ type=service
 [<%= $name %>]
 type=listener
 <%- $config.each |$key, $value| { -%>
-<%- if $key != 'options' { -%>
 <%- if $value =~ Sensitive { -%>
 <%= $key %>=<%= $value.unwrap %>
 <%- } elsif $value =~ Boolean { -%>
@@ -179,18 +126,6 @@ type=listener
 <%= $key %>=<%= $value.join(',') %>
 <%- } else { -%>
 <%= $key %>=<%= $value %>
-<%- } -%>
-<%- } -%>
-<%- } -%>
-<%- if 'options' in $config and $config['options'] { -%>
-<%- $config['options'].each |$key, $value| { -%>
-<%- if $value =~ Sensitive { -%>
-<%= $key %>=<%= $value.unwrap %>
-<%- } elsif $value =~ Boolean { -%>
-<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
-<%- } else { -%>
-<%= $key %>=<%= $value %>
-<%- } -%>
 <%- } -%>
 <%- } -%>
 

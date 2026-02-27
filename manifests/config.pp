@@ -1,8 +1,8 @@
 # @summary Manages MaxScale configuration
 #
 # This private class manages the MaxScale configuration files and directories.
-# It uses a flexible, hash-based approach where all configuration options
-# are passed through to the configuration file without hardcoding parameters.
+# It creates the main configuration file from hash parameters and manages
+# the config.d directory where defined types place their individual files.
 #
 # @api private
 #
@@ -36,6 +36,20 @@ class maxscale::config {
     mode   => '0755',
   }
 
+  # Manage the config.d directory for defined-type based config files.
+  # purge + recurse ensures that files not managed by Puppet are removed,
+  # keeping the config directory in sync with the catalog.
+  $config_d_path = "${maxscale::config_dir}/${maxscale::config_d_dir}"
+
+  file { $config_d_path:
+    ensure  => directory,
+    owner   => $maxscale::config_owner,
+    group   => $maxscale::config_group,
+    mode    => '0755',
+    purge   => true,
+    recurse => true,
+  }
+
   # Build the complete configuration
   $config_path = "${maxscale::config_dir}/${maxscale::config_file}"
 
@@ -63,7 +77,6 @@ class maxscale::config {
         'listeners'      => $maxscale::listeners,
         'filters'        => $maxscale::filters,
     }),
-    require => User[$maxscale::maxscale_user],
   }
 
   # Create any extra configuration files

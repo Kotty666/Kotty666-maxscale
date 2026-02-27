@@ -7,12 +7,17 @@ class maxscale::repo::apt {
 
   include apt
 
+  $repo_url = $maxscale::repo_base_url ? {
+    undef   => "https://dlm.mariadb.com/repo/maxscale/${maxscale::repo_version}/apt",
+    default => $maxscale::repo_base_url,
+  }
+
   apt::source { 'maxscale':
-    location => "https://dlm.mariadb.com/repo/maxscale/${maxscale::repo_version}/apt",
+    location => $repo_url,
     release  => $facts['os']['distro']['codename'],
     repos    => 'main',
     key      => {
-      'id'     => '177F4010FE56CA3336300305F1656F24C74CD1D8',
+      'id'     => $maxscale::gpg_key_id,
       'source' => 'https://supplychain.mariadb.com/MariaDB-Server-GPG-KEY',
     },
   }

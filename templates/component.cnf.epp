@@ -1,11 +1,12 @@
 <%- |
-  Hash $sections,
+  String $name,
+  String $component_type,
+  Hash   $params,
 | -%>
 # Managed by Puppet - DO NOT EDIT MANUALLY
-<%- $sections.each |$name, $config| { -%>
-
 [<%= $name %>]
-<%- $config.each |$key, $value| { -%>
+type=<%= $component_type %>
+<%- $params.each |$key, $value| { -%>
 <%- if $value =~ Sensitive { -%>
 <%= $key %>=<%= $value.unwrap %>
 <%- } elsif $value =~ Boolean { -%>
@@ -14,6 +15,5 @@
 <%= $key %>=<%= $value.join(',') %>
 <%- } else { -%>
 <%= $key %>=<%= $value %>
-<%- } -%>
 <%- } -%>
 <%- } -%>

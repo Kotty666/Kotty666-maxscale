@@ -1,7 +1,5 @@
 # @summary Manages the MaxScale service
 #
-# This private class manages the MaxScale systemd service.
-#
 # @api private
 #
 class maxscale::service {

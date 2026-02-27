@@ -15,11 +15,12 @@ maxscale::service_name: 'maxscale'
 maxscale::manage_repo: false
 maxscale::repo_version: '24.02'
 maxscale::repo_base_url: ~
-maxscale::gpg_key_id: 'BCA43417C3B485DD128EC6D4B7B3B788A8D3785C'
+maxscale::gpg_key_id: '177F4010FE56CA3336300305F1656F24C74CD1D8'
 
 # Configuration file settings
 maxscale::config_dir: '/etc'
 maxscale::config_file: 'maxscale.cnf'
+maxscale::config_d_dir: 'maxscale.cnf.d'
 maxscale::config_owner: 'root'
 maxscale::config_group: 'root'
 maxscale::config_mode: '0644'
@@ -32,6 +33,9 @@ maxscale::cache_dir: '/var/cache/maxscale'
 maxscale::pid_dir: '/var/run/maxscale'
 
 # System user/group
+# Set manage_user to false if the package creates the user (default behaviour).
+# Set to true only if you need the user to exist before the package is installed.
+maxscale::manage_user: false
 maxscale::maxscale_user: 'maxscale'
 maxscale::maxscale_group: 'maxscale'
 
@@ -44,6 +48,8 @@ maxscale::global_options:
   log_debug: false
 
 # Component definitions - empty by default
+# Can be filled via Hiera or passed as class parameters.
+# For dynamic/virtual resource usage, use the defined types instead.
 maxscale::servers: {}
 maxscale::monitors: {}
 maxscale::services: {}

@@ -3,36 +3,22 @@
 [![Puppet Forge](https://img.shields.io/puppetforge/v/kotty666/maxscale.svg)](https://forge.puppet.com/kotty666/maxscale)
 [![License](https://img.shields.io/github/license/Kotty666/puppet-maxscale.svg)](LICENSE)
 
-## Table of Contents
-
-1. [Description](#description)
-2. [Setup](#setup)
-    * [Requirements](#requirements)
-    * [Beginning with maxscale](#beginning-with-maxscale)
-3. [Usage](#usage)
-    * [Basic Installation](#basic-installation)
-    * [Full Configuration Example](#full-configuration-example)
-    * [MariaDB Monitor with Auto-Failover](#mariadb-monitor-with-auto-failover)
-    * [Galera Cluster Configuration](#galera-cluster-configuration)
-    * [Read-Write Split with SSL](#read-write-split-with-ssl)
-    * [Using Filters](#using-filters)
-    * [Extra Configuration Files](#extra-configuration-files)
-4. [Reference](#reference)
-5. [Limitations](#limitations)
-6. [Development](#development)
-
 ## Description
 
-This Puppet module manages the installation and configuration of [MariaDB MaxScale](https://mariadb.com/kb/en/maxscale/), 
+This Puppet module manages the installation and configuration of [MariaDB MaxScale](https://mariadb.com/kb/en/maxscale/),
 a database proxy that extends the functionality of MariaDB/MySQL servers.
 
 **Key Features:**
 
-- **Flexible, hash-based configuration** - All parameters are passed through without hardcoding, allowing support for any current or future MaxScale options
-- **Modern Puppet practices** - Uses EPP templates, strong typing, and Puppet 7/8 syntax
-- **Repository management** - Optionally configures official MariaDB repositories
-- **Support for all MaxScale components** - Servers, Monitors, Services, Listeners, and Filters
-- **Sensitive data handling** - Passwords can use Puppet's `Sensitive` type
+- **Two configuration approaches** — hash-based (main class) *and* defined types
+  (config.d), fully combinable
+- **Virtual & collected resources** — defined types enable `@maxscale::config::server`
+  and `realize()` patterns, exported resources, and dynamic loops
+- **Forward compatible** — open hash parameters pass any key/value through to MaxScale
+  config files without module changes
+- **Modern Puppet practices** — EPP templates, strong typing, Puppet 7/8 syntax, `contain`
+- **Repository management** — optional official MariaDB repository setup
+- **Sensitive data handling** — passwords support Puppet's `Sensitive` type
 
 ## Setup
 
@@ -44,265 +30,179 @@ a database proxy that extends the functionality of MariaDB/MySQL servers.
 
 ### Beginning with maxscale
 
-The simplest way to get started is:
-
 ```puppet
 class { 'maxscale':
   manage_repo => true,
 }
 ```
 
-This will install MaxScale from the official MariaDB repository with default settings.
-
 ## Usage
 
-### Basic Installation
+### Approach 1: Hash-Based (Main Config File)
 
-Install MaxScale without repository management (assumes package is available):
-
-```puppet
-include maxscale
-```
-
-### Full Configuration Example
-
-A complete configuration with servers, monitor, service, and listener:
+All components are defined as hashes and rendered into `/etc/maxscale.cnf`.
+Best for static setups where all config is known at declaration time.
 
 ```puppet
 class { 'maxscale':
   manage_repo    => true,
   repo_version   => '24.02',
   global_options => {
-    'threads'              => 'auto',
-    'log_info'             => false,
-    'log_warning'          => true,
-    'admin_host'           => '127.0.0.1',
-    'admin_port'           => 8989,
-    'admin_secure_gui'     => false,
+    'threads'          => 'auto',
+    'admin_host'       => '127.0.0.1',
+    'admin_port'       => 8989,
+    'admin_secure_gui' => false,
   },
-  servers        => {
-    'db-master' => {
-      'address'  => '192.168.1.10',
-      'port'     => 3306,
-      'priority' => 1,
-    },
-    'db-slave1' => {
-      'address'  => '192.168.1.11',
-      'port'     => 3306,
-      'priority' => 2,
-    },
-    'db-slave2' => {
-      'address'  => '192.168.1.12',
-      'port'     => 3306,
-      'priority' => 3,
-    },
-  },
-  monitors       => {
-    'MariaDB-Monitor' => {
-      'module'             => 'mariadbmon',
-      'servers'            => 'db-master,db-slave1,db-slave2',
-      'user'               => 'maxscale_monitor',
-      'password'           => Sensitive('monitor_secret'),
-      'monitor_interval'   => '2000ms',
-      'auto_failover'      => true,
-      'auto_rejoin'        => true,
-      'enforce_read_only_slaves' => true,
-    },
-  },
-  services       => {
-    'Read-Write-Service' => {
-      'router'                => 'readwritesplit',
-      'servers'               => 'db-master,db-slave1,db-slave2',
-      'user'                  => 'maxscale_router',
-      'password'              => Sensitive('router_secret'),
-      'master_accept_reads'   => false,
-      'max_slave_connections' => '100%',
-      'causal_reads'          => 'local',
-    },
-  },
-  listeners      => {
-    'Read-Write-Listener' => {
-      'service'  => 'Read-Write-Service',
-      'protocol' => 'MariaDBClient',
-      'port'     => 4006,
-      'address'  => '0.0.0.0',
-    },
-  },
-}
-```
-
-### MariaDB Monitor with Auto-Failover
-
-Configure automatic failover for MariaDB replication:
-
-```puppet
-class { 'maxscale':
-  monitors => {
-    'MariaDB-Monitor' => {
-      'module'                 => 'mariadbmon',
-      'servers'                => 'db1,db2,db3',
-      'user'                   => 'maxscale',
-      'password'               => Sensitive('secret'),
-      'monitor_interval'       => '2000ms',
-      'auto_failover'          => true,
-      'auto_rejoin'            => true,
-      'failcount'              => 3,
-      'failover_timeout'       => '90s',
-      'switchover_timeout'     => '90s',
-      'verify_master_failure'  => true,
-      'master_failure_timeout' => '30s',
-      'replication_user'       => 'repl_user',
-      'replication_password'   => Sensitive('repl_secret'),
-      'cooperative_monitoring_locks' => 'majority_of_running',
-    },
-  },
-}
-```
-
-### Galera Cluster Configuration
-
-Configure MaxScale for a Galera cluster:
-
-```puppet
-class { 'maxscale':
-  servers  => {
-    'galera1' => { 'address' => '192.168.1.10', 'port' => 3306 },
-    'galera2' => { 'address' => '192.168.1.11', 'port' => 3306 },
-    'galera3' => { 'address' => '192.168.1.12', 'port' => 3306 },
+  servers => {
+    'db-master' => { 'address' => '192.168.1.10', 'port' => 3306, 'priority' => 1 },
+    'db-slave1' => { 'address' => '192.168.1.11', 'port' => 3306, 'priority' => 2 },
   },
   monitors => {
-    'Galera-Monitor' => {
-      'module'                    => 'galeramon',
-      'servers'                   => 'galera1,galera2,galera3',
-      'user'                      => 'maxscale',
-      'password'                  => Sensitive('secret'),
-      'monitor_interval'          => '2000ms',
-      # Additional options via the options hash
-      'options'                   => {
-        'disable_master_failback' => true,
-        'use_priority'            => true,
-      },
-    },
-  },
-  services => {
-    'Galera-RW' => {
-      'router'  => 'readwritesplit',
-      'servers' => 'galera1,galera2,galera3',
-      'user'    => 'maxscale',
-      'password'=> Sensitive('secret'),
-    },
-    'Galera-RR' => {
-      'router'         => 'readconnroute',
-      'servers'        => 'galera1,galera2,galera3',
-      'router_options' => 'synced',
+    'MariaDB-Monitor' => {
+      'module'         => 'mariadbmon',
+      'servers'        => 'db-master,db-slave1',
       'user'           => 'maxscale',
       'password'       => Sensitive('secret'),
-    },
-  },
-  listeners => {
-    'Galera-RW-Listener' => {
-      'service'  => 'Galera-RW',
-      'protocol' => 'MariaDBClient',
-      'port'     => 4006,
-    },
-    'Galera-RR-Listener' => {
-      'service'  => 'Galera-RR',
-      'protocol' => 'MariaDBClient',
-      'port'     => 4007,
-    },
-  },
-}
-```
-
-### Read-Write Split with SSL
-
-Configure SSL-encrypted connections:
-
-```puppet
-class { 'maxscale':
-  servers   => {
-    'db1' => {
-      'address'  => '192.168.1.10',
-      'port'     => 3306,
-      'ssl'      => true,
-      'ssl_cert' => '/etc/maxscale/ssl/client-cert.pem',
-      'ssl_key'  => '/etc/maxscale/ssl/client-key.pem',
-      'ssl_ca'   => '/etc/maxscale/ssl/ca-cert.pem',
-    },
-  },
-  listeners => {
-    'SSL-Listener' => {
-      'service'   => 'RW-Service',
-      'protocol'  => 'MariaDBClient',
-      'port'      => 4006,
-      'ssl'       => true,
-      'ssl_cert'  => '/etc/maxscale/ssl/server-cert.pem',
-      'ssl_key'   => '/etc/maxscale/ssl/server-key.pem',
-      'ssl_ca'    => '/etc/maxscale/ssl/ca-cert.pem',
-      'ssl_version' => 'TLSv12',
-    },
-  },
-}
-```
-
-### Using Filters
-
-Add query logging and other filters:
-
-```puppet
-class { 'maxscale':
-  filters  => {
-    'QueryLog' => {
-      'module'   => 'qlafilter',
-      'filebase' => '/var/log/maxscale/queries',
-      'log_type' => 'unified',
-      'flush'    => true,
-    },
-    'Throttle' => {
-      'module'              => 'throttlefilter',
-      'max_qps'             => 500,
-      'throttling_duration' => '10s',
-      'sampling_duration'   => '250ms',
+      'auto_failover'  => true,
+      'auto_rejoin'    => true,
     },
   },
   services => {
     'RW-Service' => {
       'router'  => 'readwritesplit',
-      'servers' => 'db1,db2',
+      'servers' => 'db-master,db-slave1',
       'user'    => 'maxscale',
-      'password'=> Sensitive('secret'),
-      'filters' => 'QueryLog|Throttle',
+      'password' => Sensitive('secret'),
+    },
+  },
+  listeners => {
+    'RW-Listener' => {
+      'service'  => 'RW-Service',
+      'protocol' => 'MariaDBClient',
+      'port'     => 4006,
     },
   },
 }
 ```
 
-### Extra Configuration Files
+### Approach 2: Defined Types (Config.d Files)
 
-Create additional configuration files for modular setups:
+Each component gets its own file in `/etc/maxscale.cnf.d/`. This enables
+virtual resources, collected resources, and dynamic loops — perfect when
+server lists come from external sources like PuppetDB, Hiera lookups, or
+other modules.
 
 ```puppet
-class { 'maxscale':
-  extra_config_files => {
-    'servers.cnf' => {
-      'db1' => {
-        'type'    => 'server',
-        'address' => '192.168.1.10',
-        'port'    => 3306,
-      },
-      'db2' => {
-        'type'    => 'server',
-        'address' => '192.168.1.11',
-        'port'    => 3306,
-      },
-    },
+include maxscale
+
+# Basic server definitions
+maxscale::config::server { 'db1':
+  address => '192.168.1.10',
+  port    => 3306,
+}
+
+maxscale::config::server { 'db2':
+  address => '192.168.1.11',
+  port    => 3306,
+}
+
+# Monitor
+maxscale::config::monitor { 'MariaDB-Monitor':
+  module   => 'mariadbmon',
+  servers  => 'db1,db2',
+  user     => 'maxscale',
+  password => Sensitive('secret'),
+  options  => {
+    'auto_failover'    => true,
+    'auto_rejoin'      => true,
+    'monitor_interval' => '2000ms',
   },
+}
+
+# Service
+maxscale::config::service { 'RW-Service':
+  router   => 'readwritesplit',
+  servers  => 'db1,db2',
+  user     => 'maxscale',
+  password => Sensitive('secret'),
+}
+
+# Listener
+maxscale::config::listener { 'RW-Listener':
+  service  => 'RW-Service',
+  protocol => 'MariaDBClient',
+  port     => 4006,
 }
 ```
 
-### Using Hiera
+### Virtual Resources
 
-Example Hiera configuration:
+Perfect for setups where server definitions come from multiple places:
+
+```puppet
+# In a profile or base class — declare virtual resources
+@maxscale::config::server { 'db-master':
+  address => '192.168.1.10',
+  port    => 3306,
+}
+
+@maxscale::config::server { 'db-slave1':
+  address => '192.168.1.11',
+  port    => 3306,
+}
+
+# Somewhere else — realize what you need
+realize(Maxscale::Config::Server['db-master'])
+realize(Maxscale::Config::Server['db-slave1'])
+```
+
+### Dynamic Loops from External Data
+
+When your server list comes from Hiera, PuppetDB, or another data source:
+
+```puppet
+# From Hiera
+$db_servers = lookup('myapp::db_servers', Hash, 'deep', {})
+
+$db_servers.each |String $name, Hash $config| {
+  maxscale::config::server { $name:
+    address => $config['address'],
+    port    => $config['port'],
+    options => pick($config['options'], {}),
+  }
+}
+```
+
+### Combining Both Approaches
+
+Hash-based config goes into `maxscale.cnf`, defined types create files in
+`maxscale.cnf.d/`. Both are loaded by MaxScale.
+
+```puppet
+# Global settings and static components in the main config
+class { 'maxscale':
+  manage_repo    => true,
+  global_options => { 'threads' => 'auto' },
+  monitors => {
+    'MariaDB-Monitor' => {
+      'module'  => 'mariadbmon',
+      'servers' => 'db1,db2',
+      'user'    => 'maxscale',
+      'password' => Sensitive('secret'),
+    },
+  },
+}
+
+# Servers added dynamically from another source
+$servers_from_hiera.each |$name, $cfg| {
+  maxscale::config::server { $name:
+    address => $cfg['address'],
+    port    => $cfg['port'],
+  }
+}
+```
+
+### Hiera Configuration
 
 ```yaml
 ---
@@ -346,31 +246,26 @@ maxscale::listeners:
     port: 4006
 ```
 
-### Using the `options` Hash for Unknown Parameters
+### Forward Compatibility
 
-Each component type supports an `options` hash for parameters not explicitly defined in the type. This ensures forward compatibility with new MaxScale versions:
+Any MaxScale parameter can be passed — either as a direct key in the hash
+(main class) or via the `options` hash (defined types). No module update
+needed when MaxScale adds new parameters:
 
 ```puppet
-class { 'maxscale':
-  monitors => {
-    'My-Monitor' => {
-      'module'  => 'mariadbmon',
-      'servers' => 'db1,db2',
-      'user'    => 'maxscale',
-      'password'=> Sensitive('secret'),
-      # Use options for parameters not in the type definition
-      'options' => {
-        'some_new_parameter'    => 'value',
-        'another_future_option' => true,
-      },
-    },
+maxscale::config::monitor { 'My-Monitor':
+  module   => 'mariadbmon',
+  servers  => 'db1,db2',
+  user     => 'maxscale',
+  password => Sensitive('secret'),
+  options  => {
+    'some_future_parameter'  => 'value',
+    'another_new_option'     => true,
   },
 }
 ```
 
 ## Reference
-
-See [REFERENCE.md](REFERENCE.md) for detailed parameter documentation (generated with `puppet strings`).
 
 ### Main Class Parameters
 
@@ -382,12 +277,26 @@ See [REFERENCE.md](REFERENCE.md) for detailed parameter documentation (generated
 | `service_enable` | Boolean | `true` | Enable service at boot |
 | `manage_repo` | Boolean | `false` | Manage MariaDB repository |
 | `repo_version` | String | `'24.02'` | MaxScale repository version |
+| `config_d_dir` | String | `'maxscale.cnf.d'` | Config.d directory name |
+| `manage_user` | Boolean | `false` | Manage the maxscale system user |
 | `global_options` | Hash | `{...}` | Global [maxscale] section options |
-| `servers` | Hash | `{}` | Server definitions |
-| `monitors` | Hash | `{}` | Monitor definitions |
-| `services` | Hash | `{}` | Service definitions |
-| `listeners` | Hash | `{}` | Listener definitions |
-| `filters` | Hash | `{}` | Filter definitions |
+| `servers` | Hash | `{}` | Server definitions (main config) |
+| `monitors` | Hash | `{}` | Monitor definitions (main config) |
+| `services` | Hash | `{}` | Service definitions (main config) |
+| `listeners` | Hash | `{}` | Listener definitions (main config) |
+| `filters` | Hash | `{}` | Filter definitions (main config) |
+
+### Defined Types
+
+| Type | Required Parameters | Description |
+|------|-------------------|-------------|
+| `maxscale::config::server` | `address` | Creates a server config in config.d |
+| `maxscale::config::monitor` | `module`, `servers` | Creates a monitor config in config.d |
+| `maxscale::config::service` | `router` | Creates a service config in config.d |
+| `maxscale::config::listener` | `service`, `protocol` | Creates a listener config in config.d |
+| `maxscale::config::filter` | `module` | Creates a filter config in config.d |
+
+All defined types accept an `options` hash for arbitrary additional parameters.
 
 ## Limitations
 
@@ -397,24 +306,9 @@ See [REFERENCE.md](REFERENCE.md) for detailed parameter documentation (generated
 
 ## Development
 
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Write tests for your changes
-4. Submit a pull request
-
-### Testing
-
 ```bash
-# Run syntax checks
 pdk validate
-
-# Run unit tests
 pdk test unit
-
-# Run acceptance tests (requires Docker)
-pdk test unit --parallel
 ```
 
 ## Authors
