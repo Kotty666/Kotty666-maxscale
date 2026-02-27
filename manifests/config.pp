@@ -28,12 +28,17 @@ class maxscale::config {
     }
   }
 
-  # Ensure config directory exists
-  file { $maxscale::config_dir:
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
+  # Manage config_dir only if it's NOT a system directory like /etc.
+  # Managing /etc causes dependency cycles with other modules (yum, puppet_agent, etc.)
+  # that also have resources under /etc (autorequire chains).
+  # Custom directories like /etc/maxscale need to be created.
+  if $maxscale::config_dir != '/etc' {
+    file { $maxscale::config_dir:
+      ensure => directory,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
+    }
   }
 
   # Manage the config.d directory for defined-type based config files.
