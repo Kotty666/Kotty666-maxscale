@@ -13,6 +13,10 @@ auf die neue Version (3.0.0) zu migrieren.
 1. [Voraussetzungen prüfen](#1-voraussetzungen-prüfen)
 2. [Dependencies anpassen](#2-dependencies-anpassen)
 3. [Hauptklasse migrieren](#3-hauptklasse-migrieren)
+    - [3.1 Parameter-Mapping](#31-parameter-mapping-hauptklasse)
+    - [3.2 Beispiel: Globale Optionen](#32-beispiel-hauptklasse)
+    - [3.3 Hash-basierte Komponenten (create_resources-Pattern)](#33-hash-basierte-komponenten-über-die-hauptklasse-create_resources-pattern)
+    - [3.4 Hiera-Kurzreferenz für das Hash-Pattern](#34-hiera-kurzreferenz-für-das-hash-pattern)
 4. [Defined Types migrieren](#4-defined-types-migrieren)
 5. [Hiera-Daten migrieren](#5-hiera-daten-migrieren)
 6. [Entfernte Features](#6-entfernte-features)
@@ -177,6 +181,142 @@ class { 'maxscale':
 >   },
 > }
 > ```
+
+### 3.3 Hash-basierte Komponenten über die Hauptklasse (create_resources-Pattern)
+
+In v2.x konnte man Server, Monitore, Services und Listener als Hashes direkt an die
+Hauptklasse übergeben. Intern wurden diese per `create_resources()` in Defined Types
+umgewandelt:
+
+```puppet
+# ALT (v2.x) — Hashes an die Hauptklasse übergeben
+class { 'maxscale':
+  setup_mariadb_repository => true,
+  threads                  => 4,
+  server => {
+    'mydb01' => {
+      'address'  => '192.168.0.1',
+      'port'     => 3306,
+      'protocol' => 'MySQLBackend',
+    },
+    'mydb02' => {
+      'address'  => '192.168.0.2',
+      'port'     => 3306,
+      'protocol' => 'MySQLBackend',
+    },
+  },
+  monitor => {
+    'Galera' => {
+      'module'   => 'galeramon',
+      'servers'  => 'mydb01,mydb02',
+      'user'     => 'Monitor',
+      'password' => 'SamplePassword',
+    },
+  },
+  service => {
+    'RW-Service' => {
+      'router'  => 'readwritesplit',
+      'servers' => 'mydb01,mydb02',
+      'user'    => 'maxscale',
+      'password' => 'secret',
+    },
+  },
+  listener => {
+    'RW-Listener' => {
+      'service'  => 'RW-Service',
+      'protocol' => 'MariaDBClient',
+      'port'     => 4006,
+    },
+  },
+}
+```
+
+**Dieses Pattern funktioniert in v3.0.0 weiterhin** — mit folgenden Änderungen:
+
+1. **Parameter sind jetzt Plural:** `server` → `servers`, `monitor` → `monitors`,
+   `service` → `services`, `listener` → `listeners`
+2. **Hash-Format ist offen:** Beliebige Key/Value-Paare werden direkt durchgereicht —
+   kein `options`-Sub-Hash nötig (der ist nur bei Defined Types relevant)
+3. **Unter der Haube:** Statt `create_resources()` → `concat::fragment` rendert jetzt
+   ein EPP-Template die Hashes direkt in `maxscale.cnf`
+
+```puppet
+# NEU (v3.0.0) — gleiches Pattern, nur Plural + offene Hashes
+class { 'maxscale':
+  manage_repo    => true,
+  global_options => {
+    'threads' => 4,
+  },
+  servers => {                                  # war: server
+    'mydb01' => {
+      'address' => '192.168.0.1',
+      'port'    => 3306,
+      # 'protocol' nicht mehr nötig — MaxScale erkennt es automatisch
+    },
+    'mydb02' => {
+      'address' => '192.168.0.2',
+      'port'    => 3306,
+    },
+  },
+  monitors => {                                 # war: monitor
+    'Galera' => {
+      'module'   => 'galeramon',
+      'servers'  => 'mydb01,mydb02',
+      'user'     => 'Monitor',
+      'password' => Sensitive('SamplePassword'), # optional: Sensitive()
+    },
+  },
+  services => {                                 # war: service
+    'RW-Service' => {
+      'router'   => 'readwritesplit',
+      'servers'  => 'mydb01,mydb02',
+      'user'     => 'maxscale',
+      'password' => Sensitive('secret'),
+    },
+  },
+  listeners => {                                # war: listener
+    'RW-Listener' => {
+      'service'  => 'RW-Service',
+      'protocol' => 'MariaDBClient',
+      'port'     => 4006,
+    },
+  },
+}
+```
+
+> **Schnellregel:** Suche in deinem Code und Hiera nach `maxscale::server:`,
+> `maxscale::monitor:`, `maxscale::service:` und `maxscale::listener:` und
+> hänge jeweils ein `s` an. Die inneren Hash-Werte können so bleiben wie sie sind —
+> veraltete MaxScale-Parameter (wie `protocol => 'MySQLBackend'`) solltest du bei
+> der Gelegenheit gleich aufräumen.
+
+### 3.4 Hiera-Kurzreferenz für das Hash-Pattern
+
+```yaml
+# ALT (v2.x)                          # NEU (v3.0.0)
+maxscale::server:                      maxscale::servers:
+  mydb01:                                mydb01:
+    address: '192.168.0.1'               address: '192.168.0.1'
+    port: 3306                           port: 3306
+    protocol: 'MySQLBackend'           # protocol entfällt
+
+maxscale::monitor:                     maxscale::monitors:
+  Galera:                                Galera:
+    module: 'galeramon'                    module: 'galeramon'
+    servers: 'mydb01'                      servers: 'mydb01'
+    user: 'Monitor'                        user: 'Monitor'
+    password: 'secret'                     password: ENC[PKCS7,...]
+
+maxscale::service:                     maxscale::services:
+  RW-Service:                            RW-Service:
+    router: 'readwritesplit'               router: 'readwritesplit'
+
+maxscale::listener:                    maxscale::listeners:
+  RW-Listener:                           RW-Listener:
+    service: 'RW-Service'                  service: 'RW-Service'
+    protocol: 'MariaDBClient'              protocol: 'MariaDBClient'
+    port: 4006                             port: 4006
+```
 
 ---
 
