@@ -230,7 +230,7 @@ describe 'maxscale::config defines' do
               filters: 'QueryLog|Throttle',
               options: {
                 'max_slave_connections' => '100%',
-                'causal_reads'         => 'local',
+                'causal_reads'          => 'local',
               },
             }
           end
