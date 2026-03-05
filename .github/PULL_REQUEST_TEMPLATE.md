@@ -1,45 +1,20 @@
-## Description
+<!--
+Thank you for contributing to this project!
 
-<!-- Please include a summary of the change and which issue is fixed. -->
+- This project has a Contributor Code of Conduct: https://voxpupuli.org/coc/
+- Please check that here is no existing issue or PR that addresses your problem.
+- Our vulnerabilities reporting process is at https://voxpupuli.org/security/
 
-Fixes # (issue)
+-->
+#### Pull Request (PR) description
+<!--
+Replace this comment with a description of your pull request.
+-->
 
-## Type of change
-
-<!-- Please delete options that are not relevant. -->
-
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-
-## Checklist
-
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] I have updated the CHANGELOG.md (for user-facing changes)
-
-## Testing performed
-
-<!-- Describe the tests you ran and how to reproduce them -->
-
-**Puppet version(s) tested:**
-- [ ] Puppet 7
-- [ ] Puppet 8
-
-**Operating system(s) tested:**
-- [ ] Debian 11
-- [ ] Debian 12
-- [ ] Ubuntu 22.04
-- [ ] Ubuntu 24.04
-- [ ] RHEL/Rocky/Alma 8
-- [ ] RHEL/Rocky/Alma 9
-
-## Additional notes
-
-<!-- Add any other context about the pull request here. -->
+#### This Pull Request (PR) fixes the following issues
+<!--
+Replace this comment with the list of issues or n/a.
+Use format:
+Fixes #123
+Fixes #124
+-->
