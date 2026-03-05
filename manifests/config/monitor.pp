@@ -76,9 +76,9 @@ define maxscale::config::monitor (
     group   => $maxscale::config_group,
     mode    => $maxscale::config_mode,
     content => epp('maxscale/component.cnf.epp', {
-        'name'           => $name,
-        'component_type' => 'monitor',
-        'params'         => $_params,
+      'name'           => $name,
+      'component_type' => 'monitor',
+      'params'         => $_params,
     }),
     notify  => Class['maxscale::service'],
   }

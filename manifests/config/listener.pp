@@ -83,9 +83,9 @@ define maxscale::config::listener (
     group   => $maxscale::config_group,
     mode    => $maxscale::config_mode,
     content => epp('maxscale/component.cnf.epp', {
-        'name'           => $name,
-        'component_type' => 'listener',
-        'params'         => $_params,
+      'name'           => $name,
+      'component_type' => 'listener',
+      'params'         => $_params,
     }),
     notify  => Class['maxscale::service'],
   }

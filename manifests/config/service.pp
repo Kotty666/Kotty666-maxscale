@@ -75,9 +75,9 @@ define maxscale::config::service (
     group   => $maxscale::config_group,
     mode    => $maxscale::config_mode,
     content => epp('maxscale/component.cnf.epp', {
-        'name'           => $name,
-        'component_type' => 'service',
-        'params'         => $_params,
+      'name'           => $name,
+      'component_type' => 'service',
+      'params'         => $_params,
     }),
     notify  => Class['maxscale::service'],
   }

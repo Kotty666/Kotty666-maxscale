@@ -75,12 +75,12 @@ class maxscale::config {
     group   => $maxscale::config_group,
     mode    => $maxscale::config_mode,
     content => epp('maxscale/maxscale.cnf.epp', {
-        'global_options' => $merged_global_options,
-        'servers'        => $maxscale::servers,
-        'monitors'       => $maxscale::monitors,
-        'services'       => $maxscale::services,
-        'listeners'      => $maxscale::listeners,
-        'filters'        => $maxscale::filters,
+      'global_options' => $merged_global_options,
+      'servers'        => $maxscale::servers,
+      'monitors'       => $maxscale::monitors,
+      'services'       => $maxscale::services,
+      'listeners'      => $maxscale::listeners,
+      'filters'        => $maxscale::filters,
     }),
   }
 
@@ -92,7 +92,7 @@ class maxscale::config {
       group   => $maxscale::config_group,
       mode    => $maxscale::config_mode,
       content => epp('maxscale/extra_config.epp', {
-          'sections' => $config,
+        'sections' => $config,
       }),
     }
   }

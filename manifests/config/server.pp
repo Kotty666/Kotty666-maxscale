@@ -80,9 +80,9 @@ define maxscale::config::server (
     group   => $maxscale::config_group,
     mode    => $maxscale::config_mode,
     content => epp('maxscale/component.cnf.epp', {
-        'name'           => $name,
-        'component_type' => 'server',
-        'params'         => $_params,
+      'name'           => $name,
+      'component_type' => 'server',
+      'params'         => $_params,
     }),
     notify  => Class['maxscale::service'],
   }
