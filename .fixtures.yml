@@ -10,5 +10,3 @@ fixtures:
     yumrepo:
       repo: 'puppetlabs/yumrepo_core'
       ref: '3.0.1'
-  symlinks:
-    maxscale: "#{source_dir}"
