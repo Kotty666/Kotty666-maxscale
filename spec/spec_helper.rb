@@ -24,10 +24,11 @@ if File.exist?(File.join(__dir__, 'default_module_facts.yml'))
 end
 
 RSpec.configure do |c|
-  c.default_facter_version = '3.14.0'
+  c.default_facter_version = '4.2.0'
 
   c.after(:suite) do
     RSpec::Puppet::Coverage.report!
   end
 end
+
 Dir['./spec/support/spec/**/*.rb'].sort.each { |f| require f }
