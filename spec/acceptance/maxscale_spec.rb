@@ -22,13 +22,17 @@ describe 'maxscale class' do
 
     describe service('maxscale') do
       it { is_expected.to be_enabled }
+
       it { is_expected.to be_running }
     end
 
     describe file('/etc/maxscale.cnf') do
       it { is_expected.to be_file }
+
       it { is_expected.to be_owned_by 'root' }
+
       its(:content) { is_expected.to match %r{\[maxscale\]} }
+
       its(:content) { is_expected.to match %r{threads=auto} }
     end
   end
@@ -52,18 +56,18 @@ describe 'maxscale class' do
         },
         monitors       => {
           'TestMonitor' => {
-            'module'  => 'mariadbmon',
-            'servers' => 'testdb',
-            'user'    => 'maxscale',
-            'password'=> 'test123',
+            'module'   => 'mariadbmon',
+            'servers'  => 'testdb',
+            'user'     => 'maxscale',
+            'password' => 'test123',
           },
         },
         services       => {
           'TestService' => {
-            'router'  => 'readconnroute',
-            'servers' => 'testdb',
-            'user'    => 'maxscale',
-            'password'=> 'test123',
+            'router'   => 'readconnroute',
+            'servers'  => 'testdb',
+            'user'     => 'maxscale',
+            'password' => 'test123',
           },
         },
         listeners      => {
@@ -83,16 +87,27 @@ describe 'maxscale class' do
 
     describe file('/etc/maxscale.cnf') do
       it { is_expected.to be_file }
+
       its(:content) { is_expected.to match %r{\[maxscale\]} }
+
       its(:content) { is_expected.to match %r{threads=4} }
+
       its(:content) { is_expected.to match %r{log_info=true} }
+
       its(:content) { is_expected.to match %r{\[testdb\]} }
+
       its(:content) { is_expected.to match %r{type=server} }
+
       its(:content) { is_expected.to match %r{\[TestMonitor\]} }
+
       its(:content) { is_expected.to match %r{type=monitor} }
+
       its(:content) { is_expected.to match %r{\[TestService\]} }
+
       its(:content) { is_expected.to match %r{type=service} }
+
       its(:content) { is_expected.to match %r{\[TestListener\]} }
+
       its(:content) { is_expected.to match %r{type=listener} }
     end
   end
@@ -114,6 +129,7 @@ describe 'maxscale class' do
 
     describe service('maxscale') do
       it { is_expected.not_to be_enabled }
+
       it { is_expected.not_to be_running }
     end
   end
