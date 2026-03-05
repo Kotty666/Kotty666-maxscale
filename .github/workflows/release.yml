@@ -2,41 +2,25 @@
 # Managed by modulesync - DO NOT EDIT
 # https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
 
-# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+name: Release
 
-changelog:
-  exclude:
-    labels:
-      - duplicate
-      - invalid
-      - modulesync
-      - question
-      - skip-changelog
-      - wont-fix
-      - wontfix
+# yamllint disable-line rule:truthy
+on:
+  push:
+    tags:
+      - '*'
 
-  categories:
-    - title: Breaking Changes 🛠
-      labels:
-        - backwards-incompatible
+permissions:
+  contents: write
 
-    - title: New Features 🎉
-      labels:
-        - enhancement
-
-    - title: Bug Fixes 🐛
-      labels:
-        - bug
-
-    - title: Documentation Updates 📚
-      labels:
-        - documentation
-        - docs
-
-    - title: Dependency Updates ⬆️
-      labels:
-        - dependencies
-
-    - title: Other Changes
-      labels:
-        - "*"
+jobs:
+  release:
+    name: Release
+    uses: voxpupuli/gha-puppet/.github/workflows/release.yml@v4
+    with:
+      allowed_owner: 'bschonec'
+    secrets:
+      # Configure secrets here:
+      #  https://docs.github.com/en/actions/security-guides/encrypted-secrets
+      username: ${{ secrets.PUPPET_FORGE_USERNAME }}
+      api_key: ${{ secrets.PUPPET_FORGE_API_KEY }}
