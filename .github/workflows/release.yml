@@ -1,120 +1,42 @@
 ---
-name: Release
+# Managed by modulesync - DO NOT EDIT
+# https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
 
-on:
-  push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (e.g., 3.0.0)'
-        required: true
-        type: string
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
 
-jobs:
-  validate:
-    name: Validate before release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+changelog:
+  exclude:
+    labels:
+      - duplicate
+      - invalid
+      - modulesync
+      - question
+      - skip-changelog
+      - wont-fix
+      - wontfix
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - backwards-incompatible
 
-      - name: Install PDK
-        run: |
-          wget https://apt.puppet.com/puppet-tools-release-jammy.deb
-          sudo dpkg -i puppet-tools-release-jammy.deb
-          sudo apt-get update
-          sudo apt-get install -y pdk
+    - title: New Features 🎉
+      labels:
+        - enhancement
 
-      - name: Validate
-        run: pdk validate --parallel
+    - title: Bug Fixes 🐛
+      labels:
+        - bug
 
-      - name: Run tests
-        run: pdk test unit --parallel
+    - title: Documentation Updates 📚
+      labels:
+        - documentation
+        - docs
 
-  release:
-    name: Release to Puppet Forge
-    needs: validate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - title: Dependency Updates ⬆️
+      labels:
+        - dependencies
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-
-      - name: Install PDK
-        run: |
-          wget https://apt.puppet.com/puppet-tools-release-jammy.deb
-          sudo dpkg -i puppet-tools-release-jammy.deb
-          sudo apt-get update
-          sudo apt-get install -y pdk
-
-      - name: Get version from tag or input
-        id: version
-        run: |
-          if [ -n "${{ github.event.inputs.version }}" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Update metadata.json version
-        run: |
-          jq '.version = "${{ steps.version.outputs.version }}"' metadata.json > metadata.json.tmp
-          mv metadata.json.tmp metadata.json
-
-      - name: Build module
-        run: pdk build --force
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: pkg/*.tar.gz
-          generate_release_notes: true
-          tag_name: v${{ steps.version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to Puppet Forge
-        if: ${{ vars.PUBLISH_TO_FORGE == 'true' }}
-        env:
-          FORGE_API_KEY: ${{ secrets.FORGE_API_KEY }}
-        run: |
-          pdk release publish --forge-token=$FORGE_API_KEY --force
-
-  update-changelog:
-    name: Update Changelog
-    needs: release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Update CHANGELOG
-        uses: orhun/git-cliff-action@v3
-        with:
-          config: cliff.toml
-          args: --verbose
-        env:
-          OUTPUT: CHANGELOG.md
-
-      - name: Commit changelog
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'docs: update CHANGELOG.md for ${{ github.ref_name }}'
-          file_pattern: CHANGELOG.md
+    - title: Other Changes
+      labels:
+        - "*"
