@@ -1,20 +1,36 @@
-# frozen_string_literal: true
-
 # Managed by modulesync - DO NOT EDIT
 # https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
 
-require 'bundler'
-require 'puppet_litmus/rake_tasks' if Gem.loaded_specs.key? 'puppet_litmus'
-require 'puppetlabs_spec_helper/rake_tasks'
-require 'puppet-syntax/tasks/puppet-syntax'
-require 'puppet-strings/tasks' if Gem.loaded_specs.key? 'puppet-strings'
+begin
+  require 'voxpupuli/test/rake'
+rescue LoadError
+  # only available if gem group test is installed
+end
 
-PuppetLint.configuration.send('disable_relative')
-PuppetLint.configuration.send('disable_80chars')
-PuppetLint.configuration.send('disable_140chars')
-PuppetLint.configuration.send('disable_class_inherits_from_params_class')
-PuppetLint.configuration.send('disable_autoloader_layout')
-PuppetLint.configuration.send('disable_documentation')
-PuppetLint.configuration.send('disable_single_quote_string_with_variables')
-PuppetLint.configuration.fail_on_warnings = true
-PuppetLint.configuration.ignore_paths = [".vendor/**/*.pp", ".bundle/**/*.pp", "pkg/**/*.pp", "spec/**/*.pp", "tests/**/*.pp", "types/**/*.pp", "vendor/**/*.pp"]
+begin
+  require 'voxpupuli/acceptance/rake'
+rescue LoadError
+  # only available if gem group acceptance is installed
+end
+
+begin
+  require 'voxpupuli/release/rake_tasks'
+rescue LoadError
+  # only available if gem group releases is installed
+else
+  GCGConfig.user = 'bschonec'
+  GCGConfig.project = 'Kotty666-maxscale'
+end
+
+desc "Run main 'test' task and report merged results to coveralls"
+task test_with_coveralls: [:test] do
+  if Dir.exist?(File.expand_path('../lib', __FILE__))
+    require 'coveralls/rake/task'
+    Coveralls::RakeTask.new
+    Rake::Task['coveralls:push'].invoke
+  else
+    puts 'Skipping reporting to coveralls.  Module has no lib dir'
+  end
+end
+
+# vim: syntax=ruby
