@@ -1,0 +1,17 @@
+---
+HOSTS:
+  debian-12:
+    roles:
+      - agent
+      - default
+    platform: debian-12-amd64
+    image: debian:12
+    hypervisor: docker
+    docker_preserve_image: true
+    docker_cmd:
+      - '/sbin/init'
+    docker_image_commands:
+      - 'apt-get update && apt-get install -y wget curl gnupg systemd'
+CONFIG:
+  type: foss
+  log_level: debug

@@ -1,59 +1,99 @@
-# == class: maxscale::config
+# @summary Manages MaxScale configuration
 #
-# configures maxscale, per default in /etc/maxscale.cnf.
+# This private class manages the MaxScale configuration files and directories.
+# It creates the main configuration file from hash parameters and manages
+# the config.d directory where defined types place their individual files.
 #
-# === Parameters
-# all Parameters are copied from the default maxscale.cnf.
-# they are set per default in /data/
-class maxscale::config(
-  Variant[Integer,Enum['auto']] $threads,
-  Integer $max_auth_errors_until_block,
-  String $auth_connect_timeout,
-  String $auth_read_timeout,
-  String $auth_write_timeout,
-  Integer $ms_timestamp,
-  Boolean $syslog,
-  Boolean $maxlog,
-  Boolean $log_warning,
-  Boolean $log_notice,
-  Boolean $log_info,
-  Boolean $log_debug,
-  Boolean $log_augmentation,
-  String $logdir,
-  String $datadir,
-  String $cachedir,
-  String $piddir,
-  String $configdir,
-  String $configfile,
-  String $max_user,
-  String $max_group,
-) {
+# @api private
+#
+class maxscale::config {
+  assert_private()
 
+  # Manage directories if requested
+  if $maxscale::manage_dirs {
+    $managed_dirs = [
+      $maxscale::log_dir,
+      $maxscale::data_dir,
+      $maxscale::cache_dir,
+      $maxscale::pid_dir,
+    ]
 
-  [$logdir,$datadir,$cachedir,$piddir].each | String $folder | {
-    file { $folder:
-      ensure  => 'directory',
-      owner   => $max_user,
-      group   => $max_group,
-      mode    => '0755',
-      require => Package[$maxscale::package_name],
+    $managed_dirs.each |String $dir| {
+      file { $dir:
+        ensure => directory,
+        owner  => $maxscale::maxscale_user,
+        group  => $maxscale::maxscale_group,
+        mode   => '0755',
+      }
     }
   }
 
-  concat { $configfile:
-    owner => 'root',
-    group => 'root',
-    mode  => '0644',
-    path  => "${configdir}/${configfile}",
+  # Manage config_dir only if it's NOT a system directory like /etc.
+  # Managing /etc causes dependency cycles with other modules (yum, puppet_agent, etc.)
+  # that also have resources under /etc (autorequire chains).
+  # Custom directories like /etc/maxscale need to be created.
+  if $maxscale::config_dir != '/etc' {
+    file { $maxscale::config_dir:
+      ensure => directory,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
+    }
   }
-  concat::fragment { 'Config Header':
-    target  => $configfile,
-    content => "# This file is managed by Puppet. DO NOT EDIT.\n",
-    order   => '01',
+
+  # Manage the config.d directory for defined-type based config files.
+  # purge + recurse ensures that files not managed by Puppet are removed,
+  # keeping the config directory in sync with the catalog.
+  $config_d_path = "${maxscale::config_dir}/${maxscale::config_d_dir}"
+
+  file { $config_d_path:
+    ensure  => directory,
+    owner   => $maxscale::config_owner,
+    group   => $maxscale::config_group,
+    mode    => '0755',
+    purge   => true,
+    recurse => true,
   }
-  concat::fragment{ 'GlobalSettings':
-    target  => $configfile,
-    content => template('maxscale/global_settings.erb'),
-    order   => '02',
+
+  # Build the complete configuration
+  $config_path = "${maxscale::config_dir}/${maxscale::config_file}"
+
+  # Merge default directory settings with user-provided global options
+  $default_global = {
+    'logdir'   => $maxscale::log_dir,
+    'datadir'  => $maxscale::data_dir,
+    'cachedir' => $maxscale::cache_dir,
+    'piddir'   => $maxscale::pid_dir,
+  }
+
+  $merged_global_options = $default_global + $maxscale::global_options
+
+  # Create the main configuration file using EPP template
+  file { $config_path:
+    ensure  => file,
+    owner   => $maxscale::config_owner,
+    group   => $maxscale::config_group,
+    mode    => $maxscale::config_mode,
+    content => epp('maxscale/maxscale.cnf.epp', {
+      'global_options' => $merged_global_options,
+      'servers'        => $maxscale::servers,
+      'monitors'       => $maxscale::monitors,
+      'services'       => $maxscale::services,
+      'listeners'      => $maxscale::listeners,
+      'filters'        => $maxscale::filters,
+    }),
+  }
+
+  # Create any extra configuration files
+  $maxscale::extra_config_files.each |String $filename, Hash $config| {
+    file { "${maxscale::config_dir}/${filename}":
+      ensure  => file,
+      owner   => $maxscale::config_owner,
+      group   => $maxscale::config_group,
+      mode    => $maxscale::config_mode,
+      content => epp('maxscale/extra_config.epp', {
+        'sections' => $config,
+      }),
+    }
   }
 }

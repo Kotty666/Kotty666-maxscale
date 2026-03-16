@@ -1,0 +1,19 @@
+<%- |
+  String $name,
+  String $component_type,
+  Hash   $params,
+| -%>
+# Managed by Puppet - DO NOT EDIT MANUALLY
+[<%= $name %>]
+type=<%= $component_type %>
+<%- $params.each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>

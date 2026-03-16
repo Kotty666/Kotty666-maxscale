@@ -1,10 +1,33 @@
 ---
+# PDK sync configuration
+# This file configures how PDK updates module files
+
+.gitignore:
+  paths:
+    - /coverage/
+    - /log/
+    - /pkg/
+    - /spec/fixtures/modules/
+    - /vendor/
+    - /.vendor/
+    - /.bundle/
+    - /Gemfile.lock
+    - /.idea/
+    - /.vscode/
+
+.gitlab-ci.yml:
+  delete: true
+
+.travis.yml:
+  delete: true
+
+appveyor.yml:
+  delete: true
+
+Gemfile:
+  optional:
+    ':development':
+      - gem: 'pdk'
+
 spec/spec_helper.rb:
   mock_with: ':rspec'
-  spec_overrides:
-    - 'RSpec.configure do |c|'
-    - "  c.default_facter_version = '3.14.0'"
-    - "  c.after(:suite) do"
-    - "    RSpec::Puppet::Coverage.report!"
-    - "  end"
-    - "end"

@@ -1,0 +1,19 @@
+<%- |
+  Hash $sections,
+| -%>
+# Managed by Puppet - DO NOT EDIT MANUALLY
+<%- $sections.each |$name, $config| { -%>
+
+[<%= $name %>]
+<%- $config.each |$key, $value| { -%>
+<%- if $value =~ Sensitive { -%>
+<%= $key %>=<%= $value.unwrap %>
+<%- } elsif $value =~ Boolean { -%>
+<%= $key %>=<%= $value ? { true => 'true', false => 'false' } %>
+<%- } elsif $value =~ Array { -%>
+<%= $key %>=<%= $value.join(',') %>
+<%- } else { -%>
+<%= $key %>=<%= $value %>
+<%- } -%>
+<%- } -%>
+<%- } -%>

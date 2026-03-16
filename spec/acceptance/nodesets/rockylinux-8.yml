@@ -1,0 +1,17 @@
+---
+HOSTS:
+  rockylinux-8:
+    roles:
+      - agent
+      - default
+    platform: el-8-x86_64
+    image: rockylinux:8
+    hypervisor: docker
+    docker_preserve_image: true
+    docker_cmd:
+      - '/sbin/init'
+    docker_image_commands:
+      - 'dnf install -y wget curl systemd'
+CONFIG:
+  type: foss
+  log_level: debug

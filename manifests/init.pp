@@ -1,152 +1,232 @@
-# == Class: maxscale
+# @summary Manages MariaDB MaxScale installation and configuration
 #
-# Install MariaDB MaxScale.
+# This module installs and configures MariaDB MaxScale with a flexible,
+# hash-based configuration approach that supports all current and future
+# MaxScale parameters without code changes.
 #
-# === Parameters
+# Configuration can be provided in two ways:
+# 1. **Hash-based** (via the main class parameters) - all components are
+#    defined in the main config file
+# 2. **Defined types** (via `maxscale::config::server` etc.) - each component
+#    gets its own file in `config.d/`, enabling virtual resources, collected
+#    resources and dynamic loops from external data sources
 #
-# [*maxscale_package_name*]
-#  Override the name of the maxscale package
+# Both approaches can be combined: hash-based config goes into the main
+# `maxscale.cnf`, while defined types create individual files in
+# `maxscale.cnf.d/`.
 #
-# [*setup_mariadb_repository*]
-#  Setup the apt repositories from MariaDB for MaxScale.
+# @param package_name
+#   Name of the MaxScale package to install.
 #
-# [*repository_base_url*]
-#  Overrides the default repositorie.
+# @param package_version
+#   Version of the MaxScale package. Use 'installed', 'latest', or a specific version.
 #
-# [*service_enable*]
-#  Manages if the service should be enabled
+# @param service_ensure
+#   Whether the service should be running or stopped.
 #
-# [*threads*]
-#  Manages the number of maxscale threads
+# @param service_enable
+#   Whether the service should be enabled at boot.
 #
-# [*auth_connect_timeout*]
-#  The connection timeout in seconds for the MySQL connections to the backend server
+# @param service_name
+#   Name of the MaxScale service.
 #
-# [*auth_read_timeout*]
-#  The read timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+# @param manage_repo
+#   Whether to manage the MariaDB repository for MaxScale.
 #
-# [*auth_write_timeout*]
-#  The write timeout in seconds for the MySQL connection to the backend database when user authentication data is fetched.
+# @param repo_version
+#   MaxScale repository version (e.g., '24.02', '23.08').
 #
-# [*ms_timestamp*]
-#  Enable or disable the high precision timestamps in logfiles.
-#  Enabling this adds millisecond precision to all logfile timestamps.
+# @param repo_base_url
+#   Base URL for the MaxScale repository. If not set, defaults are used.
 #
-# [*syslog*]
-#  Enable or disable the logging of messages to syslog.
+# @param config_dir
+#   Directory for MaxScale configuration files.
 #
-# [*maxlog*]
-#  Enable or disable the logging of messages to MaxScale's log file.
+# @param config_file
+#   Name of the main configuration file.
 #
-# [*log_warning*]
-#  Enable or disable the logging of messages whose syslog priority is warning.
+# @param config_d_dir
+#   Directory for additional per-component configuration files.
+#   Used by the defined types (maxscale::config::server, etc.).
 #
-# [*log_notice*]
-#  Enable or disable the logging of messages whose syslog priority is notice.
+# @param config_owner
+#   Owner of the configuration files.
 #
-# [*log_info*]
-#  Enable or disable the logging of messages whose syslog priority is info.
+# @param config_group
+#   Group of the configuration files.
 #
-# [*log_debug*]
-#  Enable or disable the logging of messages whose syslog priority is debug.
+# @param config_mode
+#   File mode for the main configuration file.
 #
-# [*log_augmentation*]
-#  Enable or disable the augmentation of messages.
+# @param global_options
+#   Hash of global [maxscale] section options. Supports any valid MaxScale parameter.
 #
-# [*logdir*]
-#  Set the directory where the logfiles are stored.
+# @param servers
+#   Hash of server definitions for the main config file.
 #
-# [*datadir*]
-#  Set the directory where the data files used by MaxScale are stored.
+# @param monitors
+#   Hash of monitor definitions for the main config file.
 #
-# [*cachedir*]
-#  Configure the directory MaxScale uses to store cached data.
+# @param services
+#   Hash of service definitions for the main config file.
 #
-# [*piddir*]
-#  Configure the directory for the PID file for MaxScale.
+# @param listeners
+#   Hash of listener definitions for the main config file.
 #
-# [*configdir*]
-#  Configure the directory for the configuration file for MaxScale.
+# @param filters
+#   Hash of filter definitions for the main config file.
 #
-# === Authors
+# @param manage_dirs
+#   Whether to manage MaxScale directories (log, data, cache, pid).
 #
-# Philipp Frik <kotty@guns-n-girls.de>
+# @param log_dir
+#   Directory for MaxScale log files.
+#
+# @param data_dir
+#   Directory for MaxScale data files.
+#
+# @param cache_dir
+#   Directory for MaxScale cache files.
+#
+# @param pid_dir
+#   Directory for MaxScale PID files.
+#
+# @param manage_user
+#   Whether to manage the maxscale system user and group.
+#   Set to false if the package creates them or they are managed elsewhere.
+#
+# @param maxscale_user
+#   System user for MaxScale.
+#
+# @param maxscale_group
+#   System group for MaxScale.
+#
+# @param gpg_key_id
+#   GPG key ID for package verification.
+#
+# @param extra_config_files
+#   Hash of additional configuration files to create in config_dir.
+#
+# @example Basic installation with defaults
+#   include maxscale
+#
+# @example Full configuration via hashes (main config file)
+#   class { 'maxscale':
+#     manage_repo    => true,
+#     repo_version   => '24.02',
+#     global_options => {
+#       'threads' => 'auto',
+#       'log_info' => true,
+#     },
+#     servers => {
+#       'db1' => { 'address' => '192.168.1.10', 'port' => 3306 },
+#       'db2' => { 'address' => '192.168.1.11', 'port' => 3306 },
+#     },
+#     monitors => {
+#       'MariaDB-Monitor' => {
+#         'module'  => 'mariadbmon',
+#         'servers' => 'db1,db2',
+#         'user'    => 'maxscale',
+#         'password' => Sensitive('secret'),
+#       },
+#     },
+#   }
+#
+# @example Using defined types for dynamic server lists
+#   include maxscale
+#
+#   # From a loop, virtual resource, or collected resource:
+#   maxscale::config::server { 'db1':
+#     address => '192.168.1.10',
+#     port    => 3306,
+#   }
+#
+#   # Or via virtual resources:
+#   @maxscale::config::server { 'db2':
+#     address => '192.168.1.11',
+#   }
+#   realize(Maxscale::Config::Server['db2'])
+#
 class maxscale (
+  # Package parameters
   String                        $package_name,
   String                        $package_version,
-  Boolean                       $setup_mariadb_repository,
+
+  # Service parameters
+  Enum['running', 'stopped']    $service_ensure,
   Boolean                       $service_enable,
-  Variant[Integer,Enum['auto']] $threads,
-  String                        $auth_connect_timeout,
-  String                        $auth_read_timeout,
-  String                        $auth_write_timeout,
-  Integer                       $ms_timestamp,
-  Integer                       $max_auth_errors_until_block,
-  Boolean                       $syslog,
-  Boolean                       $maxlog,
-  Boolean                       $log_warning,
-  Boolean                       $log_notice,
-  Boolean                       $log_info,
-  Boolean                       $log_debug,
-  Boolean                       $log_augmentation,
-  String                        $logdir,
-  String                        $datadir,
-  String                        $cachedir,
-  String                        $piddir,
-  String                        $configdir,
-  String                        $configfile,
-  String                        $max_user,
-  String                        $max_group,
-  Optional[String]              $repository_base_url,
-  Optional[Hash]                $monitor,
-  Optional[Hash]                $server,
-  Optional[Hash]                $service,
-  Optional[Hash]                $listener,
+  String                        $service_name,
+
+  # Repository parameters
+  Boolean                       $manage_repo,
+  String                        $repo_version,
+  Optional[String]              $repo_base_url,
+  String                        $gpg_key_id,
+
+  # Configuration file parameters
+  Stdlib::Absolutepath          $config_dir,
+  String                        $config_file,
+  String                        $config_d_dir,
+  String                        $config_owner,
+  String                        $config_group,
+  Stdlib::Filemode              $config_mode,
+
+  # Global MaxScale options - flexible hash for any parameters
+  Hash                          $global_options,
+
+  # Component definitions - open Hash for maximum flexibility
+  # All key/value pairs are passed through to the config file as-is.
+  Hash[String, Hash]            $servers,
+  Hash[String, Hash]            $monitors,
+  Hash[String, Hash]            $services,
+  Hash[String, Hash]            $listeners,
+  Hash[String, Hash]            $filters,
+
+  # Directory management
+  Boolean                       $manage_dirs,
+  Stdlib::Absolutepath          $log_dir,
+  Stdlib::Absolutepath          $data_dir,
+  Stdlib::Absolutepath          $cache_dir,
+  Stdlib::Absolutepath          $pid_dir,
+
+  # System user/group
+  Boolean                       $manage_user,
+  String                        $maxscale_user,
+  String                        $maxscale_group,
+
+  # Extra configuration files
+  Hash[String, Hash]            $extra_config_files,
 ) {
+  # Ensure proper class ordering:
+  # 1. Repo (if managed) -> Install -> Config -> Service
+  # 2. User (if managed) -> Config
 
-  class { '::maxscale::install':
-    package_name             => $package_name,
-    setup_mariadb_repository => $setup_mariadb_repository,
-    repository_base_url      => $repository_base_url,
-    package_version          => $package_version,
-  }
-  class { '::maxscale::config':
-    threads                     => $threads,
-    auth_connect_timeout        => $auth_connect_timeout,
-    auth_read_timeout           => $auth_read_timeout,
-    auth_write_timeout          => $auth_write_timeout,
-    ms_timestamp                => $ms_timestamp,
-    syslog                      => $syslog,
-    maxlog                      => $maxlog,
-    log_warning                 => $log_warning,
-    log_notice                  => $log_notice,
-    log_info                    => $log_info,
-    log_debug                   => $log_debug,
-    log_augmentation            => $log_augmentation,
-    logdir                      => $logdir,
-    datadir                     => $datadir,
-    cachedir                    => $cachedir,
-    piddir                      => $piddir,
-    configdir                   => $configdir,
-    configfile                  => $configfile,
-    max_user                    => $max_user,
-    max_group                   => $max_group,
-    max_auth_errors_until_block => $max_auth_errors_until_block,
+  contain maxscale::install
+  contain maxscale::config
+  contain maxscale::service
+
+  Class['maxscale::install']
+  -> Class['maxscale::config']
+  ~> Class['maxscale::service']
+
+  if $manage_user {
+    contain maxscale::user
+    Class['maxscale::user'] -> Class['maxscale::config']
   }
 
-  # make sure maxscale user is available before writing config files
-  Class['::maxscale::install'] -> Class['::maxscale::config'] ~> Service['maxscale']
-
-  service { 'maxscale':
-    ensure    => $service_enable,
-    name      => $package_name,
-    enable    => $service_enable,
-    subscribe => Package[$package_name],
+  if $manage_repo {
+    case $facts['os']['family'] {
+      'Debian': {
+        contain maxscale::repo::apt
+        Class['maxscale::repo::apt'] -> Class['maxscale::install']
+      }
+      'RedHat': {
+        contain maxscale::repo::yum
+        Class['maxscale::repo::yum'] -> Class['maxscale::install']
+      }
+      default: {
+        fail("Unsupported OS family: ${facts['os']['family']}")
+      }
+    }
   }
-
-  create_resources(maxscale::config::monitor, $monitor)
-  create_resources(maxscale::config::server, $server)
-  create_resources(maxscale::config::service, $service)
-  create_resources(maxscale::config::listener, $listener)
-
 }

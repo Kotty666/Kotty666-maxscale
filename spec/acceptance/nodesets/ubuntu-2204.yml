@@ -1,0 +1,17 @@
+---
+HOSTS:
+  ubuntu-2204:
+    roles:
+      - agent
+      - default
+    platform: ubuntu-22.04-amd64
+    image: ubuntu:22.04
+    hypervisor: docker
+    docker_preserve_image: true
+    docker_cmd:
+      - '/sbin/init'
+    docker_image_commands:
+      - 'apt-get update && apt-get install -y wget curl gnupg systemd'
+CONFIG:
+  type: foss
+  log_level: debug

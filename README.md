@@ -1,194 +1,320 @@
 # maxscale
-[![Puppet Forge](http://img.shields.io/puppetforge/v/Kotty666/maxscale.svg)](https://forge.puppetlabs.com/Kotty666/maxscale)
-[![Github Tag](https://img.shields.io/github/tag/Kotty666/Kotty666-maxscale.svg)](https://github.com/Kotty666/Kotty666-maxscale)
-[![Build Status](https://travis-ci.org/Kotty666/Kotty666-maxscale.png?branch=master)](https://travis-ci.org/Kotty666/Kotty666-maxscale)
 
-#### Table of Contents
-
-1. [Description](#description)
-2. [Setup - The basics of getting started with maxscale](#setup)
-    * [What maxscale affects](#what-maxscale-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with maxscale](#beginning-with-maxscale)
-3. [Usage - Configuration options and additional functionality](#usage)
-4. [Limitations - OS compatibility, etc.](#limitations)
-5. [Development - Guide for contributing to the module](#development)
-6. [Contributers](#contributers)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/kotty666/maxscale.svg)](https://forge.puppet.com/kotty666/maxscale)
+[![License](https://img.shields.io/github/license/Kotty666/puppet-maxscale.svg)](LICENSE)
 
 ## Description
 
-Puppetmodule for installing and configuring the MaxScale database gateway which
-is developed by the MariaDB.
+This Puppet module manages the installation and configuration of [MariaDB MaxScale](https://mariadb.com/kb/en/maxscale/),
+a database proxy that extends the functionality of MariaDB/MySQL servers.
+
+**Key Features:**
+
+- **Two configuration approaches** — hash-based (main class) *and* defined types
+  (config.d), fully combinable
+- **Virtual & collected resources** — defined types enable `@maxscale::config::server`
+  and `realize()` patterns, exported resources, and dynamic loops
+- **Forward compatible** — open hash parameters pass any key/value through to MaxScale
+  config files without module changes
+- **Modern Puppet practices** — EPP templates, strong typing, Puppet 7/8 syntax, `contain`
+- **Repository management** — optional official MariaDB repository setup
+- **Sensitive data handling** — passwords support Puppet's `Sensitive` type
 
 ## Setup
 
-### What maxscale affects
+### Requirements
 
-* Installs maxscale in version 2.5
-* overrides /etc/maxscale.cnf
-* adds per default the mariadb-maxscale repository and its key to the system
-
-### Setup Requirements 
-
-* the module requires:
-  - puppetlabs-stdlib
-  - puppetlabs-apt (only if you wish to use the repo management)
-  - puppetlabs-concat
+- Puppet >= 7.0.0
+- puppetlabs/stdlib >= 8.0.0
+- puppetlabs/apt >= 9.0.0 (for Debian-based systems)
 
 ### Beginning with maxscale
 
-This code will
-* install maxscale from the mariadb repo
-* configure a galera monitor
-* adds 2 sample servers
-* adds a Maxscale CLI Listener
-* adds the Maxscale CLI Service
-
 ```puppet
-# add the default configuration and Package installation
-include maxscale
-
-# Configure the Galera Monitor to check the Nodes
-::maxscale::config::monitor{"Galera":
-  module  => 'galeramon',
-  servers => 'mydb01,mydb02',
-  user    => 'Monitor',
-  password  => 'SamplePassword',
-}
-
-# Create the Server resources
-::maxscale::config::server{"mydb01":
-  address => '192.168.0.1',
-}
-::maxscale::config::server{"mydb02":
-  address => '192.168.0.2',
-}
-
-# Create the Commandlineinterface Service
-::maxscale::config::service{"CLI":
-  router => "cli",
-}
-
-# Add the connection Listener for the CLI Service
-::maxscale::config::listener{"CLI Listener":
-  service  => "CLI",
-  protocol => "MariaDBClient",
-  address  => "localhost",
-  port     => 6603,
+class { 'maxscale':
+  manage_repo => true,
 }
 ```
 
 ## Usage
 
-### Using the default values:
+### Approach 1: Hash-Based (Main Config File)
+
+All components are defined as hashes and rendered into `/etc/maxscale.cnf`.
+Best for static setups where all config is known at declaration time.
+
+```puppet
+class { 'maxscale':
+  manage_repo    => true,
+  repo_version   => '24.02',
+  global_options => {
+    'threads'          => 'auto',
+    'admin_host'       => '127.0.0.1',
+    'admin_port'       => 8989,
+    'admin_secure_gui' => false,
+  },
+  servers => {
+    'db-master' => { 'address' => '192.168.1.10', 'port' => 3306, 'priority' => 1 },
+    'db-slave1' => { 'address' => '192.168.1.11', 'port' => 3306, 'priority' => 2 },
+  },
+  monitors => {
+    'MariaDB-Monitor' => {
+      'module'         => 'mariadbmon',
+      'servers'        => 'db-master,db-slave1',
+      'user'           => 'maxscale',
+      'password'       => Sensitive('secret'),
+      'auto_failover'  => true,
+      'auto_rejoin'    => true,
+    },
+  },
+  services => {
+    'RW-Service' => {
+      'router'  => 'readwritesplit',
+      'servers' => 'db-master,db-slave1',
+      'user'    => 'maxscale',
+      'password' => Sensitive('secret'),
+    },
+  },
+  listeners => {
+    'RW-Listener' => {
+      'service'  => 'RW-Service',
+      'protocol' => 'MariaDBClient',
+      'port'     => 4006,
+    },
+  },
+}
+```
+
+### Approach 2: Defined Types (Config.d Files)
+
+Each component gets its own file in `/etc/maxscale.cnf.d/`. This enables
+virtual resources, collected resources, and dynamic loops — perfect when
+server lists come from external sources like PuppetDB, Hiera lookups, or
+other modules.
+
 ```puppet
 include maxscale
-```
-### Variables and Default values for the Package and main configuration
-```puppet
-class {'maxscale':
-  package_name              => 'maxscale',
-  setup_mariadb_repository  => true,
-  service_enable            => true,
-  threads                   => 'auto',
-  auth_connect_timeout      => 3,
-  auth_read_timeout         => 1,
-  auth_write_timeout        => 2,
-  ms_timestamp              => 0,
-  syslog                    => 0,
-  maxlog                    => 1,
-  log_warning               => 1,
-  log_notice                => 0,
-  log_info                  => 0,
-  log_debug                 => 0,
-  log_augmentation          => 0,
-  logdir                    => '/var/log/maxscale/',
-  datadir                   => '/var/lib/maxscale/data/',
-  cachedir                  => '/var/cache/maxscale/',
-  piddir                    =>  '/var/run/maxscale/',
+
+# Basic server definitions
+maxscale::config::server { 'db1':
+  address => '192.168.1.10',
+  port    => 3306,
+}
+
+maxscale::config::server { 'db2':
+  address => '192.168.1.11',
+  port    => 3306,
+}
+
+# Monitor
+maxscale::config::monitor { 'MariaDB-Monitor':
+  module   => 'mariadbmon',
+  servers  => 'db1,db2',
+  user     => 'maxscale',
+  password => Sensitive('secret'),
+  options  => {
+    'auto_failover'    => true,
+    'auto_rejoin'      => true,
+    'monitor_interval' => '2000ms',
+  },
+}
+
+# Service
+maxscale::config::service { 'RW-Service':
+  router   => 'readwritesplit',
+  servers  => 'db1,db2',
+  user     => 'maxscale',
+  password => Sensitive('secret'),
+}
+
+# Listener
+maxscale::config::listener { 'RW-Listener':
+  service  => 'RW-Service',
+  protocol => 'MariaDBClient',
+  port     => 4006,
 }
 ```
 
-### Configuration and default values for a Listener
+### Virtual Resources
+
+Perfect for setups where server definitions come from multiple places:
+
 ```puppet
-::maxscale::config::listener{"Listener Name":
-  service,
-  protocol,
-  port,
-  socket => undef,
-  address => undef,
-  ssl => undef,
-  ssl_key => undef,
-  ssl_cert => undef,
-  ssl_ca_cert => undef,
-  ssl_version => undef,
-  ssl_cert_verification_depth => undef,
+# In a profile or base class — declare virtual resources
+@maxscale::config::server { 'db-master':
+  address => '192.168.1.10',
+  port    => 3306,
 }
+
+@maxscale::config::server { 'db-slave1':
+  address => '192.168.1.11',
+  port    => 3306,
+}
+
+# Somewhere else — realize what you need
+realize(Maxscale::Config::Server['db-master'])
+realize(Maxscale::Config::Server['db-slave1'])
 ```
-### Configuration and default values for a Monitor
+
+### Dynamic Loops from External Data
+
+When your server list comes from Hiera, PuppetDB, or another data source:
+
 ```puppet
-::maxscale::config::monitor{"Monitor Name":
-  module,
-  servers,
-  user => undef,
-  password => undef,
-  monitor_interval => undef,
-  backend_connect_timeout => undef,
-  backend_write_timeout => undef,
-  backend_read_timeout => undef,
+# From Hiera
+$db_servers = lookup('myapp::db_servers', Hash, 'deep', {})
+
+$db_servers.each |String $name, Hash $config| {
+  maxscale::config::server { $name:
+    address => $config['address'],
+    port    => $config['port'],
+    options => pick($config['options'], {}),
+  }
 }
 ```
 
-### Configuration and default values for a Server
+### Combining Both Approaches
+
+Hash-based config goes into `maxscale.cnf`, defined types create files in
+`maxscale.cnf.d/`. Both are loaded by MaxScale.
+
 ```puppet
-::maxscale::config::server{"ServerName":
-  address,
-  port => 3306,
-  protocol => 'MySQLBackend',
-  monitoruser => undef,
-  monitorpw => undef,
-  persistpoolmax => undef,
-  persistmaxtime => undef,
-  serv_weight => undef,
+# Global settings and static components in the main config
+class { 'maxscale':
+  manage_repo    => true,
+  global_options => { 'threads' => 'auto' },
+  monitors => {
+    'MariaDB-Monitor' => {
+      'module'  => 'mariadbmon',
+      'servers' => 'db1,db2',
+      'user'    => 'maxscale',
+      'password' => Sensitive('secret'),
+    },
+  },
+}
+
+# Servers added dynamically from another source
+$servers_from_hiera.each |$name, $cfg| {
+  maxscale::config::server { $name:
+    address => $cfg['address'],
+    port    => $cfg['port'],
+  }
 }
 ```
 
-### Configuration and default values for a Service
+### Hiera Configuration
+
+```yaml
+---
+maxscale::manage_repo: true
+maxscale::repo_version: '24.02'
+
+maxscale::global_options:
+  threads: 'auto'
+  log_info: false
+  admin_host: '0.0.0.0'
+  admin_port: 8989
+
+maxscale::servers:
+  db-master:
+    address: '192.168.1.10'
+    port: 3306
+  db-slave:
+    address: '192.168.1.11'
+    port: 3306
+
+maxscale::monitors:
+  MariaDB-Monitor:
+    module: 'mariadbmon'
+    servers: 'db-master,db-slave'
+    user: 'maxscale'
+    password: ENC[PKCS7,...]
+    auto_failover: true
+    auto_rejoin: true
+
+maxscale::services:
+  RW-Service:
+    router: 'readwritesplit'
+    servers: 'db-master,db-slave'
+    user: 'maxscale'
+    password: ENC[PKCS7,...]
+
+maxscale::listeners:
+  RW-Listener:
+    service: 'RW-Service'
+    protocol: 'MariaDBClient'
+    port: 4006
+```
+
+### Forward Compatibility
+
+Any MaxScale parameter can be passed — either as a direct key in the hash
+(main class) or via the `options` hash (defined types). No module update
+needed when MaxScale adds new parameters:
+
 ```puppet
-::maxscale::config::service{"ServiceName":
-  router,
-  servers => undef,
-  router_options => undef,
-  filters => undef,
-  user => undef,
-  password => undef,
-  enable_root_user => 0,
-  localhost_match_wildcard_host => 1,
-  version_string=>'MaxScale',
-  weightby => undef,
-  auth_all_servers => 1,
-  strip_db_esc => 1,
-  optimize_wildcard => 1,
-  retry_on_failure => 1,
-  log_auth_warnings => 0,
-  connection_timeout => undef,
-  max_slave_connections => undef,
-  max_slave_replication_lag => undef,
-  use_sql_variables_in => undef,
+maxscale::config::monitor { 'My-Monitor':
+  module   => 'mariadbmon',
+  servers  => 'db1,db2',
+  user     => 'maxscale',
+  password => Sensitive('secret'),
+  options  => {
+    'some_future_parameter'  => 'value',
+    'another_new_option'     => true,
+  },
 }
 ```
 
+## Reference
+
+### Main Class Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `package_name` | String | `'maxscale'` | Name of the MaxScale package |
+| `package_version` | String | `'installed'` | Package version to install |
+| `service_ensure` | Enum | `'running'` | Service state |
+| `service_enable` | Boolean | `true` | Enable service at boot |
+| `manage_repo` | Boolean | `false` | Manage MariaDB repository |
+| `repo_version` | String | `'24.02'` | MaxScale repository version |
+| `config_d_dir` | String | `'maxscale.cnf.d'` | Config.d directory name |
+| `manage_user` | Boolean | `false` | Manage the maxscale system user |
+| `global_options` | Hash | `{...}` | Global [maxscale] section options |
+| `servers` | Hash | `{}` | Server definitions (main config) |
+| `monitors` | Hash | `{}` | Monitor definitions (main config) |
+| `services` | Hash | `{}` | Service definitions (main config) |
+| `listeners` | Hash | `{}` | Listener definitions (main config) |
+| `filters` | Hash | `{}` | Filter definitions (main config) |
+
+### Defined Types
+
+| Type | Required Parameters | Description |
+|------|-------------------|-------------|
+| `maxscale::config::server` | `address` | Creates a server config in config.d |
+| `maxscale::config::monitor` | `module`, `servers` | Creates a monitor config in config.d |
+| `maxscale::config::service` | `router` | Creates a service config in config.d |
+| `maxscale::config::listener` | `service`, `protocol` | Creates a listener config in config.d |
+| `maxscale::config::filter` | `module` | Creates a filter config in config.d |
+
+All defined types accept an `options` hash for arbitrary additional parameters.
 
 ## Limitations
 
-Tested on Debian wheezy and jessie with maxscale version 1.4.1 (GA), this should also work on Ubuntu 12.04, 14.04, 15.10
+- Supported on Debian 11/12, Ubuntu 22.04/24.04, RHEL 8/9, Rocky 8/9, AlmaLinux 8/9
+- Requires Puppet 7 or 8
+- ARM64 architecture support depends on MaxScale repository availability
 
 ## Development
-If you have whishes for features let me know.
 
-### Contributers
+```bash
+pdk validate
+pdk test unit
+```
 
-**Release**  | **PR/Issue**                                        | **Contributer**
--------------|-----------------------------------------------------|----------------------------------------------------
-1.0.0        |                                                     | [@Kotty666](https://github.com/Kotty666)
-1.0.9        |                                                     | [@xalimar](https://github.com/xalimar)
+## Authors
+
+- Philipp Frik <kotty@guns-n-girls.de>
+
+## License
+
+Apache-2.0
