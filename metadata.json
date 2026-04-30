@@ -1,5 +1,5 @@
 {
-  "name": "kotty666-maxscale",
+  "name": "Kotty666-maxscale",
   "version": "3.0.0",
   "author": "Philipp Frik",
   "summary": "Manages MariaDB MaxScale installation and configuration with flexible, hash-based parameters",
